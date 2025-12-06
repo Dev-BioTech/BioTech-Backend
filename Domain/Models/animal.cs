@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Models;
@@ -9,129 +8,150 @@ namespace Domain.Models;
 [Index("farm_id", "current_status", Name = "idx_animals_farm_status")]
 [Index("paddock_id", Name = "idx_animals_paddock")]
 [Index("farm_id", "visual_code", Name = "uk_animal_code_farm", IsUnique = true)]
-public partial class animal
+public partial class Animal
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
     [StringLength(20)]
-    public string visual_code { get; set; } = null!;
+    [Column("visual_code")]
+    public string VisualCode { get; set; } = null!;
 
     [StringLength(50)]
-    public string? electronic_code { get; set; }
+    [Column("electronic_code")]
+    public string? ElectronicCode { get; set; }
 
     [StringLength(100)]
-    public string? name { get; set; }
+    [Column("name")]
+    public string? Name { get; set; }
 
-    public DateOnly birth_date { get; set; }
+    [Column("birth_date")]
+    public DateOnly BirthDate { get; set; }
 
     [MaxLength(1)]
-    public char sex { get; set; }
+    [Column("sex")]
+    public char Sex { get; set; }
 
-    public int? breed_id { get; set; }
+    [Column("breed_id")]
+    public int? BreedId { get; set; }
 
     [StringLength(30)]
-    public string? color { get; set; }
+    [Column("color")]
+    public string? Color { get; set; }
 
-    public long? mother_id { get; set; }
+    [Column("mother_id")]
+    public long? MotherId { get; set; }
 
-    public long? father_id { get; set; }
+    [Column("father_id")]
+    public long? FatherId { get; set; }
 
     [StringLength(50)]
-    public string? external_mother { get; set; }
+    [Column("external_mother")]
+    public string? ExternalMother { get; set; }
 
     [StringLength(50)]
-    public string? external_father { get; set; }
+    [Column("external_father")]
+    public string? ExternalFather { get; set; }
 
-    public int? batch_id { get; set; }
+    [Column("batch_id")]
+    public int? BatchId { get; set; }
 
-    public int? paddock_id { get; set; }
+    [Column("paddock_id")]
+    public int? PaddockId { get; set; }
 
-    public int? category_id { get; set; }
-
-    [StringLength(20)]
-    public string? current_status { get; set; }
-
-    [StringLength(20)]
-    public string? purpose { get; set; }
+    [Column("category_id")]
+    public int? CategoryId { get; set; }
 
     [StringLength(20)]
-    public string? origin { get; set; }
+    [Column("current_status")]
+    public string? CurrentStatus { get; set; }
 
-    public DateOnly? entry_date { get; set; }
+    [StringLength(20)]
+    [Column("purpose")]
+    public string? Purpose { get; set; }
+
+    [StringLength(20)]
+    [Column("origin")]
+    public string? Origin { get; set; }
+
+    [Column("entry_date")]
+    public DateOnly? EntryDate { get; set; }
 
     [Precision(12, 2)]
-    public decimal? initial_cost { get; set; }
+    [Column("initial_cost")]
+    public decimal? InitialCost { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? created_at { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     [InverseProperty("father")]
-    public virtual ICollection<animal> Inversefather { get; set; } = new List<animal>();
+    public virtual ICollection<Animal> Inversefather { get; set; } = new List<Animal>();
 
     [InverseProperty("mother")]
-    public virtual ICollection<animal> Inversemother { get; set; } = new List<animal>();
+    public virtual ICollection<Animal> Inversemother { get; set; } = new List<Animal>();
 
     [InverseProperty("animal")]
-    public virtual ICollection<animal_movement> animal_movements { get; set; } = new List<animal_movement>();
+    public virtual ICollection<AnimalMovement> AnimalMovements { get; set; } = new List<AnimalMovement>();
 
     [ForeignKey("batch_id")]
     [InverseProperty("animals")]
-    public virtual batch? batch { get; set; }
+    public virtual Batch? Batch { get; set; }
 
     [ForeignKey("breed_id")]
     [InverseProperty("animals")]
-    public virtual breed? breed { get; set; }
+    public virtual Breed? Breed { get; set; }
 
     [InverseProperty("calf")]
-    public virtual ICollection<calving_calf> calving_calves { get; set; } = new List<calving_calf>();
+    public virtual ICollection<CalvingCalf> CalvingCalves { get; set; } = new List<CalvingCalf>();
 
     [InverseProperty("mother")]
-    public virtual ICollection<calving> calvings { get; set; } = new List<calving>();
+    public virtual ICollection<Calving> Calvings { get; set; } = new List<Calving>();
 
     [ForeignKey("category_id")]
     [InverseProperty("animals")]
-    public virtual animal_category? category { get; set; }
+    public virtual AnimalCategory? Category { get; set; }
 
     [ForeignKey("farm_id")]
     [InverseProperty("animals")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("father_id")]
     [InverseProperty("Inversefather")]
-    public virtual animal? father { get; set; }
+    public virtual Animal? Father { get; set; }
 
     [InverseProperty("animal")]
-    public virtual ICollection<feeding_event> feeding_events { get; set; } = new List<feeding_event>();
+    public virtual ICollection<FeedingEvent> FeedingEvents { get; set; } = new List<FeedingEvent>();
 
     [InverseProperty("animal")]
-    public virtual ICollection<health_event> health_events { get; set; } = new List<health_event>();
+    public virtual ICollection<HealthEvent> HealthEvents { get; set; } = new List<HealthEvent>();
 
     [InverseProperty("animal")]
-    public virtual ICollection<milk_production> milk_productions { get; set; } = new List<milk_production>();
+    public virtual ICollection<MilkProduction> MilkProductions { get; set; } = new List<MilkProduction>();
 
     [ForeignKey("mother_id")]
     [InverseProperty("Inversemother")]
-    public virtual animal? mother { get; set; }
+    public virtual Animal? Mother { get; set; }
 
     [ForeignKey("paddock_id")]
     [InverseProperty("animals")]
-    public virtual paddock? paddock { get; set; }
+    public virtual Paddock? Paddock { get; set; }
 
     [InverseProperty("animal")]
-    public virtual ICollection<reproduction_event> reproduction_eventanimals { get; set; } = new List<reproduction_event>();
+    public virtual ICollection<ReproductionEvent> ReproductionEventanimals { get; set; } = new List<ReproductionEvent>();
 
     [InverseProperty("reproducer")]
-    public virtual ICollection<reproduction_event> reproduction_eventreproducers { get; set; } = new List<reproduction_event>();
+    public virtual ICollection<ReproductionEvent> ReproductionEventreproducers { get; set; } = new List<ReproductionEvent>();
 
     [InverseProperty("animal")]
-    public virtual ICollection<transaction_animal_detail> transaction_animal_details { get; set; } = new List<transaction_animal_detail>();
+    public virtual ICollection<TransactionAnimalDetail> TransactionAnimalDetails { get; set; } = new List<TransactionAnimalDetail>();
 
     [InverseProperty("animal")]
-    public virtual ICollection<weighing> weighings { get; set; } = new List<weighing>();
+    public virtual ICollection<Weighing> Weighings { get; set; } = new List<Weighing>();
 
     [InverseProperty("animal")]
-    public virtual ICollection<withdrawal_period> withdrawal_periods { get; set; } = new List<withdrawal_period>();
+    public virtual ICollection<WithdrawalPeriod> WithdrawalPeriods { get; set; } = new List<WithdrawalPeriod>();
 }

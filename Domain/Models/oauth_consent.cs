@@ -4,31 +4,37 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("oauth_consents", Schema = "auth")]
 [Index("user_id", "client_id", Name = "oauth_consents_user_client_unique", IsUnique = true)]
 [Index("user_id", "granted_at", Name = "oauth_consents_user_order_idx", IsDescending = new[] { false, true })]
-public partial class oauth_consent
+public partial class OauthConsent
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid user_id { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
 
-    public Guid client_id { get; set; }
+    [Column("client_id")]
+    public Guid ClientId { get; set; }
 
-    public string scopes { get; set; } = null!;
+    [Column("scopes")]
+    public string Scopes { get; set; } = null!;
 
-    public DateTime granted_at { get; set; }
+    [Column("granted_at")]
+    public DateTime GrantedAt { get; set; }
 
-    public DateTime? revoked_at { get; set; }
+    [Column("revoked_at")]
+    public DateTime? RevokedAt { get; set; }
 
     [ForeignKey("client_id")]
     [InverseProperty("oauth_consents")]
-    public virtual oauth_client client { get; set; } = null!;
+    public virtual OauthClient Client { get; set; } = null!;
 
     [ForeignKey("user_id")]
     [InverseProperty("oauth_consents")]
-    public virtual user1 user { get; set; } = null!;
+    public virtual User1 User { get; set; } = null!;
 }

@@ -2,66 +2,79 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("feeding_events")]
 [Index("batch_id", Name = "idx_feeding_events_batch")]
 [Index("farm_id", "supply_date", Name = "idx_feeding_events_farm_date")]
-public partial class feeding_event
+public partial class FeedingEvent
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public DateOnly supply_date { get; set; }
+    [Column("supply_date")]
+    public DateOnly SupplyDate { get; set; }
 
-    public int? diet_id { get; set; }
+    [Column("diet_id")]
+    public int? DietId { get; set; }
 
-    public int? batch_id { get; set; }
+    [Column("batch_id")]
+    public int? BatchId { get; set; }
 
-    public long? animal_id { get; set; }
+    [Column("animal_id")]
+    public long? AnimalId { get; set; }
 
-    public int product_id { get; set; }
+    [Column("product_id")]
+    public int ProductId { get; set; }
 
     [Precision(12, 2)]
-    public decimal total_quantity { get; set; }
+    [Column("total_quantity")]
+    public decimal TotalQuantity { get; set; }
 
-    public int animals_fed_count { get; set; }
+    [Column("animals_fed_count")]
+    public int AnimalsFedCount { get; set; }
 
     [Precision(12, 2)]
-    public decimal unit_cost_at_moment { get; set; }
+    [Column("unit_cost_at_moment")]
+    public decimal UnitCostAtMoment { get; set; }
 
     [Precision(12, 2)]
-    public decimal? calculated_total_cost { get; set; }
+    [Column("calculated_total_cost")]
+    public decimal? CalculatedTotalCost { get; set; }
 
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
-    public int? registered_by { get; set; }
+    [Column("registered_by")]
+    public int? RegisteredBy { get; set; }
 
     [ForeignKey("animal_id")]
     [InverseProperty("feeding_events")]
-    public virtual animal? animal { get; set; }
+    public virtual Animal? Animal { get; set; }
 
     [ForeignKey("batch_id")]
     [InverseProperty("feeding_events")]
-    public virtual batch? batch { get; set; }
+    public virtual Batch? Batch { get; set; }
 
     [ForeignKey("diet_id")]
     [InverseProperty("feeding_events")]
-    public virtual diet? diet { get; set; }
+    public virtual Diet? Diet { get; set; }
 
     [ForeignKey("farm_id")]
     [InverseProperty("feeding_events")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("product_id")]
     [InverseProperty("feeding_events")]
-    public virtual product product { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
     [ForeignKey("registered_by")]
     [InverseProperty("feeding_events")]
-    public virtual user? registered_byNavigation { get; set; }
+    public virtual User? RegisteredBynavigation { get; set; }
 }

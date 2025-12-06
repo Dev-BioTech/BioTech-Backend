@@ -4,18 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("buckets_vectors", Schema = "storage")]
-public partial class buckets_vector
+public partial class BucketsVector
 {
     [Key]
-    public string id { get; set; } = null!;
+    [Column("id")]
+    public string Id { get; set; } = null!;
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime UpdatedAt { get; set; }
 
-    [InverseProperty("bucket")]
-    public virtual ICollection<vector_index> vector_indices { get; set; } = new List<vector_index>();
+    [InverseProperty("Bucket")]
+    public virtual ICollection<VectorIndex> VectorIndices { get; set; } = new List<VectorIndex>();
 }

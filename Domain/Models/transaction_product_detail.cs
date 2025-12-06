@@ -4,37 +4,45 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
-public partial class transaction_product_detail
+[Table("transaction_product_details")]
+public partial class TransactionProductDetail
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public long transaction_id { get; set; }
+    [Column("transaction_id")]
+    public long TransactionId { get; set; }
 
-    public int product_id { get; set; }
-
-    [Precision(12, 2)]
-    public decimal quantity { get; set; }
-
-    [Precision(12, 2)]
-    public decimal unit_price { get; set; }
+    [Column("product_id")]
+    public int ProductId { get; set; }
 
     [Precision(12, 2)]
-    public decimal? line_subtotal { get; set; }
+    [Column("quantity")]
+    public decimal Quantity { get; set; }
 
-    public long? inventory_movement_id { get; set; }
+    [Precision(12, 2)]
+    [Column("unit_price")]
+    public decimal UnitPrice { get; set; }
+
+    [Precision(12, 2)]
+    [Column("line_subtotal")]
+    public decimal? LineSubtotal { get; set; }
+
+    [Column("inventory_movement_id")]
+    public long? InventoryMovementId { get; set; }
 
     [ForeignKey("inventory_movement_id")]
     [InverseProperty("transaction_product_details")]
-    public virtual inventory_movement? inventory_movement { get; set; }
+    public virtual InventoryMovement? InventoryMovement { get; set; }
 
     [ForeignKey("product_id")]
     [InverseProperty("transaction_product_details")]
-    public virtual product product { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
     [ForeignKey("transaction_id")]
     [InverseProperty("transaction_product_details")]
-    public virtual commercial_transaction transaction { get; set; } = null!;
+    public virtual CommercialTransaction Transaction { get; set; } = null!;
 }

@@ -4,37 +4,46 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
-public partial class health_event_detail
+[Table("health_event_details")]
+public partial class HealthEventDetail
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public long health_event_id { get; set; }
+    [Column("health_event_id")]
+    public long HealthEventId { get; set; }
 
-    public int product_id { get; set; }
+    [Column("product_id")]
+    public int ProductId { get; set; }
 
     [Precision(8, 3)]
-    public decimal dose_per_animal { get; set; }
+    [Column("dose_per_animal")]
+    public decimal DosePerAnimal { get; set; }
 
     [Precision(10, 2)]
-    public decimal total_quantity_deducted { get; set; }
+    [Column("total_quantity_deducted")]
+    public decimal TotalQuantityDeducted { get; set; }
 
     [Precision(12, 2)]
-    public decimal unit_cost_at_moment { get; set; }
+    [Column("unit_cost_at_moment")]
+    public decimal UnitCostAtMoment { get; set; }
 
     [Precision(12, 2)]
-    public decimal? calculated_total_cost { get; set; }
+    [Column("calculated_total_cost")]
+    public decimal? CalculatedTotalCost { get; set; }
 
     [StringLength(20)]
-    public string? administration_route { get; set; }
+    [Column("administration_route")]
+    public string? AdministrationRoute { get; set; }
 
     [ForeignKey("health_event_id")]
     [InverseProperty("health_event_details")]
-    public virtual health_event health_event { get; set; } = null!;
+    public virtual HealthEvent HealthEvent { get; set; } = null!;
 
     [ForeignKey("product_id")]
     [InverseProperty("health_event_details")]
-    public virtual product product { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 }

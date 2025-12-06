@@ -4,25 +4,29 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
-/// Auth: Audit trail for user actions.
+/// Auth: Audit trail for User actions.
 /// </summary>
 [Table("audit_log_entries", Schema = "auth")]
 [Index("instance_id", Name = "audit_logs_instance_id_idx")]
-public partial class audit_log_entry
+public partial class AuditLogEntry
 {
-    public Guid? instance_id { get; set; }
+    [Column("instance_id")]
+    public Guid? InstanceId { get; set; }
 
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
     [Column(TypeName = "json")]
-    public string? payload { get; set; }
+    public string? Payload { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
     [StringLength(64)]
-    public string ip_address { get; set; } = null!;
+    [Column("ip_address")]
+    public string IpAddress { get; set; } = null!;
 }

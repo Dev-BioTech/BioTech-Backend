@@ -4,37 +4,47 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("s3_multipart_uploads_parts", Schema = "storage")]
-public partial class s3_multipart_uploads_part
+public partial class S3MultipartUploadsPart
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public string upload_id { get; set; } = null!;
+    [Column("upload_id")]
+    public string UploadId { get; set; } = null!;
 
-    public long size { get; set; }
+    [Column("size")]
+    public long Size { get; set; }
 
-    public int part_number { get; set; }
+    [Column("part_number")]
+    public int PartNumber { get; set; }
 
-    public string bucket_id { get; set; } = null!;
+    [Column("bucket_id")]
+    public string BucketId { get; set; } = null!;
 
-    public string key { get; set; } = null!;
+    [Column("key")]
+    public string Key { get; set; } = null!;
 
-    public string etag { get; set; } = null!;
+    [Column("etag")]
+    public string Etag { get; set; } = null!;
 
-    public string? owner_id { get; set; }
+    [Column("owner_id")]
+    public string? OwnerId { get; set; }
 
-    public string version { get; set; } = null!;
+    [Column("version")]
+    public string Version { get; set; } = null!;
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
     [ForeignKey("bucket_id")]
     [InverseProperty("s3_multipart_uploads_parts")]
-    public virtual bucket bucket { get; set; } = null!;
+    public virtual Bucket Bucket { get; set; } = null!;
 
     [ForeignKey("upload_id")]
     [InverseProperty("s3_multipart_uploads_parts")]
-    public virtual s3_multipart_upload upload { get; set; } = null!;
+    public virtual S3MultipartUpload Upload { get; set; } = null!;
 }

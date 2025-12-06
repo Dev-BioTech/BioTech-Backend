@@ -2,25 +2,29 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("breeds")]
 [Index("name", Name = "breeds_name_key", IsUnique = true)]
-public partial class breed
+public partial class Breed
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(50)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
-    public bool? active { get; set; }
+    [Column("active")]
+    public bool? Active { get; set; }
 
-    [InverseProperty("breed")]
-    public virtual ICollection<animal> animals { get; set; } = new List<animal>();
+    [InverseProperty("Breed")]
+    public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
 }

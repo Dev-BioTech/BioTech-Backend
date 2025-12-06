@@ -4,19 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
-[Table("subscription", Schema = "realtime")]
-public partial class subscription
+[Table("Subscription", Schema = "realtime")]
+public partial class Subscription
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public Guid subscription_id { get; set; }
+    [Column("subscription_id")]
+    public Guid SubscriptionId { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string claims { get; set; } = null!;
+    public string Claims { get; set; } = null!;
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime created_at { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

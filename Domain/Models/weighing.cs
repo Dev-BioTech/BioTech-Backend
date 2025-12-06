@@ -2,49 +2,59 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("weighings")]
 [Index("animal_id", "weighing_date", Name = "idx_weighings_animal", IsDescending = new[] { false, true })]
 [Index("animal_id", "weighing_date", Name = "uk_weighing_day", IsUnique = true)]
-public partial class weighing
+public partial class Weighing
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public long animal_id { get; set; }
+    [Column("animal_id")]
+    public long AnimalId { get; set; }
 
-    public DateOnly weighing_date { get; set; }
+    [Column("weighing_date")]
+    public DateOnly WeighingDate { get; set; }
 
     [Precision(6, 2)]
-    public decimal weight_kg { get; set; }
+    [Column("weight_kg")]
+    public decimal WeightKg { get; set; }
 
-    public DateOnly? previous_weighing_date { get; set; }
+    [Column("previous_weighing_date")]
+    public DateOnly? PreviousWeighingDate { get; set; }
 
     [Precision(6, 2)]
-    public decimal? previous_weight { get; set; }
+    [Column("previous_weight")]
+    public decimal? PreviousWeight { get; set; }
 
     [Precision(5, 3)]
-    public decimal? daily_weight_gain { get; set; }
+    [Column("daily_weight_gain")]
+    public decimal? DailyWeightGain { get; set; }
 
     [StringLength(200)]
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
-    public int? registered_by { get; set; }
+    [Column("registered_by")]
+    public int? RegisteredBy { get; set; }
 
     [ForeignKey("animal_id")]
     [InverseProperty("weighings")]
-    public virtual animal animal { get; set; } = null!;
+    public virtual Animal Animal { get; set; } = null!;
 
     [ForeignKey("farm_id")]
     [InverseProperty("weighings")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("registered_by")]
     [InverseProperty("weighings")]
-    public virtual user? registered_byNavigation { get; set; }
+    public virtual User? RegisteredBynavigation { get; set; }
 }

@@ -4,14 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("schema_migrations", Schema = "realtime")]
-public partial class schema_migration1
+public partial class SchemaMigration1
 {
     [Key]
-    public long version { get; set; }
+    [Column("version")]
+    public long Version { get; set; }
 
     [Column(TypeName = "timestamp(0) without time zone")]
-    public DateTime? inserted_at { get; set; }
+    public DateTime? InsertedAt { get; set; }
 }

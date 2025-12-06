@@ -4,15 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// Auth: Manages updates to the auth system.
 /// </summary>
 [Table("schema_migrations", Schema = "auth")]
-public partial class schema_migration
+public partial class SchemaMigration
 {
     [Key]
     [StringLength(255)]
-    public string version { get; set; } = null!;
+    [Column("version")]
+    public string Version { get; set; } = null!;
 }

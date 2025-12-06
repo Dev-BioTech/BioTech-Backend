@@ -2,47 +2,55 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("paddocks")]
 [Index("farm_id", Name = "idx_paddocks_farm")]
 [Index("farm_id", "code", Name = "uk_paddock_code_farm", IsUnique = true)]
-public partial class paddock
+public partial class Paddock
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
     [StringLength(20)]
-    public string code { get; set; } = null!;
+    [Column("code")]
+    public string Code { get; set; } = null!;
 
     [StringLength(50)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [Precision(10, 2)]
-    public decimal area_hectares { get; set; }
+    [Column("area_hectares")]
+    public decimal AreaHectares { get; set; }
 
-    public int? gauged_capacity { get; set; }
+    [Column("gauged_capacity")]
+    public int? GaugedCapacity { get; set; }
 
     [StringLength(50)]
-    public string? grass_type { get; set; }
+    [Column("grass_type")]
+    public string? GrassType { get; set; }
 
     [StringLength(20)]
-    public string? current_status { get; set; }
+    [Column("current_status")]
+    public string? CurrentStatus { get; set; }
 
     [InverseProperty("new_paddock")]
-    public virtual ICollection<animal_movement> animal_movementnew_paddocks { get; set; } = new List<animal_movement>();
+    public virtual ICollection<AnimalMovement> AnimalMovementnewPaddocks { get; set; } = new List<AnimalMovement>();
 
     [InverseProperty("previous_paddock")]
-    public virtual ICollection<animal_movement> animal_movementprevious_paddocks { get; set; } = new List<animal_movement>();
+    public virtual ICollection<AnimalMovement> AnimalMovementpreviousPaddocks { get; set; } = new List<AnimalMovement>();
 
-    [InverseProperty("paddock")]
-    public virtual ICollection<animal> animals { get; set; } = new List<animal>();
+    [InverseProperty("Paddock")]
+    public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
 
     [ForeignKey("farm_id")]
     [InverseProperty("paddocks")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 }

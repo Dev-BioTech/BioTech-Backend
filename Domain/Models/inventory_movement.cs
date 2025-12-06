@@ -4,69 +4,84 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("inventory_movements")]
 [Index("farm_id", "concept", Name = "idx_kardex_concept")]
 [Index("product_id", "movement_date", Name = "idx_kardex_product_date", IsDescending = new[] { false, true })]
-public partial class inventory_movement
+public partial class InventoryMovement
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public int product_id { get; set; }
+    [Column("product_id")]
+    public int ProductId { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? movement_date { get; set; }
+    public DateTime? MovementDate { get; set; }
 
     [StringLength(10)]
-    public string movement_type { get; set; } = null!;
+    [Column("MovementType")]
+    public string MovementType { get; set; } = null!;
 
     [StringLength(30)]
-    public string concept { get; set; } = null!;
+    [Column("concept")]
+    public string Concept { get; set; } = null!;
 
     [Precision(12, 2)]
-    public decimal quantity { get; set; }
+    [Column("quantity")]
+    public decimal Quantity { get; set; }
 
     [Precision(12, 2)]
-    public decimal transaction_unit_cost { get; set; }
+    [Column("transaction_unit_cost")]
+    public decimal TransactionUnitCost { get; set; }
 
     [Precision(12, 2)]
-    public decimal? transaction_total_cost { get; set; }
+    [Column("transaction_total_cost")]
+    public decimal? TransactionTotalCost { get; set; }
 
     [Precision(12, 2)]
-    public decimal? subsequent_quantity_balance { get; set; }
+    [Column("subsequent_quantity_balance")]
+    public decimal? SubsequentQuantityBalance { get; set; }
 
     [Precision(12, 2)]
-    public decimal? subsequent_average_cost { get; set; }
+    [Column("subsequent_average_cost")]
+    public decimal? SubsequentAverageCost { get; set; }
 
-    public long? third_party_id { get; set; }
+    [Column("third_party_id")]
+    public long? ThirdPartyId { get; set; }
 
     [StringLength(50)]
-    public string? reference_document { get; set; }
+    [Column("reference_document")]
+    public string? ReferenceDocument { get; set; }
 
     [StringLength(255)]
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
-    public int? registered_by { get; set; }
+    [Column("registered_by")]
+    public int? RegisteredBy { get; set; }
 
     [ForeignKey("farm_id")]
     [InverseProperty("inventory_movements")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("product_id")]
     [InverseProperty("inventory_movements")]
-    public virtual product product { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
     [ForeignKey("registered_by")]
     [InverseProperty("inventory_movements")]
-    public virtual user? registered_byNavigation { get; set; }
+    public virtual User? RegisteredBynavigation { get; set; }
 
     [ForeignKey("third_party_id")]
     [InverseProperty("inventory_movements")]
-    public virtual third_party? third_party { get; set; }
+    public virtual ThirdParty? ThirdParty { get; set; }
 
-    [InverseProperty("inventory_movement")]
-    public virtual ICollection<transaction_product_detail> transaction_product_details { get; set; } = new List<transaction_product_detail>();
+    [InverseProperty("InventoryMovement")]
+    public virtual ICollection<TransactionProductDetail> TransactionProductDetails { get; set; } = new List<TransactionProductDetail>();
 }

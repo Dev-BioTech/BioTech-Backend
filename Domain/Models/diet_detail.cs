@@ -4,29 +4,35 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("diet_details")]
 [Index("diet_id", "product_id", Name = "uk_diet_product", IsUnique = true)]
-public partial class diet_detail
+public partial class DietDetail
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
-    public int diet_id { get; set; }
+    [Column("diet_id")]
+    public int DietId { get; set; }
 
-    public int product_id { get; set; }
+    [Column("product_id")]
+    public int ProductId { get; set; }
 
     [Precision(10, 3)]
-    public decimal quantity_per_animal { get; set; }
+    [Column("quantity_per_animal")]
+    public decimal QuantityPerAnimal { get; set; }
 
     [StringLength(20)]
-    public string? frequency { get; set; }
+    [Column("frequency")]
+    public string? Frequency { get; set; }
 
     [ForeignKey("diet_id")]
     [InverseProperty("diet_details")]
-    public virtual diet diet { get; set; } = null!;
+    public virtual Diet Diet { get; set; } = null!;
 
     [ForeignKey("product_id")]
     [InverseProperty("diet_details")]
-    public virtual product product { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 }

@@ -4,31 +4,41 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("v_low_stock_alerts")]
 [Keyless]
-public partial class v_low_stock_alert
+public partial class VLowStockAlert
 {
-    public int? id { get; set; }
+    [Column("id")]
+    public int? Id { get; set; }
 
-    public int? farm_id { get; set; }
+    [Column("farm_id")]
+    public int? FarmId { get; set; }
 
     [StringLength(100)]
-    public string? farm { get; set; }
+    [Column("Farm")]
+    public string? Farm { get; set; }
 
     [StringLength(100)]
-    public string? product { get; set; }
+    [Column("Product")]
+    public string? Product { get; set; }
 
     [StringLength(50)]
-    public string? category { get; set; }
+    [Column("category")]
+    public string? Category { get; set; }
 
     [Precision(12, 2)]
-    public decimal? current_quantity { get; set; }
+    [Column("current_quantity")]
+    public decimal? CurrentQuantity { get; set; }
 
     [Precision(12, 2)]
-    public decimal? minimum_stock { get; set; }
+    [Column("minimum_stock")]
+    public decimal? MinimumStock { get; set; }
 
-    public decimal? deficit { get; set; }
+    [Column("deficit")]
+    public decimal? Deficit { get; set; }
 
-    public string? alert_level { get; set; }
+    [Column("alert_level")]
+    public string? AlertLevel { get; set; }
 }

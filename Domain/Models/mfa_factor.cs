@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// auth: stores metadata about factors
@@ -14,40 +14,49 @@ namespace Infrastructure;
 [Index("last_challenged_at", Name = "mfa_factors_last_challenged_at_key", IsUnique = true)]
 [Index("user_id", Name = "mfa_factors_user_id_idx")]
 [Index("user_id", "phone", Name = "unique_phone_factor_per_user", IsUnique = true)]
-public partial class mfa_factor
+public partial class MfaFactor
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid user_id { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
 
-    public string? friendly_name { get; set; }
+    [Column("friendly_name")]
+    public string? FriendlyName { get; set; }
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime UpdatedAt { get; set; }
 
-    public string? secret { get; set; }
+    [Column("secret")]
+    public string? Secret { get; set; }
 
-    public string? phone { get; set; }
+    [Column("phone")]
+    public string? Phone { get; set; }
 
-    public DateTime? last_challenged_at { get; set; }
+    [Column("last_challenged_at")]
+    public DateTime? LastChallengedAt { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? web_authn_credential { get; set; }
+    public string? WebAuthnCredential { get; set; }
 
-    public Guid? web_authn_aaguid { get; set; }
+    [Column("web_authn_aaguid")]
+    public Guid? WebAuthnAaguid { get; set; }
 
     /// <summary>
     /// Stores the latest WebAuthn challenge data including attestation/assertion for customer verification
     /// </summary>
     [Column(TypeName = "jsonb")]
-    public string? last_webauthn_challenge_data { get; set; }
+    public string? LastWebauthnChallengeData { get; set; }
 
     [InverseProperty("factor")]
-    public virtual ICollection<mfa_challenge> mfa_challenges { get; set; } = new List<mfa_challenge>();
+    public virtual ICollection<MfaChallenge> MfaChallenges { get; set; } = new List<MfaChallenge>();
 
     [ForeignKey("user_id")]
     [InverseProperty("mfa_factors")]
-    public virtual user1 user { get; set; } = null!;
+    public virtual User1 User { get; set; } = null!;
 }

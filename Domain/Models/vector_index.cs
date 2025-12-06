@@ -4,32 +4,40 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("vector_indexes", Schema = "storage")]
-public partial class vector_index
+public partial class VectorIndex
 {
     [Key]
-    public string id { get; set; } = null!;
+    [Column("id")]
+    public string Id { get; set; } = null!;
 
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
-    public string bucket_id { get; set; } = null!;
+    [Column("bucket_id")]
+    public string BucketId { get; set; } = null!;
 
-    public string data_type { get; set; } = null!;
+    [Column("data_type")]
+    public string DataType { get; set; } = null!;
 
-    public int dimension { get; set; }
+    [Column("dimension")]
+    public int Dimension { get; set; }
 
-    public string distance_metric { get; set; } = null!;
+    [Column("distance_metric")]
+    public string DistanceMetric { get; set; } = null!;
 
     [Column(TypeName = "jsonb")]
-    public string? metadata_configuration { get; set; }
+    public string? MetadataConfiguration { get; set; }
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime UpdatedAt { get; set; }
 
     [ForeignKey("bucket_id")]
     [InverseProperty("vector_indices")]
-    public virtual buckets_vector bucket { get; set; } = null!;
+    public virtual BucketsVector Bucket { get; set; } = null!;
 }

@@ -4,21 +4,27 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("buckets_analytics", Schema = "storage")]
-public partial class buckets_analytic
+public partial class BucketsAnalytic
 {
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
-    public string format { get; set; } = null!;
+    [Column("format")]
+    public string Format { get; set; } = null!;
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime UpdatedAt { get; set; }
 
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public DateTime? deleted_at { get; set; }
+    [Column("deleted_at")]
+    public DateTime? DeletedAt { get; set; }
 }

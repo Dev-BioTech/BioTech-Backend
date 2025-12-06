@@ -4,24 +4,28 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("roles")]
 [Index("name", Name = "roles_name_key", IsUnique = true)]
-public partial class role
+public partial class Role
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(50)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
-    [InverseProperty("role")]
-    public virtual ICollection<user_farm_role> user_farm_roles { get; set; } = new List<user_farm_role>();
+    [InverseProperty("Role")]
+    public virtual ICollection<UserFarmRole> UserFarmRoles { get; set; } = new List<UserFarmRole>();
 
     [ForeignKey("role_id")]
     [InverseProperty("roles")]
-    public virtual ICollection<permission> permissions { get; set; } = new List<permission>();
+    public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 }

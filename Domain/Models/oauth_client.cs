@@ -4,39 +4,49 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("oauth_clients", Schema = "auth")]
 [Index("deleted_at", Name = "oauth_clients_deleted_at_idx")]
-public partial class oauth_client
+public partial class OauthClient
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public string? client_secret_hash { get; set; }
+    [Column("client_secret_hash")]
+    public string? ClientSecretHash { get; set; }
 
-    public string redirect_uris { get; set; } = null!;
+    [Column("redirect_uris")]
+    public string RedirectUris { get; set; } = null!;
 
-    public string grant_types { get; set; } = null!;
+    [Column("grant_types")]
+    public string GrantTypes { get; set; } = null!;
 
-    public string? client_name { get; set; }
+    [Column("client_name")]
+    public string? ClientName { get; set; }
 
-    public string? client_uri { get; set; }
+    [Column("client_uri")]
+    public string? ClientUri { get; set; }
 
-    public string? logo_uri { get; set; }
+    [Column("logo_uri")]
+    public string? LogoUri { get; set; }
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime UpdatedAt { get; set; }
 
-    public DateTime? deleted_at { get; set; }
+    [Column("deleted_at")]
+    public DateTime? DeletedAt { get; set; }
 
     [InverseProperty("client")]
-    public virtual ICollection<oauth_authorization> oauth_authorizations { get; set; } = new List<oauth_authorization>();
+    public virtual ICollection<OauthAuthorization> OauthAuthorizations { get; set; } = new List<OauthAuthorization>();
 
     [InverseProperty("client")]
-    public virtual ICollection<oauth_consent> oauth_consents { get; set; } = new List<oauth_consent>();
+    public virtual ICollection<OauthConsent> OauthConsents { get; set; } = new List<OauthConsent>();
 
-    [InverseProperty("oauth_client")]
-    public virtual ICollection<session> sessions { get; set; } = new List<session>();
+    [InverseProperty("OauthClient")]
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }

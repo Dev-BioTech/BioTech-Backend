@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// Auth: Store of tokens used to refresh JWT tokens once they expire.
@@ -16,31 +16,40 @@ namespace Infrastructure;
 [Index("session_id", "revoked", Name = "refresh_tokens_session_id_revoked_idx")]
 [Index("token", Name = "refresh_tokens_token_unique", IsUnique = true)]
 [Index("updated_at", Name = "refresh_tokens_updated_at_idx", AllDescending = true)]
-public partial class refresh_token
+public partial class RefreshToken
 {
-    public Guid? instance_id { get; set; }
+    [Column("instance_id")]
+    public Guid? InstanceId { get; set; }
 
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
     [StringLength(255)]
-    public string? token { get; set; }
+    [Column("token")]
+    public string? Token { get; set; }
 
     [StringLength(255)]
-    public string? user_id { get; set; }
+    [Column("user_id")]
+    public string? UserId { get; set; }
 
-    public bool? revoked { get; set; }
+    [Column("revoked")]
+    public bool? Revoked { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
     [StringLength(255)]
-    public string? parent { get; set; }
+    [Column("parent")]
+    public string? Parent { get; set; }
 
-    public Guid? session_id { get; set; }
+    [Column("session_id")]
+    public Guid? SessionId { get; set; }
 
     [ForeignKey("session_id")]
     [InverseProperty("refresh_tokens")]
-    public virtual session? session { get; set; }
+    public virtual Session? Session { get; set; }
 }
