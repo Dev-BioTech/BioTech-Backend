@@ -2,46 +2,55 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("calvings")]
 [Index("farm_id", "calving_date", Name = "idx_calvings_date")]
-public partial class calving
+public partial class Calving
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public long mother_id { get; set; }
+    [Column("mother_id")]
+    public long MotherId { get; set; }
 
-    public DateOnly calving_date { get; set; }
+    [Column("calving_date")]
+    public DateOnly CalvingDate { get; set; }
 
     [StringLength(20)]
-    public string? calving_type { get; set; }
+    [Column("calving_type")]
+    public string? CalvingType { get; set; }
 
-    public int? number_of_calves { get; set; }
+    [Column("number_of_calves")]
+    public int? NumberOfCalves { get; set; }
 
     [Precision(3, 1)]
-    public decimal? body_condition { get; set; }
+    [Column("body_condition")]
+    public decimal? BodyCondition { get; set; }
 
-    public bool? placenta_retention { get; set; }
+    [Column("placenta_retention")]
+    public bool? PlacentaRetention { get; set; }
 
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? registered_at { get; set; }
+    public DateTime? RegisteredAt { get; set; }
 
-    [InverseProperty("calving")]
-    public virtual ICollection<calving_calf> calving_calves { get; set; } = new List<calving_calf>();
+    [InverseProperty("Calving")]
+    public virtual ICollection<CalvingCalf> CalvingCalves { get; set; } = new List<CalvingCalf>();
 
     [ForeignKey("farm_id")]
     [InverseProperty("calvings")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("mother_id")]
     [InverseProperty("calvings")]
-    public virtual animal mother { get; set; } = null!;
+    public virtual Animal Mother { get; set; } = null!;
 }

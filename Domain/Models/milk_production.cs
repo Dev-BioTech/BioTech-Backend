@@ -2,53 +2,63 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("milk_production")]
 [Index("animal_id", Name = "idx_milk_animal")]
 [Index("farm_id", "milking_date", Name = "idx_milk_date")]
-public partial class milk_production
+public partial class MilkProduction
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public DateOnly milking_date { get; set; }
+    [Column("milking_date")]
+    public DateOnly MilkingDate { get; set; }
 
     [StringLength(10)]
-    public string? shift { get; set; }
+    [Column("shift")]
+    public string? Shift { get; set; }
 
-    public long? animal_id { get; set; }
+    [Column("animal_id")]
+    public long? AnimalId { get; set; }
 
-    public int? batch_id { get; set; }
+    [Column("batch_id")]
+    public int? BatchId { get; set; }
 
     [Precision(6, 2)]
-    public decimal liters_quantity { get; set; }
+    [Column("liters_quantity")]
+    public decimal LitersQuantity { get; set; }
 
     [Precision(4, 2)]
-    public decimal? fat_percentage { get; set; }
+    [Column("fat_percentage")]
+    public decimal? FatPercentage { get; set; }
 
     [Precision(4, 2)]
-    public decimal? protein_percentage { get; set; }
+    [Column("protein_percentage")]
+    public decimal? ProteinPercentage { get; set; }
 
-    public int? somatic_cells { get; set; }
+    [Column("somatic_cells")]
+    public int? SomaticCells { get; set; }
 
     [StringLength(200)]
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
     [ForeignKey("animal_id")]
     [InverseProperty("milk_productions")]
-    public virtual animal? animal { get; set; }
+    public virtual Animal? Animal { get; set; }
 
     [ForeignKey("batch_id")]
     [InverseProperty("milk_productions")]
-    public virtual batch? batch { get; set; }
+    public virtual Batch? Batch { get; set; }
 
     [ForeignKey("farm_id")]
     [InverseProperty("milk_productions")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 }

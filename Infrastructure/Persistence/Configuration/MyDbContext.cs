@@ -14,127 +14,127 @@ public partial class MyDbContext : DbContext
     {
     }
 
-    public virtual DbSet<animal> animals { get; set; }
+    public virtual DbSet<Animal> animals { get; set; }
 
-    public virtual DbSet<animal_category> animal_categories { get; set; }
+    public virtual DbSet<AnimalCategory> animal_categories { get; set; }
 
-    public virtual DbSet<animal_movement> animal_movements { get; set; }
+    public virtual DbSet<AnimalMovement> animal_movements { get; set; }
 
-    public virtual DbSet<audit_log_entry> audit_log_entries { get; set; }
+    public virtual DbSet<AuditLogEntry> audit_log_entries { get; set; }
 
-    public virtual DbSet<batch> batches { get; set; }
+    public virtual DbSet<Batch> batches { get; set; }
 
-    public virtual DbSet<breed> breeds { get; set; }
+    public virtual DbSet<Breed> breeds { get; set; }
 
-    public virtual DbSet<bucket> buckets { get; set; }
+    public virtual DbSet<Bucket> buckets { get; set; }
 
-    public virtual DbSet<buckets_analytic> buckets_analytics { get; set; }
+    public virtual DbSet<BucketsAnalytic> buckets_analytics { get; set; }
 
-    public virtual DbSet<buckets_vector> buckets_vectors { get; set; }
+    public virtual DbSet<BucketsVector> buckets_vectors { get; set; }
 
-    public virtual DbSet<calving> calvings { get; set; }
+    public virtual DbSet<Calving> calvings { get; set; }
 
-    public virtual DbSet<calving_calf> calving_calves { get; set; }
+    public virtual DbSet<CalvingCalf> calving_calves { get; set; }
 
-    public virtual DbSet<commercial_transaction> commercial_transactions { get; set; }
+    public virtual DbSet<CommercialTransaction> commercial_transactions { get; set; }
 
-    public virtual DbSet<diet> diets { get; set; }
+    public virtual DbSet<Diet> diets { get; set; }
 
-    public virtual DbSet<diet_detail> diet_details { get; set; }
+    public virtual DbSet<DietDetail> diet_details { get; set; }
 
-    public virtual DbSet<disease> diseases { get; set; }
+    public virtual DbSet<Disease> diseases { get; set; }
 
-    public virtual DbSet<farm> farms { get; set; }
+    public virtual DbSet<Farm> farms { get; set; }
 
-    public virtual DbSet<feeding_event> feeding_events { get; set; }
+    public virtual DbSet<FeedingEvent> feeding_events { get; set; }
 
-    public virtual DbSet<flow_state> flow_states { get; set; }
+    public virtual DbSet<FlowState> flow_states { get; set; }
 
-    public virtual DbSet<health_event> health_events { get; set; }
+    public virtual DbSet<HealthEvent> health_events { get; set; }
 
-    public virtual DbSet<health_event_detail> health_event_details { get; set; }
+    public virtual DbSet<HealthEventDetail> health_event_details { get; set; }
 
-    public virtual DbSet<identity> identities { get; set; }
+    public virtual DbSet<Identity> identities { get; set; }
 
-    public virtual DbSet<instance> instances { get; set; }
+    public virtual DbSet<Instance> instances { get; set; }
 
-    public virtual DbSet<inventory_movement> inventory_movements { get; set; }
+    public virtual DbSet<InventoryMovement> inventory_movements { get; set; }
 
-    public virtual DbSet<mfa_amr_claim> mfa_amr_claims { get; set; }
+    public virtual DbSet<MfaAmrClaim> mfa_amr_claims { get; set; }
 
-    public virtual DbSet<mfa_challenge> mfa_challenges { get; set; }
+    public virtual DbSet<MfaChallenge> mfa_challenges { get; set; }
 
-    public virtual DbSet<mfa_factor> mfa_factors { get; set; }
+    public virtual DbSet<MfaFactor> mfa_factors { get; set; }
 
-    public virtual DbSet<migration> migrations { get; set; }
+    public virtual DbSet<Migration> migrations { get; set; }
 
-    public virtual DbSet<milk_production> milk_productions { get; set; }
+    public virtual DbSet<MilkProduction> milk_productions { get; set; }
 
-    public virtual DbSet<movement_type> movement_types { get; set; }
+    public virtual DbSet<MovementType> movement_types { get; set; }
 
-    public virtual DbSet<oauth_authorization> oauth_authorizations { get; set; }
+    public virtual DbSet<OauthAuthorization> oauth_authorizations { get; set; }
 
-    public virtual DbSet<oauth_client> oauth_clients { get; set; }
+    public virtual DbSet<OauthClient> oauth_clients { get; set; }
 
-    public virtual DbSet<oauth_consent> oauth_consents { get; set; }
+    public virtual DbSet<OauthConsent> oauth_consents { get; set; }
 
-    public virtual DbSet<object> objects { get; set; }
+    public virtual DbSet<object> Objects { get; set; }
 
-    public virtual DbSet<one_time_token> one_time_tokens { get; set; }
+    public virtual DbSet<OneTimeToken> one_time_tokens { get; set; }
 
-    public virtual DbSet<paddock> paddocks { get; set; }
+    public virtual DbSet<Paddock> paddocks { get; set; }
 
-    public virtual DbSet<permission> permissions { get; set; }
+    public virtual DbSet<Permission> permissions { get; set; }
 
-    public virtual DbSet<prefix> prefixes { get; set; }
+    public virtual DbSet<Prefix> prefixes { get; set; }
 
-    public virtual DbSet<product> products { get; set; }
+    public virtual DbSet<Product> products { get; set; }
 
-    public virtual DbSet<refresh_token> refresh_tokens { get; set; }
+    public virtual DbSet<RefreshToken> refresh_tokens { get; set; }
 
-    public virtual DbSet<reproduction_event> reproduction_events { get; set; }
+    public virtual DbSet<ReproductionEvent> reproduction_events { get; set; }
 
-    public virtual DbSet<role> roles { get; set; }
+    public virtual DbSet<Role> roles { get; set; }
 
-    public virtual DbSet<s3_multipart_upload> s3_multipart_uploads { get; set; }
+    public virtual DbSet<S3MultipartUpload> s3_multipart_uploads { get; set; }
 
-    public virtual DbSet<s3_multipart_uploads_part> s3_multipart_uploads_parts { get; set; }
+    public virtual DbSet<S3MultipartUploadsPart> s3_multipart_uploads_parts { get; set; }
 
-    public virtual DbSet<saml_provider> saml_providers { get; set; }
+    public virtual DbSet<SamlProvider> saml_providers { get; set; }
 
-    public virtual DbSet<saml_relay_state> saml_relay_states { get; set; }
+    public virtual DbSet<SamlRelayState> saml_relay_states { get; set; }
 
-    public virtual DbSet<schema_migration> schema_migrations { get; set; }
+    public virtual DbSet<SchemaMigration> schema_migrations { get; set; }
 
-    public virtual DbSet<schema_migration1> schema_migrations1 { get; set; }
+    public virtual DbSet<SchemaMigration1> schema_migrations1 { get; set; }
 
-    public virtual DbSet<session> sessions { get; set; }
+    public virtual DbSet<Session> sessions { get; set; }
 
-    public virtual DbSet<sso_domain> sso_domains { get; set; }
+    public virtual DbSet<SsoDomain> sso_domains { get; set; }
 
-    public virtual DbSet<sso_provider> sso_providers { get; set; }
+    public virtual DbSet<SsoProvider> sso_providers { get; set; }
 
-    public virtual DbSet<subscription> subscriptions { get; set; }
+    public virtual DbSet<Subscription> subscriptions { get; set; }
 
-    public virtual DbSet<third_party> third_parties { get; set; }
+    public virtual DbSet<ThirdParty> third_parties { get; set; }
 
-    public virtual DbSet<transaction_animal_detail> transaction_animal_details { get; set; }
+    public virtual DbSet<TransactionAnimalDetail> transaction_animal_details { get; set; }
 
-    public virtual DbSet<transaction_product_detail> transaction_product_details { get; set; }
+    public virtual DbSet<TransactionProductDetail> transaction_product_details { get; set; }
 
-    public virtual DbSet<user> users { get; set; }
+    public virtual DbSet<User> users { get; set; }
 
-    public virtual DbSet<user1> users1 { get; set; }
+    public virtual DbSet<User1> users1 { get; set; }
 
-    public virtual DbSet<user_farm_role> user_farm_roles { get; set; }
+    public virtual DbSet<UserFarmRole> user_farm_roles { get; set; }
 
-    public virtual DbSet<v_low_stock_alert> v_low_stock_alerts { get; set; }
+    public virtual DbSet<VLowStockAlert> v_low_stock_alerts { get; set; }
 
-    public virtual DbSet<vector_index> vector_indexes { get; set; }
+    public virtual DbSet<VectorIndex> vector_indexes { get; set; }
 
-    public virtual DbSet<weighing> weighings { get; set; }
+    public virtual DbSet<Weighing> weighings { get; set; }
 
-    public virtual DbSet<withdrawal_period> withdrawal_periods { get; set; }
+    public virtual DbSet<WithdrawalPeriod> withdrawal_periods { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -161,538 +161,538 @@ public partial class MyDbContext : DbContext
             .HasPostgresExtension("graphql", "pg_graphql")
             .HasPostgresExtension("vault", "supabase_vault");
 
-        modelBuilder.Entity<animal>(entity =>
+        modelBuilder.Entity<Animal>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("animals_pkey");
+            entity.HasKey(e => e.Id).HasName("animals_pkey");
 
-            entity.HasIndex(e => new { e.birth_date, e.category_id }, "idx_animals_birth_category").HasFilter("((current_status)::text = 'ACTIVE'::text)");
+            entity.HasIndex(e => new { e.BirthDate, e.CategoryId }, "idx_animals_birth_category").HasFilter("((current_status)::text = 'ACTIVE'::text)");
 
-            entity.Property(e => e.created_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.current_status).HasDefaultValueSql("'ACTIVE'::character varying");
-            entity.Property(e => e.entry_date).HasDefaultValueSql("CURRENT_DATE");
-            entity.Property(e => e.initial_cost).HasDefaultValueSql("0");
-            entity.Property(e => e.purpose).HasDefaultValueSql("'MEAT'::character varying");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CurrentStatus).HasDefaultValueSql("'ACTIVE'::character varying");
+            entity.Property(e => e.EntryDate).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.InitialCost).HasDefaultValueSql("0");
+            entity.Property(e => e.Purpose).HasDefaultValueSql("'MEAT'::character varying");
 
-            entity.HasOne(d => d.batch).WithMany(p => p.animals).HasConstraintName("animals_batch_id_fkey");
+            entity.HasOne(d => d.Batch).WithMany(p => p.Animals).HasConstraintName("animals_batch_id_fkey");
 
-            entity.HasOne(d => d.breed).WithMany(p => p.animals).HasConstraintName("animals_breed_id_fkey");
+            entity.HasOne(d => d.Breed).WithMany(p => p.Animals).HasConstraintName("animals_breed_id_fkey");
 
-            entity.HasOne(d => d.category).WithMany(p => p.animals).HasConstraintName("animals_category_id_fkey");
+            entity.HasOne(d => d.Category).WithMany(p => p.Animals).HasConstraintName("animals_category_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.animals).HasConstraintName("animals_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Animals).HasConstraintName("animals_farm_id_fkey");
 
-            entity.HasOne(d => d.father).WithMany(p => p.Inversefather).HasConstraintName("animals_father_id_fkey");
+            entity.HasOne(d => d.Father).WithMany(p => p.Inversefather).HasConstraintName("animals_father_id_fkey");
 
-            entity.HasOne(d => d.mother).WithMany(p => p.Inversemother).HasConstraintName("animals_mother_id_fkey");
+            entity.HasOne(d => d.Mother).WithMany(p => p.Inversemother).HasConstraintName("animals_mother_id_fkey");
 
-            entity.HasOne(d => d.paddock).WithMany(p => p.animals).HasConstraintName("animals_paddock_id_fkey");
+            entity.HasOne(d => d.Paddock).WithMany(p => p.Animals).HasConstraintName("animals_paddock_id_fkey");
         });
 
-        modelBuilder.Entity<animal_category>(entity =>
+        modelBuilder.Entity<AnimalCategory>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("animal_categories_pkey");
+            entity.HasKey(e => e.Id).HasName("animal_categories_pkey");
 
-            entity.Property(e => e.min_age_months).HasDefaultValue(0);
+            entity.Property(e => e.MinAgeMonths).HasDefaultValue(0);
         });
 
-        modelBuilder.Entity<animal_movement>(entity =>
+        modelBuilder.Entity<AnimalMovement>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("animal_movements_pkey");
+            entity.HasKey(e => e.Id).HasName("animal_movements_pkey");
 
-            entity.Property(e => e.movement_date).HasDefaultValueSql("CURRENT_DATE");
-            entity.Property(e => e.transaction_value).HasDefaultValueSql("0");
+            entity.Property(e => e.MovementDate).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.TransactionValue).HasDefaultValueSql("0");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.animal_movements).HasConstraintName("animal_movements_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.AnimalMovements).HasConstraintName("animal_movements_animal_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.animal_movements).HasConstraintName("animal_movements_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.AnimalMovements).HasConstraintName("animal_movements_farm_id_fkey");
 
-            entity.HasOne(d => d.movement_type).WithMany(p => p.animal_movements)
+            entity.HasOne(d => d.MovementType).WithMany(p => p.AnimalMovements)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("animal_movements_movement_type_id_fkey");
 
-            entity.HasOne(d => d.new_batch).WithMany(p => p.animal_movementnew_batches).HasConstraintName("animal_movements_new_batch_id_fkey");
+            entity.HasOne(d => d.NewBatch).WithMany(p => p.AnimalMovementnewBatches).HasConstraintName("animal_movements_new_batch_id_fkey");
 
-            entity.HasOne(d => d.new_paddock).WithMany(p => p.animal_movementnew_paddocks).HasConstraintName("animal_movements_new_paddock_id_fkey");
+            entity.HasOne(d => d.NewPaddock).WithMany(p => p.AnimalMovementnewPaddocks).HasConstraintName("animal_movements_new_paddock_id_fkey");
 
-            entity.HasOne(d => d.previous_batch).WithMany(p => p.animal_movementprevious_batches).HasConstraintName("animal_movements_previous_batch_id_fkey");
+            entity.HasOne(d => d.PreviousBatch).WithMany(p => p.AnimalMovementpreviousBatches).HasConstraintName("animal_movements_previous_batch_id_fkey");
 
-            entity.HasOne(d => d.previous_paddock).WithMany(p => p.animal_movementprevious_paddocks).HasConstraintName("animal_movements_previous_paddock_id_fkey");
+            entity.HasOne(d => d.PreviousPaddock).WithMany(p => p.AnimalMovementpreviousPaddocks).HasConstraintName("animal_movements_previous_paddock_id_fkey");
 
-            entity.HasOne(d => d.registered_byNavigation).WithMany(p => p.animal_movements).HasConstraintName("animal_movements_registered_by_fkey");
+            entity.HasOne(d => d.RegisteredBynavigation).WithMany(p => p.AnimalMovements).HasConstraintName("animal_movements_registered_by_fkey");
 
-            entity.HasOne(d => d.third_party).WithMany(p => p.animal_movements).HasConstraintName("animal_movements_third_party_id_fkey");
+            entity.HasOne(d => d.ThirdParty).WithMany(p => p.AnimalMovements).HasConstraintName("animal_movements_third_party_id_fkey");
         });
 
-        modelBuilder.Entity<audit_log_entry>(entity =>
+        modelBuilder.Entity<AuditLogEntry>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("audit_log_entries_pkey");
+            entity.HasKey(e => e.Id).HasName("audit_log_entries_pkey");
 
-            entity.ToTable("audit_log_entries", "auth", tb => tb.HasComment("Auth: Audit trail for user actions."));
+            entity.ToTable("audit_log_entries", "auth", tb => tb.HasComment("Auth: Audit trail for User actions."));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.ip_address).HasDefaultValueSql("''::character varying");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.IpAddress).HasDefaultValueSql("''::character varying");
         });
 
-        modelBuilder.Entity<batch>(entity =>
+        modelBuilder.Entity<Batch>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("batches_pkey");
+            entity.HasKey(e => e.Id).HasName("batches_pkey");
 
-            entity.Property(e => e.active).HasDefaultValue(true);
-            entity.Property(e => e.created_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.batches).HasConstraintName("batches_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Batches).HasConstraintName("batches_farm_id_fkey");
         });
 
-        modelBuilder.Entity<breed>(entity =>
+        modelBuilder.Entity<Breed>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("breeds_pkey");
+            entity.HasKey(e => e.Id).HasName("breeds_pkey");
 
-            entity.Property(e => e.active).HasDefaultValue(true);
+            entity.Property(e => e.Active).HasDefaultValue(true);
         });
 
-        modelBuilder.Entity<bucket>(entity =>
+        modelBuilder.Entity<Bucket>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("buckets_pkey");
+            entity.HasKey(e => e.Id).HasName("buckets_pkey");
 
-            entity.Property(e => e._public).HasDefaultValue(false);
-            entity.Property(e => e.avif_autodetection).HasDefaultValue(false);
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.owner).HasComment("Field is deprecated, use owner_id instead");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Public).HasDefaultValue(false);
+            entity.Property(e => e.AvifAutodetection).HasDefaultValue(false);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.Owner).HasComment("Field is deprecated, use owner_id instead");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
         });
 
-        modelBuilder.Entity<buckets_analytic>(entity =>
+        modelBuilder.Entity<BucketsAnalytic>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("buckets_analytics_pkey");
+            entity.HasKey(e => e.Id).HasName("buckets_analytics_pkey");
 
-            entity.HasIndex(e => e.name, "buckets_analytics_unique_name_idx")
+            entity.HasIndex(e => e.Name, "buckets_analytics_unique_name_idx")
                 .IsUnique()
                 .HasFilter("(deleted_at IS NULL)");
 
-            entity.Property(e => e.id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.format).HasDefaultValueSql("'ICEBERG'::text");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.Format).HasDefaultValueSql("'ICEBERG'::text");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
         });
 
-        modelBuilder.Entity<buckets_vector>(entity =>
+        modelBuilder.Entity<BucketsVector>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("buckets_vectors_pkey");
+            entity.HasKey(e => e.Id).HasName("buckets_vectors_pkey");
 
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
         });
 
-        modelBuilder.Entity<calving>(entity =>
+        modelBuilder.Entity<Calving>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("calvings_pkey");
+            entity.HasKey(e => e.Id).HasName("calvings_pkey");
 
-            entity.Property(e => e.calving_date).HasDefaultValueSql("CURRENT_DATE");
-            entity.Property(e => e.calving_type).HasDefaultValueSql("'NORMAL'::character varying");
-            entity.Property(e => e.number_of_calves).HasDefaultValue(1);
-            entity.Property(e => e.placenta_retention).HasDefaultValue(false);
-            entity.Property(e => e.registered_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CalvingDate).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.CalvingType).HasDefaultValueSql("'NORMAL'::character varying");
+            entity.Property(e => e.NumberOfCalves).HasDefaultValue(1);
+            entity.Property(e => e.PlacentaRetention).HasDefaultValue(false);
+            entity.Property(e => e.RegisteredAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.calvings).HasConstraintName("calvings_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Calvings).HasConstraintName("calvings_farm_id_fkey");
 
-            entity.HasOne(d => d.mother).WithMany(p => p.calvings)
+            entity.HasOne(d => d.Mother).WithMany(p => p.Calvings)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("calvings_mother_id_fkey");
         });
 
-        modelBuilder.Entity<calving_calf>(entity =>
+        modelBuilder.Entity<CalvingCalf>(entity =>
         {
-            entity.HasKey(e => new { e.calving_id, e.calf_id }).HasName("calving_calves_pkey");
+            entity.HasKey(e => new { e.CalvingId, e.CalfId }).HasName("calving_calves_pkey");
 
-            entity.Property(e => e.birth_status).HasDefaultValueSql("'ALIVE'::character varying");
+            entity.Property(e => e.BirthStatus).HasDefaultValueSql("'ALIVE'::character varying");
 
-            entity.HasOne(d => d.calf).WithMany(p => p.calving_calves).HasConstraintName("calving_calves_calf_id_fkey");
+            entity.HasOne(d => d.Calf).WithMany(p => p.CalvingCalves).HasConstraintName("calving_calves_calf_id_fkey");
 
-            entity.HasOne(d => d.calving).WithMany(p => p.calving_calves).HasConstraintName("calving_calves_calving_id_fkey");
+            entity.HasOne(d => d.Calving).WithMany(p => p.CalvingCalves).HasConstraintName("calving_calves_calving_id_fkey");
         });
 
-        modelBuilder.Entity<commercial_transaction>(entity =>
+        modelBuilder.Entity<CommercialTransaction>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("commercial_transactions_pkey");
+            entity.HasKey(e => e.Id).HasName("commercial_transactions_pkey");
 
-            entity.Property(e => e.discounts).HasDefaultValueSql("0");
-            entity.Property(e => e.payment_status).HasDefaultValueSql("'PENDING'::character varying");
-            entity.Property(e => e.registered_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.taxes).HasDefaultValueSql("0");
-            entity.Property(e => e.transaction_date).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.Discounts).HasDefaultValueSql("0");
+            entity.Property(e => e.PaymentStatus).HasDefaultValueSql("'PENDING'::character varying");
+            entity.Property(e => e.RegisteredAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Taxes).HasDefaultValueSql("0");
+            entity.Property(e => e.TransactionDate).HasDefaultValueSql("CURRENT_DATE");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.commercial_transactions).HasConstraintName("commercial_transactions_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.CommercialTransactions).HasConstraintName("commercial_transactions_farm_id_fkey");
 
-            entity.HasOne(d => d.registered_byNavigation).WithMany(p => p.commercial_transactions).HasConstraintName("commercial_transactions_registered_by_fkey");
+            entity.HasOne(d => d.RegisteredBynavigation).WithMany(p => p.CommercialTransactions).HasConstraintName("commercial_transactions_registered_by_fkey");
 
-            entity.HasOne(d => d.third_party).WithMany(p => p.commercial_transactions).HasConstraintName("commercial_transactions_third_party_id_fkey");
+            entity.HasOne(d => d.ThirdParty).WithMany(p => p.CommercialTransactions).HasConstraintName("commercial_transactions_third_party_id_fkey");
         });
 
-        modelBuilder.Entity<diet>(entity =>
+        modelBuilder.Entity<Diet>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("diets_pkey");
+            entity.HasKey(e => e.Id).HasName("diets_pkey");
 
-            entity.Property(e => e.created_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.diets).HasConstraintName("diets_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Diets).HasConstraintName("diets_farm_id_fkey");
         });
 
-        modelBuilder.Entity<diet_detail>(entity =>
+        modelBuilder.Entity<DietDetail>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("diet_details_pkey");
+            entity.HasKey(e => e.Id).HasName("diet_details_pkey");
 
-            entity.Property(e => e.frequency).HasDefaultValueSql("'DAILY'::character varying");
+            entity.Property(e => e.Frequency).HasDefaultValueSql("'DAILY'::character varying");
 
-            entity.HasOne(d => d.diet).WithMany(p => p.diet_details).HasConstraintName("diet_details_diet_id_fkey");
+            entity.HasOne(d => d.Diet).WithMany(p => p.DietDetails).HasConstraintName("diet_details_diet_id_fkey");
 
-            entity.HasOne(d => d.product).WithMany(p => p.diet_details)
+            entity.HasOne(d => d.Product).WithMany(p => p.DietDetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("diet_details_product_id_fkey");
         });
 
-        modelBuilder.Entity<disease>(entity =>
+        modelBuilder.Entity<Disease>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("diseases_pkey");
+            entity.HasKey(e => e.Id).HasName("diseases_pkey");
         });
 
-        modelBuilder.Entity<farm>(entity =>
+        modelBuilder.Entity<Farm>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("farms_pkey");
+            entity.HasKey(e => e.Id).HasName("farms_pkey");
 
-            entity.Property(e => e.active).HasDefaultValue(true);
-            entity.Property(e => e.created_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        modelBuilder.Entity<feeding_event>(entity =>
+        modelBuilder.Entity<FeedingEvent>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("feeding_events_pkey");
+            entity.HasKey(e => e.Id).HasName("feeding_events_pkey");
 
-            entity.Property(e => e.supply_date).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.SupplyDate).HasDefaultValueSql("CURRENT_DATE");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.feeding_events).HasConstraintName("feeding_events_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.FeedingEvents).HasConstraintName("feeding_events_animal_id_fkey");
 
-            entity.HasOne(d => d.batch).WithMany(p => p.feeding_events).HasConstraintName("feeding_events_batch_id_fkey");
+            entity.HasOne(d => d.Batch).WithMany(p => p.FeedingEvents).HasConstraintName("feeding_events_batch_id_fkey");
 
-            entity.HasOne(d => d.diet).WithMany(p => p.feeding_events).HasConstraintName("feeding_events_diet_id_fkey");
+            entity.HasOne(d => d.Diet).WithMany(p => p.FeedingEvents).HasConstraintName("feeding_events_diet_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.feeding_events).HasConstraintName("feeding_events_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.FeedingEvents).HasConstraintName("feeding_events_farm_id_fkey");
 
-            entity.HasOne(d => d.product).WithMany(p => p.feeding_events)
+            entity.HasOne(d => d.Product).WithMany(p => p.FeedingEvents)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("feeding_events_product_id_fkey");
 
-            entity.HasOne(d => d.registered_byNavigation).WithMany(p => p.feeding_events).HasConstraintName("feeding_events_registered_by_fkey");
+            entity.HasOne(d => d.RegisteredBynavigation).WithMany(p => p.FeedingEvents).HasConstraintName("feeding_events_registered_by_fkey");
         });
 
-        modelBuilder.Entity<flow_state>(entity =>
+        modelBuilder.Entity<FlowState>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("flow_state_pkey");
+            entity.HasKey(e => e.Id).HasName("flow_state_pkey");
 
-            entity.ToTable("flow_state", "auth", tb => tb.HasComment("stores metadata for pkce logins"));
+            entity.ToTable("FlowState", "auth", tb => tb.HasComment("stores metadata for pkce logins"));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
-        modelBuilder.Entity<health_event>(entity =>
+        modelBuilder.Entity<HealthEvent>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("health_events_pkey");
+            entity.HasKey(e => e.Id).HasName("health_events_pkey");
 
-            entity.Property(e => e.event_date).HasDefaultValueSql("CURRENT_DATE");
-            entity.Property(e => e.service_cost).HasDefaultValueSql("0");
+            entity.Property(e => e.EventDate).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.ServiceCost).HasDefaultValueSql("0");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.health_events).HasConstraintName("health_events_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.HealthEvents).HasConstraintName("health_events_animal_id_fkey");
 
-            entity.HasOne(d => d.batch).WithMany(p => p.health_events).HasConstraintName("health_events_batch_id_fkey");
+            entity.HasOne(d => d.Batch).WithMany(p => p.HealthEvents).HasConstraintName("health_events_batch_id_fkey");
 
-            entity.HasOne(d => d.disease_diagnosis).WithMany(p => p.health_events).HasConstraintName("health_events_disease_diagnosis_id_fkey");
+            entity.HasOne(d => d.DiseaseDiagnosis).WithMany(p => p.HealthEvents).HasConstraintName("health_events_disease_diagnosis_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.health_events).HasConstraintName("health_events_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.HealthEvents).HasConstraintName("health_events_farm_id_fkey");
 
-            entity.HasOne(d => d.professional).WithMany(p => p.health_events).HasConstraintName("health_events_professional_id_fkey");
+            entity.HasOne(d => d.Professional).WithMany(p => p.HealthEvents).HasConstraintName("health_events_professional_id_fkey");
         });
 
-        modelBuilder.Entity<health_event_detail>(entity =>
+        modelBuilder.Entity<HealthEventDetail>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("health_event_details_pkey");
+            entity.HasKey(e => e.Id).HasName("health_event_details_pkey");
 
-            entity.HasOne(d => d.health_event).WithMany(p => p.health_event_details).HasConstraintName("health_event_details_health_event_id_fkey");
+            entity.HasOne(d => d.HealthEvent).WithMany(p => p.HealthEventDetails).HasConstraintName("health_event_details_health_event_id_fkey");
 
-            entity.HasOne(d => d.product).WithMany(p => p.health_event_details)
+            entity.HasOne(d => d.Product).WithMany(p => p.HealthEventDetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("health_event_details_product_id_fkey");
         });
 
-        modelBuilder.Entity<identity>(entity =>
+        modelBuilder.Entity<Identity>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("identities_pkey");
+            entity.HasKey(e => e.Id).HasName("identities_pkey");
 
-            entity.ToTable("identities", "auth", tb => tb.HasComment("Auth: Stores identities associated to a user."));
+            entity.ToTable("identities", "auth", tb => tb.HasComment("Auth: Stores identities associated to a User."));
 
-            entity.HasIndex(e => e.email, "identities_email_idx").HasOperators(new[] { "text_pattern_ops" });
+            entity.HasIndex(e => e.Email, "identities_email_idx").HasOperators(new[] { "text_pattern_ops" });
 
-            entity.Property(e => e.id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.email)
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.Email)
                 .HasComputedColumnSql("lower((identity_data ->> 'email'::text))", true)
                 .HasComment("Auth: Email is a generated column that references the optional email property in the identity_data");
 
-            entity.HasOne(d => d.user).WithMany(p => p.identities).HasConstraintName("identities_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.Identities).HasConstraintName("identities_user_id_fkey");
         });
 
-        modelBuilder.Entity<instance>(entity =>
+        modelBuilder.Entity<Instance>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("instances_pkey");
+            entity.HasKey(e => e.Id).HasName("instances_pkey");
 
             entity.ToTable("instances", "auth", tb => tb.HasComment("Auth: Manages users across multiple sites."));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
-        modelBuilder.Entity<inventory_movement>(entity =>
+        modelBuilder.Entity<InventoryMovement>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("inventory_movements_pkey");
+            entity.HasKey(e => e.Id).HasName("inventory_movements_pkey");
 
-            entity.Property(e => e.movement_date).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.MovementDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.inventory_movements).HasConstraintName("inventory_movements_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.InventoryMovements).HasConstraintName("inventory_movements_farm_id_fkey");
 
-            entity.HasOne(d => d.product).WithMany(p => p.inventory_movements)
+            entity.HasOne(d => d.Product).WithMany(p => p.InventoryMovements)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("inventory_movements_product_id_fkey");
 
-            entity.HasOne(d => d.registered_byNavigation).WithMany(p => p.inventory_movements).HasConstraintName("inventory_movements_registered_by_fkey");
+            entity.HasOne(d => d.RegisteredBynavigation).WithMany(p => p.InventoryMovements).HasConstraintName("inventory_movements_registered_by_fkey");
 
-            entity.HasOne(d => d.third_party).WithMany(p => p.inventory_movements).HasConstraintName("inventory_movements_third_party_id_fkey");
+            entity.HasOne(d => d.ThirdParty).WithMany(p => p.InventoryMovements).HasConstraintName("inventory_movements_third_party_id_fkey");
         });
 
-        modelBuilder.Entity<mfa_amr_claim>(entity =>
+        modelBuilder.Entity<MfaAmrClaim>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("amr_id_pk");
+            entity.HasKey(e => e.Id).HasName("amr_id_pk");
 
             entity.ToTable("mfa_amr_claims", "auth", tb => tb.HasComment("auth: stores authenticator method reference claims for multi factor authentication"));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.session).WithMany(p => p.mfa_amr_claims).HasConstraintName("mfa_amr_claims_session_id_fkey");
+            entity.HasOne(d => d.Session).WithMany(p => p.MfaAmrClaims).HasConstraintName("mfa_amr_claims_session_id_fkey");
         });
 
-        modelBuilder.Entity<mfa_challenge>(entity =>
+        modelBuilder.Entity<MfaChallenge>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("mfa_challenges_pkey");
+            entity.HasKey(e => e.Id).HasName("mfa_challenges_pkey");
 
             entity.ToTable("mfa_challenges", "auth", tb => tb.HasComment("auth: stores metadata about challenge requests made"));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.factor).WithMany(p => p.mfa_challenges).HasConstraintName("mfa_challenges_auth_factor_id_fkey");
+            entity.HasOne(d => d.Factor).WithMany(p => p.MfaChallenges).HasConstraintName("mfa_challenges_auth_factor_id_fkey");
         });
 
-        modelBuilder.Entity<mfa_factor>(entity =>
+        modelBuilder.Entity<MfaFactor>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("mfa_factors_pkey");
+            entity.HasKey(e => e.Id).HasName("mfa_factors_pkey");
 
             entity.ToTable("mfa_factors", "auth", tb => tb.HasComment("auth: stores metadata about factors"));
 
-            entity.HasIndex(e => new { e.friendly_name, e.user_id }, "mfa_factors_user_friendly_name_unique")
+            entity.HasIndex(e => new { e.FriendlyName, e.UserId }, "mfa_factors_user_friendly_name_unique")
                 .IsUnique()
                 .HasFilter("(TRIM(BOTH FROM friendly_name) <> ''::text)");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.last_webauthn_challenge_data).HasComment("Stores the latest WebAuthn challenge data including attestation/assertion for customer verification");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.LastWebauthnChallengeData).HasComment("Stores the latest WebAuthn challenge data including attestation/assertion for customer verification");
 
-            entity.HasOne(d => d.user).WithMany(p => p.mfa_factors).HasConstraintName("mfa_factors_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.MfaFactors).HasConstraintName("mfa_factors_user_id_fkey");
         });
 
-        modelBuilder.Entity<migration>(entity =>
+        modelBuilder.Entity<Migration>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("migrations_pkey");
+            entity.HasKey(e => e.Id).HasName("migrations_pkey");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.executed_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.ExecutedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        modelBuilder.Entity<milk_production>(entity =>
+        modelBuilder.Entity<MilkProduction>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("milk_production_pkey");
+            entity.HasKey(e => e.Id).HasName("milk_production_pkey");
 
-            entity.Property(e => e.milking_date).HasDefaultValueSql("CURRENT_DATE");
-            entity.Property(e => e.shift).HasDefaultValueSql("'AM'::character varying");
+            entity.Property(e => e.MilkingDate).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.Shift).HasDefaultValueSql("'AM'::character varying");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.milk_productions).HasConstraintName("milk_production_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.MilkProductions).HasConstraintName("milk_production_animal_id_fkey");
 
-            entity.HasOne(d => d.batch).WithMany(p => p.milk_productions).HasConstraintName("milk_production_batch_id_fkey");
+            entity.HasOne(d => d.Batch).WithMany(p => p.MilkProductions).HasConstraintName("milk_production_batch_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.milk_productions).HasConstraintName("milk_production_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.MilkProductions).HasConstraintName("milk_production_farm_id_fkey");
         });
 
-        modelBuilder.Entity<movement_type>(entity =>
+        modelBuilder.Entity<MovementType>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("movement_types_pkey");
+            entity.HasKey(e => e.Id).HasName("movement_types_pkey");
 
-            entity.Property(e => e.affects_inventory).HasDefaultValue(false);
-            entity.Property(e => e.inventory_sign).HasDefaultValue(0);
+            entity.Property(e => e.AffectsInventory).HasDefaultValue(false);
+            entity.Property(e => e.InventorySign).HasDefaultValue(0);
         });
 
-        modelBuilder.Entity<oauth_authorization>(entity =>
+        modelBuilder.Entity<OauthAuthorization>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("oauth_authorizations_pkey");
+            entity.HasKey(e => e.Id).HasName("oauth_authorizations_pkey");
 
-            entity.HasIndex(e => e.expires_at, "oauth_auth_pending_exp_idx").HasFilter("(status = 'pending'::auth.oauth_authorization_status)");
+            entity.HasIndex(e => e.ExpiresAt, "oauth_auth_pending_exp_idx").HasFilter("(status = 'pending'::auth.oauth_authorization_status)");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.expires_at).HasDefaultValueSql("(now() + '00:03:00'::interval)");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.ExpiresAt).HasDefaultValueSql("(now() + '00:03:00'::interval)");
 
-            entity.HasOne(d => d.client).WithMany(p => p.oauth_authorizations).HasConstraintName("oauth_authorizations_client_id_fkey");
+            entity.HasOne(d => d.Client).WithMany(p => p.OauthAuthorizations).HasConstraintName("oauth_authorizations_client_id_fkey");
 
-            entity.HasOne(d => d.user).WithMany(p => p.oauth_authorizations)
+            entity.HasOne(d => d.User).WithMany(p => p.OauthAuthorizations)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("oauth_authorizations_user_id_fkey");
         });
 
-        modelBuilder.Entity<oauth_client>(entity =>
+        modelBuilder.Entity<OauthClient>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("oauth_clients_pkey");
+            entity.HasKey(e => e.Id).HasName("oauth_clients_pkey");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
         });
 
-        modelBuilder.Entity<oauth_consent>(entity =>
+        modelBuilder.Entity<OauthConsent>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("oauth_consents_pkey");
+            entity.HasKey(e => e.Id).HasName("oauth_consents_pkey");
 
-            entity.HasIndex(e => e.client_id, "oauth_consents_active_client_idx").HasFilter("(revoked_at IS NULL)");
+            entity.HasIndex(e => e.ClientId, "oauth_consents_active_client_idx").HasFilter("(revoked_at IS NULL)");
 
-            entity.HasIndex(e => new { e.user_id, e.client_id }, "oauth_consents_active_user_client_idx").HasFilter("(revoked_at IS NULL)");
+            entity.HasIndex(e => new { e.UserId, e.ClientId }, "oauth_consents_active_user_client_idx").HasFilter("(revoked_at IS NULL)");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.granted_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.GrantedAt).HasDefaultValueSql("now()");
 
-            entity.HasOne(d => d.client).WithMany(p => p.oauth_consents).HasConstraintName("oauth_consents_client_id_fkey");
+            entity.HasOne(d => d.Client).WithMany(p => p.OauthConsents).HasConstraintName("oauth_consents_client_id_fkey");
 
-            entity.HasOne(d => d.user).WithMany(p => p.oauth_consents).HasConstraintName("oauth_consents_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.OauthConsents).HasConstraintName("oauth_consents_user_id_fkey");
         });
 
-        modelBuilder.Entity<objects>(entity =>
+        modelBuilder.Entity<Objects>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("objects_pkey");
+            entity.HasKey(e => e.Id).HasName("objects_pkey");
 
-            entity.HasIndex(e => new { e.name, e.bucket_id, e.level }, "idx_name_bucket_level_unique")
+            entity.HasIndex(e => new { e.Name, e.BucketId, e.Level }, "idx_name_bucket_level_unique")
                 .IsUnique()
                 .UseCollation(new[] { "C", null, null });
 
-            entity.HasIndex(e => new { e.bucket_id, e.name }, "idx_objects_bucket_id_name").UseCollation(new[] { null, "C" });
+            entity.HasIndex(e => new { e.BucketId, e.Name }, "idx_objects_bucket_id_name").UseCollation(new[] { null, "C" });
 
-            entity.HasIndex(e => e.name, "name_prefix_search").HasOperators(new[] { "text_pattern_ops" });
+            entity.HasIndex(e => e.Name, "name_prefix_search").HasOperators(new[] { "text_pattern_ops" });
 
-            entity.HasIndex(e => new { e.bucket_id, e.level, e.name }, "objects_bucket_id_level_idx")
+            entity.HasIndex(e => new { e.BucketId, e.Level, e.Name }, "objects_bucket_id_level_idx")
                 .IsUnique()
                 .UseCollation(new[] { null, null, "C" });
 
-            entity.Property(e => e.id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.last_accessed_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.owner).HasComment("Field is deprecated, use owner_id instead");
-            entity.Property(e => e.path_tokens).HasComputedColumnSql("string_to_array(name, '/'::text)", true);
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.LastAccessedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.Owner).HasComment("Field is deprecated, use owner_id instead");
+            entity.Property(e => e.PathTokens).HasComputedColumnSql("string_to_array(name, '/'::text)", true);
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
 
-            entity.HasOne(d => d.bucket).WithMany(p => p.objects).HasConstraintName("objects_bucketId_fkey");
+            entity.HasOne(d => d.Bucket).WithMany(p => p.Objects).HasConstraintName("objects_bucketId_fkey");
         });
 
-        modelBuilder.Entity<one_time_token>(entity =>
+        modelBuilder.Entity<OneTimeToken>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("one_time_tokens_pkey");
+            entity.HasKey(e => e.Id).HasName("one_time_tokens_pkey");
 
-            entity.HasIndex(e => e.relates_to, "one_time_tokens_relates_to_hash_idx").HasMethod("hash");
+            entity.HasIndex(e => e.RelatesTo, "one_time_tokens_relates_to_hash_idx").HasMethod("hash");
 
-            entity.HasIndex(e => e.token_hash, "one_time_tokens_token_hash_hash_idx").HasMethod("hash");
+            entity.HasIndex(e => e.TokenHash, "one_time_tokens_token_hash_hash_idx").HasMethod("hash");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
 
-            entity.HasOne(d => d.user).WithMany(p => p.one_time_tokens).HasConstraintName("one_time_tokens_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.OneTimeTokens).HasConstraintName("one_time_tokens_user_id_fkey");
         });
 
-        modelBuilder.Entity<paddock>(entity =>
+        modelBuilder.Entity<Paddock>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("paddocks_pkey");
+            entity.HasKey(e => e.Id).HasName("paddocks_pkey");
 
-            entity.Property(e => e.current_status).HasDefaultValueSql("'AVAILABLE'::character varying");
+            entity.Property(e => e.CurrentStatus).HasDefaultValueSql("'AVAILABLE'::character varying");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.paddocks).HasConstraintName("paddocks_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Paddocks).HasConstraintName("paddocks_farm_id_fkey");
         });
 
-        modelBuilder.Entity<permission>(entity =>
+        modelBuilder.Entity<Permission>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("permissions_pkey");
+            entity.HasKey(e => e.Id).HasName("permissions_pkey");
         });
 
-        modelBuilder.Entity<prefix>(entity =>
+        modelBuilder.Entity<Prefix>(entity =>
         {
-            entity.HasKey(e => new { e.bucket_id, e.level, e.name }).HasName("prefixes_pkey");
+            entity.HasKey(e => new { e.BucketId, e.Level, e.Name }).HasName("prefixes_pkey");
 
-            entity.Property(e => e.level).HasComputedColumnSql("storage.get_level(name)", true);
-            entity.Property(e => e.name).UseCollation("C");
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Level).HasComputedColumnSql("storage.get_level(name)", true);
+            entity.Property(e => e.Name).UseCollation("C");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
 
-            entity.HasOne(d => d.bucket).WithMany(p => p.prefixes)
+            entity.HasOne(d => d.Bucket).WithMany(p => p.Prefixes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("prefixes_bucketId_fkey");
         });
 
-        modelBuilder.Entity<product>(entity =>
+        modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("products_pkey");
+            entity.HasKey(e => e.Id).HasName("products_pkey");
 
-            entity.Property(e => e.active).HasDefaultValue(true);
-            entity.Property(e => e.average_cost).HasDefaultValueSql("0");
-            entity.Property(e => e.current_quantity).HasDefaultValueSql("0");
-            entity.Property(e => e.minimum_stock).HasDefaultValueSql("0");
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            entity.Property(e => e.AverageCost).HasDefaultValueSql("0");
+            entity.Property(e => e.CurrentQuantity).HasDefaultValueSql("0");
+            entity.Property(e => e.MinimumStock).HasDefaultValueSql("0");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.products).HasConstraintName("products_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Products).HasConstraintName("products_farm_id_fkey");
         });
 
-        modelBuilder.Entity<refresh_token>(entity =>
+        modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("refresh_tokens_pkey");
+            entity.HasKey(e => e.Id).HasName("refresh_tokens_pkey");
 
             entity.ToTable("refresh_tokens", "auth", tb => tb.HasComment("Auth: Store of tokens used to refresh JWT tokens once they expire."));
 
-            entity.HasOne(d => d.session).WithMany(p => p.refresh_tokens)
+            entity.HasOne(d => d.Session).WithMany(p => p.RefreshTokens)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("refresh_tokens_session_id_fkey");
         });
 
-        modelBuilder.Entity<reproduction_event>(entity =>
+        modelBuilder.Entity<ReproductionEvent>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("reproduction_events_pkey");
+            entity.HasKey(e => e.Id).HasName("reproduction_events_pkey");
 
-            entity.Property(e => e.event_cost).HasDefaultValueSql("0");
-            entity.Property(e => e.event_date).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.EventCost).HasDefaultValueSql("0");
+            entity.Property(e => e.EventDate).HasDefaultValueSql("CURRENT_DATE");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.reproduction_eventanimals).HasConstraintName("reproduction_events_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.ReproductionEventanimals).HasConstraintName("reproduction_events_animal_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.reproduction_events).HasConstraintName("reproduction_events_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.ReproductionEvents).HasConstraintName("reproduction_events_farm_id_fkey");
 
-            entity.HasOne(d => d.registered_byNavigation).WithMany(p => p.reproduction_events).HasConstraintName("reproduction_events_registered_by_fkey");
+            entity.HasOne(d => d.RegisteredBynavigation).WithMany(p => p.ReproductionEvents).HasConstraintName("reproduction_events_registered_by_fkey");
 
-            entity.HasOne(d => d.reproducer).WithMany(p => p.reproduction_eventreproducers).HasConstraintName("reproduction_events_reproducer_id_fkey");
+            entity.HasOne(d => d.Reproducer).WithMany(p => p.ReproductionEventreproducers).HasConstraintName("reproduction_events_reproducer_id_fkey");
         });
 
-        modelBuilder.Entity<role>(entity =>
+        modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("roles_pkey");
+            entity.HasKey(e => e.Id).HasName("roles_pkey");
 
-            entity.HasMany(d => d.permissions).WithMany(p => p.roles)
+            entity.HasMany(d => d.Permissions).WithMany(p => p.Roles)
                 .UsingEntity<Dictionary<string, object>>(
                     "role_permission",
-                    r => r.HasOne<permission>().WithMany()
+                    r => r.HasOne<Permission>().WithMany()
                         .HasForeignKey("permission_id")
                         .HasConstraintName("role_permissions_permission_id_fkey"),
-                    l => l.HasOne<role>().WithMany()
+                    l => l.HasOne<Role>().WithMany()
                         .HasForeignKey("role_id")
                         .HasConstraintName("role_permissions_role_id_fkey"),
                     j =>
@@ -702,277 +702,277 @@ public partial class MyDbContext : DbContext
                     });
         });
 
-        modelBuilder.Entity<s3_multipart_upload>(entity =>
+        modelBuilder.Entity<S3MultipartUpload>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("s3_multipart_uploads_pkey");
+            entity.HasKey(e => e.Id).HasName("s3_multipart_uploads_pkey");
 
-            entity.HasIndex(e => new { e.bucket_id, e.key, e.created_at }, "idx_multipart_uploads_list").UseCollation(new[] { null, "C", null });
+            entity.HasIndex(e => new { e.BucketId, e.Key, e.CreatedAt }, "idx_multipart_uploads_list").UseCollation(new[] { null, "C", null });
 
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.in_progress_size).HasDefaultValue(0L);
-            entity.Property(e => e.key).UseCollation("C");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.InProgressSize).HasDefaultValue(0L);
+            entity.Property(e => e.Key).UseCollation("C");
 
-            entity.HasOne(d => d.bucket).WithMany(p => p.s3_multipart_uploads)
+            entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploads)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("s3_multipart_uploads_bucket_id_fkey");
         });
 
-        modelBuilder.Entity<s3_multipart_uploads_part>(entity =>
+        modelBuilder.Entity<S3MultipartUploadsPart>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("s3_multipart_uploads_parts_pkey");
+            entity.HasKey(e => e.Id).HasName("s3_multipart_uploads_parts_pkey");
 
-            entity.Property(e => e.id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.key).UseCollation("C");
-            entity.Property(e => e.size).HasDefaultValue(0L);
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.Key).UseCollation("C");
+            entity.Property(e => e.Size).HasDefaultValue(0L);
 
-            entity.HasOne(d => d.bucket).WithMany(p => p.s3_multipart_uploads_parts)
+            entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploadsParts)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("s3_multipart_uploads_parts_bucket_id_fkey");
 
-            entity.HasOne(d => d.upload).WithMany(p => p.s3_multipart_uploads_parts).HasConstraintName("s3_multipart_uploads_parts_upload_id_fkey");
+            entity.HasOne(d => d.Upload).WithMany(p => p.S3MultipartUploadsParts).HasConstraintName("s3_multipart_uploads_parts_upload_id_fkey");
         });
 
-        modelBuilder.Entity<saml_provider>(entity =>
+        modelBuilder.Entity<SamlProvider>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("saml_providers_pkey");
+            entity.HasKey(e => e.Id).HasName("saml_providers_pkey");
 
             entity.ToTable("saml_providers", "auth", tb => tb.HasComment("Auth: Manages SAML Identity Provider connections."));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.sso_provider).WithMany(p => p.saml_providers).HasConstraintName("saml_providers_sso_provider_id_fkey");
+            entity.HasOne(d => d.SsoProvider).WithMany(p => p.SamlProviders).HasConstraintName("saml_providers_sso_provider_id_fkey");
         });
 
-        modelBuilder.Entity<saml_relay_state>(entity =>
+        modelBuilder.Entity<SamlRelayState>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("saml_relay_states_pkey");
+            entity.HasKey(e => e.Id).HasName("saml_relay_states_pkey");
 
             entity.ToTable("saml_relay_states", "auth", tb => tb.HasComment("Auth: Contains SAML Relay State information for each Service Provider initiated login."));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.flow_state).WithMany(p => p.saml_relay_states)
+            entity.HasOne(d => d.FlowState).WithMany(p => p.SamlRelayStates)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("saml_relay_states_flow_state_id_fkey");
 
-            entity.HasOne(d => d.sso_provider).WithMany(p => p.saml_relay_states).HasConstraintName("saml_relay_states_sso_provider_id_fkey");
+            entity.HasOne(d => d.SsoProvider).WithMany(p => p.SamlRelayStates).HasConstraintName("saml_relay_states_sso_provider_id_fkey");
         });
 
-        modelBuilder.Entity<schema_migration>(entity =>
+        modelBuilder.Entity<SchemaMigration>(entity =>
         {
-            entity.HasKey(e => e.version).HasName("schema_migrations_pkey");
+            entity.HasKey(e => e.Version).HasName("schema_migrations_pkey");
 
             entity.ToTable("schema_migrations", "auth", tb => tb.HasComment("Auth: Manages updates to the auth system."));
         });
 
-        modelBuilder.Entity<schema_migration1>(entity =>
+        modelBuilder.Entity<SchemaMigration1>(entity =>
         {
-            entity.HasKey(e => e.version).HasName("schema_migrations_pkey");
+            entity.HasKey(e => e.Version).HasName("schema_migrations_pkey");
 
-            entity.Property(e => e.version).ValueGeneratedNever();
+            entity.Property(e => e.Version).ValueGeneratedNever();
         });
 
-        modelBuilder.Entity<session>(entity =>
+        modelBuilder.Entity<Session>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("sessions_pkey");
+            entity.HasKey(e => e.Id).HasName("sessions_pkey");
 
-            entity.ToTable("sessions", "auth", tb => tb.HasComment("Auth: Stores session data associated to a user."));
+            entity.ToTable("sessions", "auth", tb => tb.HasComment("Auth: Stores Session data associated to a User."));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.not_after).HasComment("Auth: Not after is a nullable column that contains a timestamp after which the session should be regarded as expired.");
-            entity.Property(e => e.refresh_token_counter).HasComment("Holds the ID (counter) of the last issued refresh token.");
-            entity.Property(e => e.refresh_token_hmac_key).HasComment("Holds a HMAC-SHA256 key used to sign refresh tokens for this session.");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.NotAfter).HasComment("Auth: Not after is a nullable column that contains a timestamp after which the Session should be regarded as expired.");
+            entity.Property(e => e.RefreshTokenCounter).HasComment("Holds the ID (counter) of the last issued refresh token.");
+            entity.Property(e => e.RefreshTokenHmacKey).HasComment("Holds a HMAC-SHA256 key used to sign refresh tokens for this Session.");
 
-            entity.HasOne(d => d.oauth_client).WithMany(p => p.sessions)
+            entity.HasOne(d => d.OauthClient).WithMany(p => p.Sessions)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("sessions_oauth_client_id_fkey");
 
-            entity.HasOne(d => d.user).WithMany(p => p.sessions).HasConstraintName("sessions_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.Sessions).HasConstraintName("sessions_user_id_fkey");
         });
 
-        modelBuilder.Entity<sso_domain>(entity =>
+        modelBuilder.Entity<SsoDomain>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("sso_domains_pkey");
+            entity.HasKey(e => e.Id).HasName("sso_domains_pkey");
 
             entity.ToTable("sso_domains", "auth", tb => tb.HasComment("Auth: Manages SSO email address domain mapping to an SSO Identity Provider."));
 
-            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.sso_provider).WithMany(p => p.sso_domains).HasConstraintName("sso_domains_sso_provider_id_fkey");
+            entity.HasOne(d => d.SsoProvider).WithMany(p => p.SsoDomains).HasConstraintName("sso_domains_sso_provider_id_fkey");
         });
 
-        modelBuilder.Entity<sso_provider>(entity =>
+        modelBuilder.Entity<SsoProvider>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("sso_providers_pkey");
+            entity.HasKey(e => e.Id).HasName("sso_providers_pkey");
 
-            entity.ToTable("sso_providers", "auth", tb => tb.HasComment("Auth: Manages SSO identity provider information; see saml_providers for SAML."));
+            entity.ToTable("sso_providers", "auth", tb => tb.HasComment("Auth: Manages SSO Identity provider information; see saml_providers for SAML."));
 
-            entity.HasIndex(e => e.resource_id, "sso_providers_resource_id_pattern_idx").HasOperators(new[] { "text_pattern_ops" });
+            entity.HasIndex(e => e.ResourceId, "sso_providers_resource_id_pattern_idx").HasOperators(new[] { "text_pattern_ops" });
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.resource_id).HasComment("Auth: Uniquely identifies a SSO provider according to a user-chosen resource ID (case insensitive), useful in infrastructure as code.");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.ResourceId).HasComment("Auth: Uniquely identifies a SSO provider according to a User-chosen resource ID (case insensitive), useful in infrastructure as code.");
         });
 
-        modelBuilder.Entity<subscription>(entity =>
+        modelBuilder.Entity<Subscription>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("pk_subscription");
+            entity.HasKey(e => e.Id).HasName("pk_subscription");
 
-            entity.Property(e => e.id).UseIdentityAlwaysColumn();
-            entity.Property(e => e.created_at).HasDefaultValueSql("timezone('utc'::text, now())");
+            entity.Property(e => e.Id).UseIdentityAlwaysColumn();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc'::text, now())");
         });
 
-        modelBuilder.Entity<third_party>(entity =>
+        modelBuilder.Entity<ThirdParty>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("third_parties_pkey");
+            entity.HasKey(e => e.Id).HasName("third_parties_pkey");
 
-            entity.Property(e => e.is_customer).HasDefaultValue(false);
-            entity.Property(e => e.is_employee).HasDefaultValue(false);
-            entity.Property(e => e.is_supplier).HasDefaultValue(false);
-            entity.Property(e => e.is_veterinarian).HasDefaultValue(false);
+            entity.Property(e => e.IsCustomer).HasDefaultValue(false);
+            entity.Property(e => e.IsEmployee).HasDefaultValue(false);
+            entity.Property(e => e.IsSupplier).HasDefaultValue(false);
+            entity.Property(e => e.IsVeterinarian).HasDefaultValue(false);
 
-            entity.HasOne(d => d.farm).WithMany(p => p.third_parties).HasConstraintName("third_parties_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.ThirdParties).HasConstraintName("third_parties_farm_id_fkey");
         });
 
-        modelBuilder.Entity<transaction_animal_detail>(entity =>
+        modelBuilder.Entity<TransactionAnimalDetail>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("transaction_animal_details_pkey");
+            entity.HasKey(e => e.Id).HasName("transaction_animal_details_pkey");
 
-            entity.Property(e => e.commission_cost).HasDefaultValueSql("0");
-            entity.Property(e => e.transport_cost).HasDefaultValueSql("0");
+            entity.Property(e => e.CommissionCost).HasDefaultValueSql("0");
+            entity.Property(e => e.TransportCost).HasDefaultValueSql("0");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.transaction_animal_details)
+            entity.HasOne(d => d.Animal).WithMany(p => p.TransactionAnimalDetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("transaction_animal_details_animal_id_fkey");
 
-            entity.HasOne(d => d.animal_movement).WithMany(p => p.transaction_animal_details).HasConstraintName("transaction_animal_details_animal_movement_id_fkey");
+            entity.HasOne(d => d.AnimalMovement).WithMany(p => p.TransactionAnimalDetails).HasConstraintName("transaction_animal_details_animal_movement_id_fkey");
 
-            entity.HasOne(d => d.transaction).WithMany(p => p.transaction_animal_details).HasConstraintName("transaction_animal_details_transaction_id_fkey");
+            entity.HasOne(d => d.Transaction).WithMany(p => p.TransactionAnimalDetails).HasConstraintName("transaction_animal_details_transaction_id_fkey");
         });
 
-        modelBuilder.Entity<transaction_product_detail>(entity =>
+        modelBuilder.Entity<TransactionProductDetail>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("transaction_product_details_pkey");
+            entity.HasKey(e => e.Id).HasName("transaction_product_details_pkey");
 
-            entity.HasOne(d => d.inventory_movement).WithMany(p => p.transaction_product_details).HasConstraintName("transaction_product_details_inventory_movement_id_fkey");
+            entity.HasOne(d => d.InventoryMovement).WithMany(p => p.TransactionProductDetails).HasConstraintName("transaction_product_details_inventory_movement_id_fkey");
 
-            entity.HasOne(d => d.product).WithMany(p => p.transaction_product_details)
+            entity.HasOne(d => d.Product).WithMany(p => p.TransactionProductDetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("transaction_product_details_product_id_fkey");
 
-            entity.HasOne(d => d.transaction).WithMany(p => p.transaction_product_details).HasConstraintName("transaction_product_details_transaction_id_fkey");
+            entity.HasOne(d => d.Transaction).WithMany(p => p.TransactionProductDetails).HasConstraintName("transaction_product_details_transaction_id_fkey");
         });
 
-        modelBuilder.Entity<user>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("users_pkey");
+            entity.HasKey(e => e.Id).HasName("users_pkey");
 
-            entity.Property(e => e.active).HasDefaultValue(true);
-            entity.Property(e => e.created_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        modelBuilder.Entity<user1>(entity =>
+        modelBuilder.Entity<User1>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("users_pkey");
+            entity.HasKey(e => e.Id).HasName("users_pkey");
 
-            entity.ToTable("users", "auth", tb => tb.HasComment("Auth: Stores user login data within a secure schema."));
+            entity.ToTable("users", "auth", tb => tb.HasComment("Auth: Stores User login data within a secure schema."));
 
-            entity.HasIndex(e => e.confirmation_token, "confirmation_token_idx")
+            entity.HasIndex(e => e.ConfirmationToken, "confirmation_token_idx")
                 .IsUnique()
                 .HasFilter("((confirmation_token)::text !~ '^[0-9 ]*$'::text)");
 
-            entity.HasIndex(e => e.email_change_token_current, "email_change_token_current_idx")
+            entity.HasIndex(e => e.EmailChangeTokenCurrent, "email_change_token_current_idx")
                 .IsUnique()
                 .HasFilter("((email_change_token_current)::text !~ '^[0-9 ]*$'::text)");
 
-            entity.HasIndex(e => e.email_change_token_new, "email_change_token_new_idx")
+            entity.HasIndex(e => e.EmailChangeTokenNew, "email_change_token_new_idx")
                 .IsUnique()
                 .HasFilter("((email_change_token_new)::text !~ '^[0-9 ]*$'::text)");
 
-            entity.HasIndex(e => e.reauthentication_token, "reauthentication_token_idx")
+            entity.HasIndex(e => e.ReauthenticationToken, "reauthentication_token_idx")
                 .IsUnique()
                 .HasFilter("((reauthentication_token)::text !~ '^[0-9 ]*$'::text)");
 
-            entity.HasIndex(e => e.recovery_token, "recovery_token_idx")
+            entity.HasIndex(e => e.RecoveryToken, "recovery_token_idx")
                 .IsUnique()
                 .HasFilter("((recovery_token)::text !~ '^[0-9 ]*$'::text)");
 
-            entity.HasIndex(e => e.email, "users_email_partial_key")
+            entity.HasIndex(e => e.Email, "users_email_partial_key")
                 .IsUnique()
                 .HasFilter("(is_sso_user = false)");
 
-            entity.Property(e => e.id).ValueGeneratedNever();
-            entity.Property(e => e.confirmed_at).HasComputedColumnSql("LEAST(email_confirmed_at, phone_confirmed_at)", true);
-            entity.Property(e => e.email_change_confirm_status).HasDefaultValue((short)0);
-            entity.Property(e => e.email_change_token_current).HasDefaultValueSql("''::character varying");
-            entity.Property(e => e.is_anonymous).HasDefaultValue(false);
-            entity.Property(e => e.is_sso_user)
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.ConfirmedAt).HasComputedColumnSql("LEAST(email_confirmed_at, phone_confirmed_at)", true);
+            entity.Property(e => e.EmailChangeConfirmStatus).HasDefaultValue((short)0);
+            entity.Property(e => e.EmailChangeTokenCurrent).HasDefaultValueSql("''::character varying");
+            entity.Property(e => e.IsAnonymous).HasDefaultValue(false);
+            entity.Property(e => e.IsSsoUser)
                 .HasDefaultValue(false)
                 .HasComment("Auth: Set this column to true when the account comes from SSO. These accounts can have duplicate emails.");
-            entity.Property(e => e.phone).HasDefaultValueSql("NULL::character varying");
-            entity.Property(e => e.phone_change).HasDefaultValueSql("''::character varying");
-            entity.Property(e => e.phone_change_token).HasDefaultValueSql("''::character varying");
-            entity.Property(e => e.reauthentication_token).HasDefaultValueSql("''::character varying");
+            entity.Property(e => e.Phone).HasDefaultValueSql("NULL::character varying");
+            entity.Property(e => e.PhoneChange).HasDefaultValueSql("''::character varying");
+            entity.Property(e => e.PhoneChangeToken).HasDefaultValueSql("''::character varying");
+            entity.Property(e => e.ReauthenticationToken).HasDefaultValueSql("''::character varying");
         });
 
-        modelBuilder.Entity<user_farm_role>(entity =>
+        modelBuilder.Entity<UserFarmRole>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("user_farm_role_pkey");
+            entity.HasKey(e => e.Id).HasName("user_farm_role_pkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.user_farm_roles).HasConstraintName("user_farm_role_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.UserFarmRoles).HasConstraintName("user_farm_role_farm_id_fkey");
 
-            entity.HasOne(d => d.role).WithMany(p => p.user_farm_roles)
+            entity.HasOne(d => d.Role).WithMany(p => p.UserFarmRoles)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("user_farm_role_role_id_fkey");
 
-            entity.HasOne(d => d.user).WithMany(p => p.user_farm_roles).HasConstraintName("user_farm_role_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.UserFarmRoles).HasConstraintName("user_farm_role_user_id_fkey");
         });
 
-        modelBuilder.Entity<v_low_stock_alert>(entity =>
+        modelBuilder.Entity<VLowStockAlert>(entity =>
         {
             entity.ToView("v_low_stock_alerts");
         });
 
-        modelBuilder.Entity<vector_index>(entity =>
+        modelBuilder.Entity<VectorIndex>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("vector_indexes_pkey");
+            entity.HasKey(e => e.Id).HasName("vector_indexes_pkey");
 
-            entity.HasIndex(e => new { e.name, e.bucket_id }, "vector_indexes_name_bucket_id_idx")
+            entity.HasIndex(e => new { e.Name, e.BucketId }, "vector_indexes_name_bucket_id_idx")
                 .IsUnique()
                 .UseCollation(new[] { "C", null });
 
-            entity.Property(e => e.id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.created_at).HasDefaultValueSql("now()");
-            entity.Property(e => e.name).UseCollation("C");
-            entity.Property(e => e.updated_at).HasDefaultValueSql("now()");
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.Name).UseCollation("C");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
 
-            entity.HasOne(d => d.bucket).WithMany(p => p.vector_indices)
+            entity.HasOne(d => d.Bucket).WithMany(p => p.VectorIndices)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("vector_indexes_bucket_id_fkey");
         });
 
-        modelBuilder.Entity<weighing>(entity =>
+        modelBuilder.Entity<Weighing>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("weighings_pkey");
+            entity.HasKey(e => e.Id).HasName("weighings_pkey");
 
-            entity.Property(e => e.weighing_date).HasDefaultValueSql("CURRENT_DATE");
+            entity.Property(e => e.WeighingDate).HasDefaultValueSql("CURRENT_DATE");
 
-            entity.HasOne(d => d.animal).WithMany(p => p.weighings).HasConstraintName("weighings_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.Weighings).HasConstraintName("weighings_animal_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.weighings).HasConstraintName("weighings_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.Weighings).HasConstraintName("weighings_farm_id_fkey");
 
-            entity.HasOne(d => d.registered_byNavigation).WithMany(p => p.weighings).HasConstraintName("weighings_registered_by_fkey");
+            entity.HasOne(d => d.RegisteredBynavigation).WithMany(p => p.Weighings).HasConstraintName("weighings_registered_by_fkey");
         });
 
-        modelBuilder.Entity<withdrawal_period>(entity =>
+        modelBuilder.Entity<WithdrawalPeriod>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("withdrawal_periods_pkey");
+            entity.HasKey(e => e.Id).HasName("withdrawal_periods_pkey");
 
-            entity.Property(e => e.active).HasDefaultValue(true);
+            entity.Property(e => e.Active).HasDefaultValue(true);
 
-            entity.HasOne(d => d.animal).WithMany(p => p.withdrawal_periods).HasConstraintName("withdrawal_periods_animal_id_fkey");
+            entity.HasOne(d => d.Animal).WithMany(p => p.WithdrawalPeriods).HasConstraintName("withdrawal_periods_animal_id_fkey");
 
-            entity.HasOne(d => d.farm).WithMany(p => p.withdrawal_periods).HasConstraintName("withdrawal_periods_farm_id_fkey");
+            entity.HasOne(d => d.Farm).WithMany(p => p.WithdrawalPeriods).HasConstraintName("withdrawal_periods_farm_id_fkey");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 

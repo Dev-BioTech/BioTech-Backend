@@ -4,21 +4,25 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("permissions")]
 [Index("code", Name = "permissions_code_key", IsUnique = true)]
-public partial class permission
+public partial class Permission
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(50)]
-    public string code { get; set; } = null!;
+    [Column("code")]
+    public string Code { get; set; } = null!;
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
     [ForeignKey("permission_id")]
     [InverseProperty("permissions")]
-    public virtual ICollection<role> roles { get; set; } = new List<role>();
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }

@@ -2,30 +2,35 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Index("name", Name = "animal_categories_name_key", IsUnique = true)]
-public partial class animal_category
+public partial class AnimalCategory
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(50)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [MaxLength(1)]
-    public char? sex { get; set; }
+    [Column("sex")]
+    public char? Sex { get; set; }
 
-    public int? min_age_months { get; set; }
+    [Column("min_age_months")]
+    public int? MinAgeMonths { get; set; }
 
-    public int? max_age_months { get; set; }
+    [Column("max_age_months")]
+    public int? MaxAgeMonths { get; set; }
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
     [InverseProperty("category")]
-    public virtual ICollection<animal> animals { get; set; } = new List<animal>();
+    public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
 }

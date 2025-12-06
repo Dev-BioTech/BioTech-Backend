@@ -2,81 +2,87 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
-public partial class farm
+[Table("farms")]
+public partial class Farm
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(100)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [StringLength(100)]
-    public string? owner { get; set; }
+    [Column("owner")]
+    public string? Owner { get; set; }
 
     [StringLength(200)]
-    public string? address { get; set; }
+    [Column("address")]
+    public string? Address { get; set; }
 
     [StringLength(100)]
-    public string? geographic_location { get; set; }
+    [Column("geographic_location")]
+    public string? GeographicLocation { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? created_at { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public bool? active { get; set; }
+    [Column("active")]
+    public bool? Active { get; set; }
 
-    [InverseProperty("farm")]
-    public virtual ICollection<animal_movement> animal_movements { get; set; } = new List<animal_movement>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<AnimalMovement> AnimalMovements { get; set; } = new List<AnimalMovement>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<animal> animals { get; set; } = new List<animal>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<batch> batches { get; set; } = new List<batch>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Batch> Batches { get; set; } = new List<Batch>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<calving> calvings { get; set; } = new List<calving>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Calving> Calvings { get; set; } = new List<Calving>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<commercial_transaction> commercial_transactions { get; set; } = new List<commercial_transaction>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<CommercialTransaction> CommercialTransactions { get; set; } = new List<CommercialTransaction>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<diet> diets { get; set; } = new List<diet>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Diet> Diets { get; set; } = new List<Diet>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<feeding_event> feeding_events { get; set; } = new List<feeding_event>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<FeedingEvent> FeedingEvents { get; set; } = new List<FeedingEvent>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<health_event> health_events { get; set; } = new List<health_event>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<HealthEvent> HealthEvents { get; set; } = new List<HealthEvent>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<inventory_movement> inventory_movements { get; set; } = new List<inventory_movement>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<milk_production> milk_productions { get; set; } = new List<milk_production>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<MilkProduction> MilkProductions { get; set; } = new List<MilkProduction>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<paddock> paddocks { get; set; } = new List<paddock>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Paddock> Paddocks { get; set; } = new List<Paddock>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<product> products { get; set; } = new List<product>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<reproduction_event> reproduction_events { get; set; } = new List<reproduction_event>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<ReproductionEvent> ReproductionEvents { get; set; } = new List<ReproductionEvent>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<third_party> third_parties { get; set; } = new List<third_party>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<ThirdParty> ThirdParties { get; set; } = new List<ThirdParty>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<user_farm_role> user_farm_roles { get; set; } = new List<user_farm_role>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<UserFarmRole> UserFarmRoles { get; set; } = new List<UserFarmRole>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<weighing> weighings { get; set; } = new List<weighing>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<Weighing> Weighings { get; set; } = new List<Weighing>();
 
-    [InverseProperty("farm")]
-    public virtual ICollection<withdrawal_period> withdrawal_periods { get; set; } = new List<withdrawal_period>();
+    [InverseProperty("Farm")]
+    public virtual ICollection<WithdrawalPeriod> WithdrawalPeriods { get; set; } = new List<WithdrawalPeriod>();
 }

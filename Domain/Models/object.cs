@@ -1,47 +1,57 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Models;
 
-[Table("objects", Schema = "storage")]
+[Table("Objects", Schema = "storage")]
 [Index("bucket_id", "name", Name = "bucketid_objname", IsUnique = true)]
-public partial class objects
+public partial class Objects
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public string? bucket_id { get; set; }
+    [Column("bucket_id")]
+    public string? BucketId { get; set; }
 
-    public string? name { get; set; }
+    [Column("name")]
+    public string? Name { get; set; }
 
     /// <summary>
     /// Field is deprecated, use owner_id instead
     /// </summary>
-    public Guid? owner { get; set; }
+    [Column("owner")]
+    public Guid? Owner { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
-    public DateTime? last_accessed_at { get; set; }
-
-    [Column(TypeName = "jsonb")]
-    public string? metadata { get; set; }
-
-    public List<string>? path_tokens { get; set; }
-
-    public string? version { get; set; }
-
-    public string? owner_id { get; set; }
+    [Column("last_accessed_at")]
+    public DateTime? LastAccessedAt { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? user_metadata { get; set; }
+    public string? Metadata { get; set; }
 
-    public int? level { get; set; }
+    [Column("path_tokens")]
+    public List<string>? PathTokens { get; set; }
+
+    [Column("version")]
+    public string? Version { get; set; }
+
+    [Column("owner_id")]
+    public string? OwnerId { get; set; }
+
+    [Column(TypeName = "jsonb")]
+    public string? UserMetadata { get; set; }
+
+    [Column("level")]
+    public int? Level { get; set; }
 
     [ForeignKey("bucket_id")]
-    [InverseProperty("objects")]
-    public virtual bucket? bucket { get; set; }
+    [InverseProperty("Objects")]
+    public virtual Bucket? Bucket { get; set; }
 }

@@ -2,81 +2,94 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Index("animal_id", "movement_date", Name = "idx_animal_movements_date")]
-public partial class animal_movement
+public partial class AnimalMovement
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public long animal_id { get; set; }
+    [Column("animal_id")]
+    public long AnimalId { get; set; }
 
-    public int movement_type_id { get; set; }
+    [Column("movement_type_id")]
+    public int MovementTypeId { get; set; }
 
-    public DateOnly movement_date { get; set; }
+    [Column("movement_date")]
+    public DateOnly MovementDate { get; set; }
 
-    public int? previous_batch_id { get; set; }
+    [Column("previous_batch_id")]
+    public int? PreviousBatchId { get; set; }
 
-    public int? new_batch_id { get; set; }
+    [Column("new_batch_id")]
+    public int? NewBatchId { get; set; }
 
-    public int? previous_paddock_id { get; set; }
+    [Column("previous_paddock_id")]
+    public int? PreviousPaddockId { get; set; }
 
-    public int? new_paddock_id { get; set; }
+    [Column("new_paddock_id")]
+    public int? NewPaddockId { get; set; }
 
-    public long? third_party_id { get; set; }
+    [Column("third_party_id")]
+    public long? ThirdPartyId { get; set; }
 
     [Precision(12, 2)]
-    public decimal? transaction_value { get; set; }
+    [Column("transaction_value")]
+    public decimal? TransactionValue { get; set; }
 
     [Precision(6, 2)]
-    public decimal? weight_at_movement { get; set; }
+    [Column("weight_at_movement")]
+    public decimal? WeightAtMovement { get; set; }
 
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
-    public int? registered_by { get; set; }
+    [Column("registered_by")]
+    public int? RegisteredBy { get; set; }
 
     [ForeignKey("animal_id")]
     [InverseProperty("animal_movements")]
-    public virtual animal animal { get; set; } = null!;
+    public virtual Animal Animal { get; set; } = null!;
 
     [ForeignKey("farm_id")]
     [InverseProperty("animal_movements")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("movement_type_id")]
     [InverseProperty("animal_movements")]
-    public virtual movement_type movement_type { get; set; } = null!;
+    public virtual MovementType MovementType { get; set; } = null!;
 
     [ForeignKey("new_batch_id")]
     [InverseProperty("animal_movementnew_batches")]
-    public virtual batch? new_batch { get; set; }
+    public virtual Batch? NewBatch { get; set; }
 
     [ForeignKey("new_paddock_id")]
     [InverseProperty("animal_movementnew_paddocks")]
-    public virtual paddock? new_paddock { get; set; }
+    public virtual Paddock? NewPaddock { get; set; }
 
     [ForeignKey("previous_batch_id")]
     [InverseProperty("animal_movementprevious_batches")]
-    public virtual batch? previous_batch { get; set; }
+    public virtual Batch? PreviousBatch { get; set; }
 
     [ForeignKey("previous_paddock_id")]
     [InverseProperty("animal_movementprevious_paddocks")]
-    public virtual paddock? previous_paddock { get; set; }
+    public virtual Paddock? PreviousPaddock { get; set; }
 
     [ForeignKey("registered_by")]
     [InverseProperty("animal_movements")]
-    public virtual user? registered_byNavigation { get; set; }
+    public virtual User? RegisteredBynavigation { get; set; }
 
     [ForeignKey("third_party_id")]
     [InverseProperty("animal_movements")]
-    public virtual third_party? third_party { get; set; }
+    public virtual ThirdParty? ThirdParty { get; set; }
 
     [InverseProperty("animal_movement")]
-    public virtual ICollection<transaction_animal_detail> transaction_animal_details { get; set; } = new List<transaction_animal_detail>();
+    public virtual ICollection<TransactionAnimalDetail> TransactionAnimalDetails { get; set; } = new List<TransactionAnimalDetail>();
 }

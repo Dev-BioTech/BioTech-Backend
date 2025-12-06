@@ -4,46 +4,52 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("users")]
 [Index("email", Name = "users_email_key", IsUnique = true)]
-public partial class user
+public partial class User
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(100)]
-    public string email { get; set; } = null!;
+    [Column("email")]
+    public string Email { get; set; } = null!;
 
     [StringLength(255)]
-    public string password_hash { get; set; } = null!;
+    [Column("password_hash")]
+    public string PasswordHash { get; set; } = null!;
 
     [StringLength(150)]
-    public string full_name { get; set; } = null!;
+    [Column("full_name")]
+    public string FullName { get; set; } = null!;
 
-    public bool? active { get; set; }
+    [Column("active")]
+    public bool? Active { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? created_at { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     [InverseProperty("registered_byNavigation")]
-    public virtual ICollection<animal_movement> animal_movements { get; set; } = new List<animal_movement>();
+    public virtual ICollection<AnimalMovement> AnimalMovements { get; set; } = new List<AnimalMovement>();
 
     [InverseProperty("registered_byNavigation")]
-    public virtual ICollection<commercial_transaction> commercial_transactions { get; set; } = new List<commercial_transaction>();
+    public virtual ICollection<CommercialTransaction> CommercialTransactions { get; set; } = new List<CommercialTransaction>();
 
     [InverseProperty("registered_byNavigation")]
-    public virtual ICollection<feeding_event> feeding_events { get; set; } = new List<feeding_event>();
+    public virtual ICollection<FeedingEvent> FeedingEvents { get; set; } = new List<FeedingEvent>();
 
     [InverseProperty("registered_byNavigation")]
-    public virtual ICollection<inventory_movement> inventory_movements { get; set; } = new List<inventory_movement>();
+    public virtual ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
 
     [InverseProperty("registered_byNavigation")]
-    public virtual ICollection<reproduction_event> reproduction_events { get; set; } = new List<reproduction_event>();
+    public virtual ICollection<ReproductionEvent> ReproductionEvents { get; set; } = new List<ReproductionEvent>();
 
-    [InverseProperty("user")]
-    public virtual ICollection<user_farm_role> user_farm_roles { get; set; } = new List<user_farm_role>();
+    [InverseProperty("User")]
+    public virtual ICollection<UserFarmRole> UserFarmRoles { get; set; } = new List<UserFarmRole>();
 
     [InverseProperty("registered_byNavigation")]
-    public virtual ICollection<weighing> weighings { get; set; } = new List<weighing>();
+    public virtual ICollection<Weighing> Weighings { get; set; } = new List<Weighing>();
 }

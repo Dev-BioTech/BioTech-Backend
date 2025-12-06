@@ -4,27 +4,31 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("one_time_tokens", Schema = "auth")]
-public partial class one_time_token
+public partial class OneTimeToken
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid user_id { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
 
-    public string token_hash { get; set; } = null!;
+    [Column("token_hash")]
+    public string TokenHash { get; set; } = null!;
 
-    public string relates_to { get; set; } = null!;
+    [Column("relates_to")]
+    public string RelatesTo { get; set; } = null!;
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime created_at { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime updated_at { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     [ForeignKey("user_id")]
     [InverseProperty("one_time_tokens")]
-    public virtual user1 user { get; set; } = null!;
+    public virtual User1 User { get; set; } = null!;
 }

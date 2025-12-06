@@ -2,49 +2,59 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
-public partial class transaction_animal_detail
+[Table("transaction_animal_details")]
+public partial class TransactionAnimalDetail
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public long transaction_id { get; set; }
+    [Column("transaction_id")]
+    public long TransactionId { get; set; }
 
-    public long animal_id { get; set; }
+    [Column("animal_id")]
+    public long AnimalId { get; set; }
 
     [Precision(10, 2)]
-    public decimal? price_per_kilo { get; set; }
+    [Column("price_per_kilo")]
+    public decimal? PricePerKilo { get; set; }
 
     [Precision(6, 2)]
-    public decimal? weight_at_negotiation { get; set; }
+    [Column("weight_at_negotiation")]
+    public decimal? WeightAtNegotiation { get; set; }
 
     [Precision(12, 2)]
-    public decimal base_head_price { get; set; }
+    [Column("base_head_price")]
+    public decimal BaseHeadPrice { get; set; }
 
     [Precision(12, 2)]
-    public decimal? commission_cost { get; set; }
+    [Column("commission_cost")]
+    public decimal? CommissionCost { get; set; }
 
     [Precision(12, 2)]
-    public decimal? transport_cost { get; set; }
+    [Column("transport_cost")]
+    public decimal? TransportCost { get; set; }
 
     [Precision(12, 2)]
-    public decimal? final_line_value { get; set; }
+    [Column("final_line_value")]
+    public decimal? FinalLineValue { get; set; }
 
-    public long? animal_movement_id { get; set; }
+    [Column("animal_movement_id")]
+    public long? AnimalMovementId { get; set; }
 
     [ForeignKey("animal_id")]
     [InverseProperty("transaction_animal_details")]
-    public virtual animal animal { get; set; } = null!;
+    public virtual Animal Animal { get; set; } = null!;
 
     [ForeignKey("animal_movement_id")]
     [InverseProperty("transaction_animal_details")]
-    public virtual animal_movement? animal_movement { get; set; }
+    public virtual AnimalMovement? AnimalMovement { get; set; }
 
     [ForeignKey("transaction_id")]
     [InverseProperty("transaction_animal_details")]
-    public virtual commercial_transaction transaction { get; set; } = null!;
+    public virtual CommercialTransaction Transaction { get; set; } = null!;
 }

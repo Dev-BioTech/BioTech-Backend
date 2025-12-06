@@ -4,64 +4,78 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("commercial_transactions")]
 [Index("farm_id", "transaction_date", Name = "idx_transactions_date")]
 [Index("third_party_id", Name = "idx_transactions_third_party")]
-public partial class commercial_transaction
+public partial class CommercialTransaction
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public long? third_party_id { get; set; }
+    [Column("third_party_id")]
+    public long? ThirdPartyId { get; set; }
 
     [StringLength(10)]
-    public string transaction_type { get; set; } = null!;
+    [Column("transaction_type")]
+    public string TransactionType { get; set; } = null!;
 
-    public DateOnly transaction_date { get; set; }
+    [Column("transaction_date")]
+    public DateOnly TransactionDate { get; set; }
 
     [StringLength(50)]
-    public string? invoice_number { get; set; }
+    [Column("invoice_number")]
+    public string? InvoiceNumber { get; set; }
 
     [Precision(12, 2)]
-    public decimal subtotal { get; set; }
+    [Column("subtotal")]
+    public decimal Subtotal { get; set; }
 
     [Precision(12, 2)]
-    public decimal? taxes { get; set; }
+    [Column("taxes")]
+    public decimal? Taxes { get; set; }
 
     [Precision(12, 2)]
-    public decimal? discounts { get; set; }
+    [Column("discounts")]
+    public decimal? Discounts { get; set; }
 
     [Precision(12, 2)]
-    public decimal? net_total { get; set; }
+    [Column("net_total")]
+    public decimal? NetTotal { get; set; }
 
     [StringLength(20)]
-    public string? payment_status { get; set; }
+    [Column("payment_status")]
+    public string? PaymentStatus { get; set; }
 
-    public string? observations { get; set; }
+    [Column("observations")]
+    public string? Observations { get; set; }
 
-    public int? registered_by { get; set; }
+    [Column("registered_by")]
+    public int? RegisteredBy { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? registered_at { get; set; }
+    public DateTime? RegisteredAt { get; set; }
 
     [ForeignKey("farm_id")]
     [InverseProperty("commercial_transactions")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [ForeignKey("registered_by")]
     [InverseProperty("commercial_transactions")]
-    public virtual user? registered_byNavigation { get; set; }
+    public virtual User? RegisteredBynavigation { get; set; }
 
     [ForeignKey("third_party_id")]
     [InverseProperty("commercial_transactions")]
-    public virtual third_party? third_party { get; set; }
+    public virtual ThirdParty? ThirdParty { get; set; }
 
     [InverseProperty("transaction")]
-    public virtual ICollection<transaction_animal_detail> transaction_animal_details { get; set; } = new List<transaction_animal_detail>();
+    public virtual ICollection<TransactionAnimalDetail> TransactionAnimalDetails { get; set; } = new List<TransactionAnimalDetail>();
 
     [InverseProperty("transaction")]
-    public virtual ICollection<transaction_product_detail> transaction_product_details { get; set; } = new List<transaction_product_detail>();
+    public virtual ICollection<TransactionProductDetail> TransactionProductDetails { get; set; } = new List<TransactionProductDetail>();
 }

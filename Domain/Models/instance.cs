@@ -4,22 +4,27 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// Auth: Manages users across multiple sites.
 /// </summary>
 [Table("instances", Schema = "auth")]
-public partial class instance
+public partial class Instance
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid? uuid { get; set; }
+    [Column("uuid")]
+    public Guid? Uuid { get; set; }
 
-    public string? raw_base_config { get; set; }
+    [Column("raw_base_config")]
+    public string? RawBaseConfig { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 }

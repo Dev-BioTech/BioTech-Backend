@@ -4,119 +4,152 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
-/// Auth: Stores user login data within a secure schema.
+/// Auth: Stores User login data within a secure schema.
 /// </summary>
 [Table("users", Schema = "auth")]
 [Index("instance_id", Name = "users_instance_id_idx")]
 [Index("is_anonymous", Name = "users_is_anonymous_idx")]
 [Index("phone", Name = "users_phone_key", IsUnique = true)]
-public partial class user1
+public partial class User1
 {
-    public Guid? instance_id { get; set; }
+    [Column("instance_id")]
+    public Guid? InstanceId { get; set; }
 
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
     [StringLength(255)]
-    public string? aud { get; set; }
+    [Column("aud")]
+    public string? Aud { get; set; }
 
     [StringLength(255)]
-    public string? role { get; set; }
+    [Column("Role")]
+    public string? Role { get; set; }
 
     [StringLength(255)]
-    public string? email { get; set; }
+    [Column("email")]
+    public string? Email { get; set; }
 
     [StringLength(255)]
-    public string? encrypted_password { get; set; }
+    [Column("encrypted_password")]
+    public string? EncryptedPassword { get; set; }
 
-    public DateTime? email_confirmed_at { get; set; }
+    [Column("email_confirmed_at")]
+    public DateTime? EmailConfirmedAt { get; set; }
 
-    public DateTime? invited_at { get; set; }
-
-    [StringLength(255)]
-    public string? confirmation_token { get; set; }
-
-    public DateTime? confirmation_sent_at { get; set; }
+    [Column("invited_at")]
+    public DateTime? InvitedAt { get; set; }
 
     [StringLength(255)]
-    public string? recovery_token { get; set; }
+    [Column("confirmation_token")]
+    public string? ConfirmationToken { get; set; }
 
-    public DateTime? recovery_sent_at { get; set; }
+    [Column("confirmation_sent_at")]
+    public DateTime? ConfirmationSentAt { get; set; }
 
     [StringLength(255)]
-    public string? email_change_token_new { get; set; }
+    [Column("recovery_token")]
+    public string? RecoveryToken { get; set; }
+
+    [Column("recovery_sent_at")]
+    public DateTime? RecoverySentAt { get; set; }
 
     [StringLength(255)]
-    public string? email_change { get; set; }
+    [Column("email_change_token_new")]
+    public string? EmailChangeTokenNew { get; set; }
 
-    public DateTime? email_change_sent_at { get; set; }
+    [StringLength(255)]
+    [Column("email_change")]
+    public string? EmailChange { get; set; }
 
-    public DateTime? last_sign_in_at { get; set; }
+    [Column("email_change_sent_at")]
+    public DateTime? EmailChangeSentAt { get; set; }
+
+    [Column("last_sign_in_at")]
+    public DateTime? LastSignInAt { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? raw_app_meta_data { get; set; }
+    public string? RawAppMetaData { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? raw_user_meta_data { get; set; }
+    public string? RawUserMetaData { get; set; }
 
-    public bool? is_super_admin { get; set; }
+    [Column("is_super_admin")]
+    public bool? IsSuperAdmin { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
-    public string? phone { get; set; }
+    [Column("phone")]
+    public string? Phone { get; set; }
 
-    public DateTime? phone_confirmed_at { get; set; }
+    [Column("phone_confirmed_at")]
+    public DateTime? PhoneConfirmedAt { get; set; }
 
-    public string? phone_change { get; set; }
-
-    [StringLength(255)]
-    public string? phone_change_token { get; set; }
-
-    public DateTime? phone_change_sent_at { get; set; }
-
-    public DateTime? confirmed_at { get; set; }
-
-    [StringLength(255)]
-    public string? email_change_token_current { get; set; }
-
-    public short? email_change_confirm_status { get; set; }
-
-    public DateTime? banned_until { get; set; }
+    [Column("phone_change")]
+    public string? PhoneChange { get; set; }
 
     [StringLength(255)]
-    public string? reauthentication_token { get; set; }
+    [Column("phone_change_token")]
+    public string? PhoneChangeToken { get; set; }
 
-    public DateTime? reauthentication_sent_at { get; set; }
+    [Column("phone_change_sent_at")]
+    public DateTime? PhoneChangeSentAt { get; set; }
+
+    [Column("confirmed_at")]
+    public DateTime? ConfirmedAt { get; set; }
+
+    [StringLength(255)]
+    [Column("email_change_token_current")]
+    public string? EmailChangeTokenCurrent { get; set; }
+
+    [Column("email_change_confirm_status")]
+    public short? EmailChangeConfirmStatus { get; set; }
+
+    [Column("banned_until")]
+    public DateTime? BannedUntil { get; set; }
+
+    [StringLength(255)]
+    [Column("reauthentication_token")]
+    public string? ReauthenticationToken { get; set; }
+
+    [Column("reauthentication_sent_at")]
+    public DateTime? ReauthenticationSentAt { get; set; }
 
     /// <summary>
     /// Auth: Set this column to true when the account comes from SSO. These accounts can have duplicate emails.
     /// </summary>
-    public bool is_sso_user { get; set; }
+    [Column("is_sso_user")]
+    public bool IsSsoUser { get; set; }
 
-    public DateTime? deleted_at { get; set; }
+    [Column("deleted_at")]
+    public DateTime? DeletedAt { get; set; }
 
-    public bool is_anonymous { get; set; }
+    [Column("is_anonymous")]
+    public bool IsAnonymous { get; set; }
 
-    [InverseProperty("user")]
-    public virtual ICollection<identity> identities { get; set; } = new List<identity>();
+    [InverseProperty("User")]
+    public virtual ICollection<Identity> Identities { get; set; } = new List<Identity>();
 
-    [InverseProperty("user")]
-    public virtual ICollection<mfa_factor> mfa_factors { get; set; } = new List<mfa_factor>();
+    [InverseProperty("User")]
+    public virtual ICollection<MfaFactor> MfaFactors { get; set; } = new List<MfaFactor>();
 
-    [InverseProperty("user")]
-    public virtual ICollection<oauth_authorization> oauth_authorizations { get; set; } = new List<oauth_authorization>();
+    [InverseProperty("User")]
+    public virtual ICollection<OauthAuthorization> OauthAuthorizations { get; set; } = new List<OauthAuthorization>();
 
-    [InverseProperty("user")]
-    public virtual ICollection<oauth_consent> oauth_consents { get; set; } = new List<oauth_consent>();
+    [InverseProperty("User")]
+    public virtual ICollection<OauthConsent> OauthConsents { get; set; } = new List<OauthConsent>();
 
-    [InverseProperty("user")]
-    public virtual ICollection<one_time_token> one_time_tokens { get; set; } = new List<one_time_token>();
+    [InverseProperty("User")]
+    public virtual ICollection<OneTimeToken> OneTimeTokens { get; set; } = new List<OneTimeToken>();
 
-    [InverseProperty("user")]
-    public virtual ICollection<session> sessions { get; set; } = new List<session>();
+    [InverseProperty("User")]
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }

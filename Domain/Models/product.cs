@@ -4,53 +4,63 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("products")]
 [Index("id", "current_quantity", "minimum_stock", Name = "idx_products_minimum_stock")]
 [Index("farm_id", "name", Name = "uk_product_name_farm", IsUnique = true)]
-public partial class product
+public partial class Product
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
     [StringLength(100)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [StringLength(50)]
-    public string? category { get; set; }
+    [Column("category")]
+    public string? Category { get; set; }
 
     [StringLength(20)]
-    public string unit_of_measure { get; set; } = null!;
+    [Column("unit_of_measure")]
+    public string UnitOfMeasure { get; set; } = null!;
 
     [Precision(12, 2)]
-    public decimal? current_quantity { get; set; }
+    [Column("current_quantity")]
+    public decimal? CurrentQuantity { get; set; }
 
     [Precision(12, 2)]
-    public decimal? average_cost { get; set; }
+    [Column("average_cost")]
+    public decimal? AverageCost { get; set; }
 
     [Precision(12, 2)]
-    public decimal? minimum_stock { get; set; }
+    [Column("minimum_stock")]
+    public decimal? MinimumStock { get; set; }
 
-    public bool? active { get; set; }
+    [Column("active")]
+    public bool? Active { get; set; }
 
-    [InverseProperty("product")]
-    public virtual ICollection<diet_detail> diet_details { get; set; } = new List<diet_detail>();
+    [InverseProperty("Product")]
+    public virtual ICollection<DietDetail> DietDetails { get; set; } = new List<DietDetail>();
 
     [ForeignKey("farm_id")]
     [InverseProperty("products")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
-    [InverseProperty("product")]
-    public virtual ICollection<feeding_event> feeding_events { get; set; } = new List<feeding_event>();
+    [InverseProperty("Product")]
+    public virtual ICollection<FeedingEvent> FeedingEvents { get; set; } = new List<FeedingEvent>();
 
-    [InverseProperty("product")]
-    public virtual ICollection<health_event_detail> health_event_details { get; set; } = new List<health_event_detail>();
+    [InverseProperty("Product")]
+    public virtual ICollection<HealthEventDetail> HealthEventDetails { get; set; } = new List<HealthEventDetail>();
 
-    [InverseProperty("product")]
-    public virtual ICollection<inventory_movement> inventory_movements { get; set; } = new List<inventory_movement>();
+    [InverseProperty("Product")]
+    public virtual ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
 
-    [InverseProperty("product")]
-    public virtual ICollection<transaction_product_detail> transaction_product_details { get; set; } = new List<transaction_product_detail>();
+    [InverseProperty("Product")]
+    public virtual ICollection<TransactionProductDetail> TransactionProductDetails { get; set; } = new List<TransactionProductDetail>();
 }

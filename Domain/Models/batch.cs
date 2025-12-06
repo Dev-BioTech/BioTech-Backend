@@ -2,50 +2,55 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("batches")]
 [Index("farm_id", Name = "idx_batches_farm")]
 [Index("farm_id", "name", Name = "uk_batch_name_farm", IsUnique = true)]
-public partial class batch
+public partial class Batch
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
     [StringLength(50)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
-    public DateTime? created_at { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public bool? active { get; set; }
+    [Column("active")]
+    public bool? Active { get; set; }
 
     [InverseProperty("new_batch")]
-    public virtual ICollection<animal_movement> animal_movementnew_batches { get; set; } = new List<animal_movement>();
+    public virtual ICollection<AnimalMovement> AnimalMovementnewBatches { get; set; } = new List<AnimalMovement>();
 
     [InverseProperty("previous_batch")]
-    public virtual ICollection<animal_movement> animal_movementprevious_batches { get; set; } = new List<animal_movement>();
+    public virtual ICollection<AnimalMovement> AnimalMovementpreviousBatches { get; set; } = new List<AnimalMovement>();
 
-    [InverseProperty("batch")]
-    public virtual ICollection<animal> animals { get; set; } = new List<animal>();
+    [InverseProperty("Batch")]
+    public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
 
     [ForeignKey("farm_id")]
     [InverseProperty("batches")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
-    [InverseProperty("batch")]
-    public virtual ICollection<feeding_event> feeding_events { get; set; } = new List<feeding_event>();
+    [InverseProperty("Batch")]
+    public virtual ICollection<FeedingEvent> FeedingEvents { get; set; } = new List<FeedingEvent>();
 
-    [InverseProperty("batch")]
-    public virtual ICollection<health_event> health_events { get; set; } = new List<health_event>();
+    [InverseProperty("Batch")]
+    public virtual ICollection<HealthEvent> HealthEvents { get; set; } = new List<HealthEvent>();
 
-    [InverseProperty("batch")]
-    public virtual ICollection<milk_production> milk_productions { get; set; } = new List<milk_production>();
+    [InverseProperty("Batch")]
+    public virtual ICollection<MilkProduction> MilkProductions { get; set; } = new List<MilkProduction>();
 }

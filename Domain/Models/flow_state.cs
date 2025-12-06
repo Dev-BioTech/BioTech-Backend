@@ -4,40 +4,51 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// stores metadata for pkce logins
 /// </summary>
-[Table("flow_state", Schema = "auth")]
+[Table("FlowState", Schema = "auth")]
 [Index("created_at", Name = "flow_state_created_at_idx", AllDescending = true)]
 [Index("auth_code", Name = "idx_auth_code")]
 [Index("user_id", "authentication_method", Name = "idx_user_id_auth_method")]
-public partial class flow_state
+public partial class FlowState
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid? user_id { get; set; }
+    [Column("user_id")]
+    public Guid? UserId { get; set; }
 
-    public string auth_code { get; set; } = null!;
+    [Column("auth_code")]
+    public string AuthCode { get; set; } = null!;
 
-    public string code_challenge { get; set; } = null!;
+    [Column("code_challenge")]
+    public string CodeChallenge { get; set; } = null!;
 
-    public string provider_type { get; set; } = null!;
+    [Column("provider_type")]
+    public string ProviderType { get; set; } = null!;
 
-    public string? provider_access_token { get; set; }
+    [Column("provider_access_token")]
+    public string? ProviderAccessToken { get; set; }
 
-    public string? provider_refresh_token { get; set; }
+    [Column("provider_refresh_token")]
+    public string? ProviderRefreshToken { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
-    public string authentication_method { get; set; } = null!;
+    [Column("authentication_method")]
+    public string AuthenticationMethod { get; set; } = null!;
 
-    public DateTime? auth_code_issued_at { get; set; }
+    [Column("auth_code_issued_at")]
+    public DateTime? AuthCodeIssuedAt { get; set; }
 
-    [InverseProperty("flow_state")]
-    public virtual ICollection<saml_relay_state> saml_relay_states { get; set; } = new List<saml_relay_state>();
+    [InverseProperty("FlowState")]
+    public virtual ICollection<SamlRelayState> SamlRelayStates { get; set; } = new List<SamlRelayState>();
 }

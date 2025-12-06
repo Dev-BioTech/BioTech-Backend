@@ -4,40 +4,48 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
-/// Auth: Stores identities associated to a user.
+/// Auth: Stores identities associated to a User.
 /// </summary>
 [Table("identities", Schema = "auth")]
 [Index("provider_id", "provider", Name = "identities_provider_id_provider_unique", IsUnique = true)]
 [Index("user_id", Name = "identities_user_id_idx")]
-public partial class identity
+public partial class Identity
 {
-    public string provider_id { get; set; } = null!;
+    [Column("provider_id")]
+    public string ProviderId { get; set; } = null!;
 
-    public Guid user_id { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string identity_data { get; set; } = null!;
+    public string IdentityData { get; set; } = null!;
 
-    public string provider { get; set; } = null!;
+    [Column("provider")]
+    public string Provider { get; set; } = null!;
 
-    public DateTime? last_sign_in_at { get; set; }
+    [Column("last_sign_in_at")]
+    public DateTime? LastSignInAt { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
     /// Auth: Email is a generated column that references the optional email property in the identity_data
     /// </summary>
-    public string? email { get; set; }
+    [Column("email")]
+    public string? Email { get; set; }
 
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
     [ForeignKey("user_id")]
     [InverseProperty("identities")]
-    public virtual user1 user { get; set; } = null!;
+    public virtual User1 User { get; set; } = null!;
 }

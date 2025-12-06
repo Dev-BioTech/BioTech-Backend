@@ -5,32 +5,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// auth: stores metadata about challenge requests made
 /// </summary>
 [Table("mfa_challenges", Schema = "auth")]
 [Index("created_at", Name = "mfa_challenge_created_at_idx", AllDescending = true)]
-public partial class mfa_challenge
+public partial class MfaChallenge
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid factor_id { get; set; }
+    [Column("factor_id")]
+    public Guid FactorId { get; set; }
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime? verified_at { get; set; }
+    [Column("verified_at")]
+    public DateTime? VerifiedAt { get; set; }
 
-    public IPAddress ip_address { get; set; } = null!;
+    [Column("ip_address")]
+    public IPAddress IpAddress { get; set; } = null!;
 
-    public string? otp_code { get; set; }
+    [Column("otp_code")]
+    public string? OtpCode { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? web_authn_session_data { get; set; }
+    public string? WebAuthnSessionData { get; set; }
 
     [ForeignKey("factor_id")]
     [InverseProperty("mfa_challenges")]
-    public virtual mfa_factor factor { get; set; } = null!;
+    public virtual MfaFactor Factor { get; set; } = null!;
 }

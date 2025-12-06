@@ -4,35 +4,43 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("s3_multipart_uploads", Schema = "storage")]
-public partial class s3_multipart_upload
+public partial class S3MultipartUpload
 {
     [Key]
-    public string id { get; set; } = null!;
+    [Column("id")]
+    public string Id { get; set; } = null!;
 
-    public long in_progress_size { get; set; }
+    [Column("in_progress_size")]
+    public long InProgressSize { get; set; }
 
-    public string upload_signature { get; set; } = null!;
+    [Column("upload_signature")]
+    public string UploadSignature { get; set; } = null!;
 
-    public string bucket_id { get; set; } = null!;
+    [Column("bucket_id")]
+    public string BucketId { get; set; } = null!;
 
-    public string key { get; set; } = null!;
+    [Column("key")]
+    public string Key { get; set; } = null!;
 
-    public string version { get; set; } = null!;
+    [Column("version")]
+    public string Version { get; set; } = null!;
 
-    public string? owner_id { get; set; }
+    [Column("owner_id")]
+    public string? OwnerId { get; set; }
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? user_metadata { get; set; }
+    public string? UserMetadata { get; set; }
 
     [ForeignKey("bucket_id")]
     [InverseProperty("s3_multipart_uploads")]
-    public virtual bucket bucket { get; set; } = null!;
+    public virtual Bucket Bucket { get; set; } = null!;
 
     [InverseProperty("upload")]
-    public virtual ICollection<s3_multipart_uploads_part> s3_multipart_uploads_parts { get; set; } = new List<s3_multipart_uploads_part>();
+    public virtual ICollection<S3MultipartUploadsPart> S3MultipartUploadsParts { get; set; } = new List<S3MultipartUploadsPart>();
 }

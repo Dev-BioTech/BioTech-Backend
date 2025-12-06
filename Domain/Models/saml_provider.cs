@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// Auth: Manages SAML Identity Provider connections.
@@ -12,29 +12,37 @@ namespace Infrastructure;
 [Table("saml_providers", Schema = "auth")]
 [Index("entity_id", Name = "saml_providers_entity_id_key", IsUnique = true)]
 [Index("sso_provider_id", Name = "saml_providers_sso_provider_id_idx")]
-public partial class saml_provider
+public partial class SamlProvider
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid sso_provider_id { get; set; }
+    [Column("sso_provider_id")]
+    public Guid SsoProviderId { get; set; }
 
-    public string entity_id { get; set; } = null!;
+    [Column("entity_id")]
+    public string EntityId { get; set; } = null!;
 
-    public string metadata_xml { get; set; } = null!;
+    [Column("metadata_xml")]
+    public string MetadataXml { get; set; } = null!;
 
-    public string? metadata_url { get; set; }
+    [Column("metadata_url")]
+    public string? MetadataUrl { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public string? attribute_mapping { get; set; }
+    public string? AttributeMapping { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
-    public string? name_id_format { get; set; }
+    [Column("name_id_format")]
+    public string? NameIdFormat { get; set; }
 
     [ForeignKey("sso_provider_id")]
     [InverseProperty("saml_providers")]
-    public virtual sso_provider sso_provider { get; set; } = null!;
+    public virtual SsoProvider SsoProvider { get; set; } = null!;
 }

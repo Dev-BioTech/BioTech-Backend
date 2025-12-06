@@ -2,49 +2,57 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("buckets", Schema = "storage")]
 [Index("name", Name = "bname", IsUnique = true)]
-public partial class bucket
+public partial class Bucket
 {
     [Key]
-    public string id { get; set; } = null!;
+    [Column("id")]
+    public string Id { get; set; } = null!;
 
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Field is deprecated, use owner_id instead
     /// </summary>
-    public Guid? owner { get; set; }
+    [Column("owner")]
+    public Guid? Owner { get; set; }
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
     [Column("public")]
-    public bool? _public { get; set; }
+    public bool? Public { get; set; }
 
-    public bool? avif_autodetection { get; set; }
+    [Column("avif_autodetection")]
+    public bool? AvifAutodetection { get; set; }
 
-    public long? file_size_limit { get; set; }
+    [Column("file_size_limit")]
+    public long? FileSizeLimit { get; set; }
 
-    public List<string>? allowed_mime_types { get; set; }
+    [Column("allowed_mime_types")]
+    public List<string>? AllowedMimeTypes { get; set; }
 
-    public string? owner_id { get; set; }
+    [Column("owner_id")]
+    public string? OwnerId { get; set; }
 
-    [InverseProperty("bucket")]
-    public virtual IEnumerable<objects>? objects { get; set; } = new List<objects>();
+    [InverseProperty("Bucket")]
+    public virtual IEnumerable<Objects>? Objects { get; set; } = new List<Objects>();
 
-    [InverseProperty("bucket")]
-    public virtual ICollection<prefix> prefixes { get; set; } = new List<prefix>();
+    [InverseProperty("Bucket")]
+    public virtual ICollection<Prefix> Prefixes { get; set; } = new List<Prefix>();
 
-    [InverseProperty("bucket")]
-    public virtual ICollection<s3_multipart_upload> s3_multipart_uploads { get; set; } = new List<s3_multipart_upload>();
+    [InverseProperty("Bucket")]
+    public virtual ICollection<S3MultipartUpload> S3MultipartUploads { get; set; } = new List<S3MultipartUpload>();
 
-    [InverseProperty("bucket")]
-    public virtual ICollection<s3_multipart_uploads_part> s3_multipart_uploads_parts { get; set; } = new List<s3_multipart_uploads_part>();
+    [InverseProperty("Bucket")]
+    public virtual ICollection<S3MultipartUploadsPart> S3MultipartUploadsParts { get; set; } = new List<S3MultipartUploadsPart>();
 }

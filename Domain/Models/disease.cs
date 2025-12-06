@@ -4,23 +4,28 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("diseases")]
 [Index("name", Name = "diseases_name_key", IsUnique = true)]
-public partial class disease
+public partial class Disease
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(100)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
     [StringLength(50)]
-    public string? type { get; set; }
+    [Column("type")]
+    public string? Type { get; set; }
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
     [InverseProperty("disease_diagnosis")]
-    public virtual ICollection<health_event> health_events { get; set; } = new List<health_event>();
+    public virtual ICollection<HealthEvent> HealthEvents { get; set; } = new List<HealthEvent>();
 }

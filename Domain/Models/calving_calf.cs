@@ -2,31 +2,35 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("calving_calves")]
 [PrimaryKey("calving_id", "calf_id")]
-public partial class calving_calf
+public partial class CalvingCalf
 {
     [Key]
-    public long calving_id { get; set; }
+    [Column("calving_id")]
+    public long CalvingId { get; set; }
 
     [Key]
-    public long calf_id { get; set; }
+    [Column("calf_id")]
+    public long CalfId { get; set; }
 
     [Precision(5, 2)]
-    public decimal? birth_weight { get; set; }
+    [Column("birth_weight")]
+    public decimal? BirthWeight { get; set; }
 
     [StringLength(20)]
-    public string? birth_status { get; set; }
+    [Column("birth_status")]
+    public string? BirthStatus { get; set; }
 
     [ForeignKey("calf_id")]
     [InverseProperty("calving_calves")]
-    public virtual animal calf { get; set; } = null!;
+    public virtual Animal Calf { get; set; } = null!;
 
     [ForeignKey("calving_id")]
     [InverseProperty("calving_calves")]
-    public virtual calving calving { get; set; } = null!;
+    public virtual Calving Calving { get; set; } = null!;
 }

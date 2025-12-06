@@ -4,53 +4,65 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("third_parties")]
 [Index("farm_id", Name = "idx_third_parties_farm")]
 [Index("farm_id", "identity_document", Name = "uk_third_party_doc_farm", IsUnique = true)]
-public partial class third_party
+public partial class ThirdParty
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
     [StringLength(150)]
-    public string full_name { get; set; } = null!;
+    [Column("full_name")]
+    public string FullName { get; set; } = null!;
 
     [StringLength(20)]
-    public string identity_document { get; set; } = null!;
+    [Column("identity_document")]
+    public string IdentityDocument { get; set; } = null!;
 
     [StringLength(20)]
-    public string? phone { get; set; }
+    [Column("phone")]
+    public string? Phone { get; set; }
 
     [StringLength(100)]
-    public string? email { get; set; }
+    [Column("email")]
+    public string? Email { get; set; }
 
-    public bool? is_supplier { get; set; }
+    [Column("is_supplier")]
+    public bool? IsSupplier { get; set; }
 
-    public bool? is_customer { get; set; }
+    [Column("is_customer")]
+    public bool? IsCustomer { get; set; }
 
-    public bool? is_employee { get; set; }
+    [Column("is_employee")]
+    public bool? IsEmployee { get; set; }
 
-    public bool? is_veterinarian { get; set; }
+    [Column("is_veterinarian")]
+    public bool? IsVeterinarian { get; set; }
 
     [StringLength(200)]
-    public string? address { get; set; }
+    [Column("address")]
+    public string? Address { get; set; }
 
-    [InverseProperty("third_party")]
-    public virtual ICollection<animal_movement> animal_movements { get; set; } = new List<animal_movement>();
+    [InverseProperty("ThirdParty")]
+    public virtual ICollection<AnimalMovement> AnimalMovements { get; set; } = new List<AnimalMovement>();
 
-    [InverseProperty("third_party")]
-    public virtual ICollection<commercial_transaction> commercial_transactions { get; set; } = new List<commercial_transaction>();
+    [InverseProperty("ThirdParty")]
+    public virtual ICollection<CommercialTransaction> CommercialTransactions { get; set; } = new List<CommercialTransaction>();
 
     [ForeignKey("farm_id")]
     [InverseProperty("third_parties")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 
     [InverseProperty("professional")]
-    public virtual ICollection<health_event> health_events { get; set; } = new List<health_event>();
+    public virtual ICollection<HealthEvent> HealthEvents { get; set; } = new List<HealthEvent>();
 
-    [InverseProperty("third_party")]
-    public virtual ICollection<inventory_movement> inventory_movements { get; set; } = new List<inventory_movement>();
+    [InverseProperty("ThirdParty")]
+    public virtual ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
 }

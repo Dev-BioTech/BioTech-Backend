@@ -4,24 +4,30 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("movement_types")]
 [Index("name", Name = "movement_types_name_key", IsUnique = true)]
-public partial class movement_type
+public partial class MovementType
 {
     [Key]
-    public int id { get; set; }
+    [Column("id")]
+    public int Id { get; set; }
 
     [StringLength(50)]
-    public string name { get; set; } = null!;
+    [Column("name")]
+    public string Name { get; set; } = null!;
 
-    public bool? affects_inventory { get; set; }
+    [Column("affects_inventory")]
+    public bool? AffectsInventory { get; set; }
 
-    public int? inventory_sign { get; set; }
+    [Column("inventory_sign")]
+    public int? InventorySign { get; set; }
 
     [StringLength(200)]
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
-    [InverseProperty("movement_type")]
-    public virtual ICollection<animal_movement> animal_movements { get; set; } = new List<animal_movement>();
+    [InverseProperty("MovementType")]
+    public virtual ICollection<AnimalMovement> AnimalMovements { get; set; } = new List<AnimalMovement>();
 }

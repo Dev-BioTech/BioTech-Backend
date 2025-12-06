@@ -4,27 +4,32 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 /// <summary>
 /// Auth: Manages SSO email address domain mapping to an SSO Identity Provider.
 /// </summary>
 [Table("sso_domains", Schema = "auth")]
 [Index("sso_provider_id", Name = "sso_domains_sso_provider_id_idx")]
-public partial class sso_domain
+public partial class SsoDomain
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid sso_provider_id { get; set; }
+    [Column("sso_provider_id")]
+    public Guid SsoProviderId { get; set; }
 
-    public string domain { get; set; } = null!;
+    [Column("domain")]
+    public string Domain { get; set; } = null!;
 
-    public DateTime? created_at { get; set; }
+    [Column("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? updated_at { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
     [ForeignKey("sso_provider_id")]
     [InverseProperty("sso_domains")]
-    public virtual sso_provider sso_provider { get; set; } = null!;
+    public virtual SsoProvider SsoProvider { get; set; } = null!;
 }

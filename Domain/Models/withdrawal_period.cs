@@ -2,40 +2,49 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
+[Table("withdrawal_periods")]
 [Index("animal_id", "end_date", Name = "idx_withdrawals_date")]
-public partial class withdrawal_period
+public partial class WithdrawalPeriod
 {
     [Key]
-    public long id { get; set; }
+    [Column("id")]
+    public long Id { get; set; }
 
-    public int farm_id { get; set; }
+    [Column("farm_id")]
+    public int FarmId { get; set; }
 
-    public long animal_id { get; set; }
+    [Column("animal_id")]
+    public long AnimalId { get; set; }
 
-    public DateOnly start_date { get; set; }
+    [Column("start_date")]
+    public DateOnly StartDate { get; set; }
 
-    public int withdrawal_days { get; set; }
+    [Column("withdrawal_days")]
+    public int WithdrawalDays { get; set; }
 
-    public DateOnly? end_date { get; set; }
+    [Column("end_date")]
+    public DateOnly? EndDate { get; set; }
 
     [StringLength(20)]
-    public string? product_type { get; set; }
+    [Column("product_type")]
+    public string? ProductType { get; set; }
 
     [StringLength(100)]
-    public string? reason { get; set; }
+    [Column("reason")]
+    public string? Reason { get; set; }
 
-    public bool? active { get; set; }
+    [Column("active")]
+    public bool? Active { get; set; }
 
     [ForeignKey("animal_id")]
     [InverseProperty("withdrawal_periods")]
-    public virtual animal animal { get; set; } = null!;
+    public virtual Animal Animal { get; set; } = null!;
 
     [ForeignKey("farm_id")]
     [InverseProperty("withdrawal_periods")]
-    public virtual farm farm { get; set; } = null!;
+    public virtual Farm Farm { get; set; } = null!;
 }

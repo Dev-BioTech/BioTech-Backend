@@ -4,47 +4,61 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Domain.Models;
 
 [Table("oauth_authorizations", Schema = "auth")]
 [Index("authorization_code", Name = "oauth_authorizations_authorization_code_key", IsUnique = true)]
 [Index("authorization_id", Name = "oauth_authorizations_authorization_id_key", IsUnique = true)]
-public partial class oauth_authorization
+public partial class OauthAuthorization
 {
     [Key]
-    public Guid id { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public string authorization_id { get; set; } = null!;
+    [Column("authorization_id")]
+    public string AuthorizationId { get; set; } = null!;
 
-    public Guid client_id { get; set; }
+    [Column("client_id")]
+    public Guid ClientId { get; set; }
 
-    public Guid? user_id { get; set; }
+    [Column("user_id")]
+    public Guid? UserId { get; set; }
 
-    public string redirect_uri { get; set; } = null!;
+    [Column("redirect_uri")]
+    public string RedirectUri { get; set; } = null!;
 
-    public string scope { get; set; } = null!;
+    [Column("scope")]
+    public string Scope { get; set; } = null!;
 
-    public string? state { get; set; }
+    [Column("state")]
+    public string? State { get; set; }
 
-    public string? resource { get; set; }
+    [Column("resource")]
+    public string? Resource { get; set; }
 
-    public string? code_challenge { get; set; }
+    [Column("code_challenge")]
+    public string? CodeChallenge { get; set; }
 
-    public string? authorization_code { get; set; }
+    [Column("authorization_code")]
+    public string? AuthorizationCode { get; set; }
 
-    public DateTime created_at { get; set; }
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime expires_at { get; set; }
+    [Column("expires_at")]
+    public DateTime ExpiresAt { get; set; }
 
-    public DateTime? approved_at { get; set; }
+    [Column("approved_at")]
+    public DateTime? ApprovedAt { get; set; }
 
-    public string? nonce { get; set; }
+    [Column("nonce")]
+    public string? Nonce { get; set; }
 
     [ForeignKey("client_id")]
     [InverseProperty("oauth_authorizations")]
-    public virtual oauth_client client { get; set; } = null!;
+    public virtual OauthClient Client { get; set; } = null!;
 
     [ForeignKey("user_id")]
     [InverseProperty("oauth_authorizations")]
-    public virtual user1? user { get; set; }
+    public virtual User1? User { get; set; }
 }
