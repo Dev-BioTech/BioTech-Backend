@@ -1,0 +1,6 @@
+@HerdService.Presentation_HostAddress = http://localhost:5014
+
+GET {{HerdService.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

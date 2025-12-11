@@ -1,0 +1,6 @@
+@FeedingService.Presentation_HostAddress = http://localhost:5102
+
+GET {{FeedingService.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
