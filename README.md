@@ -221,6 +221,26 @@ The **presentation layer** that exposes the application through REST APIs. Handl
 - ✅ Delegates to Application layer
 - ✅ Handles HTTP concerns only
 - ✅ API versioning and documentation
+---
+
+## 🔌 Available Endpoints (Gateway)
+
+Base URL: `http://localhost:5000`
+
+### 🔐 Authentication
+| Method | Endpoint | Description | Body |
+|--------|----------|-------------|------|
+| `POST` | `/api/auth/login` | Obtain JWT Token | `{ "username": "...", "password": "..." }` |
+
+### 🐄 Feeding Service (Requires Bearer Token)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/gateway/feeding/{id}` | Get feeding event by ID |
+| `GET` | `/gateway/feeding/farm/{farmId}` | Get events by Farm ID |
+| `GET` | `/gateway/feeding/batch/{batchId}` | Get events by Batch ID |
+| `GET` | `/gateway/feeding/animal/{animalId}` | Get events by Animal ID |
+| `POST` | `/gateway/feeding` | Create new feeding event |
+| `PUT` | `/gateway/feeding` | Update feeding event |
 
 ---
 

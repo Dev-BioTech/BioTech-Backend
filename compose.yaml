@@ -1,1 +1,39 @@
-﻿
+﻿services:
+  feeding-service:
+    build:
+      context: .
+      dockerfile: FeedingService.Presentation/Dockerfile
+    ports:
+      - "5114:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_SSLMODE=${DB_SSL_MODE}
+    networks:
+      - biotech-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ApiGateWay/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtConfig__Secret=${JWT_SECRET}
+      - JwtConfig__Issuer=${JWT_ISSUER}
+      - JwtConfig__Audience=${JWT_AUDIENCE}
+    depends_on:
+      - feeding-service
+    networks:
+      - biotech-network
+
+networks:
+  biotech-network:
+    driver: bridge

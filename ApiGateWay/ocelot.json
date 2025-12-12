@@ -5,8 +5,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 5114
+                    "Host": "feeding-service",
+                    "Port": 8080
                 }
             ],
             "UpstreamPathTemplate": "/gateway/feeding/{everything}",
@@ -15,7 +15,11 @@
                 "POST",
                 "PUT",
                 "DELETE"
-            ]
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
         }
     ],
     "GlobalConfiguration": {
