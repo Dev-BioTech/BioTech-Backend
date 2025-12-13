@@ -1,0 +1,42 @@
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using AuthService.Domain.Entities;
+using AuthService.Domain.Interfaces;
+using AuthService.Infrastructure.Persistence;
+
+namespace AuthService.Infrastructure.Persistence;
+
+public class UserRepository : IUserRepository
+{
+    private readonly AuthDbContext _context;
+
+    public UserRepository(AuthDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users
+            .Include(u => u.UserFarmRoles)
+            .ThenInclude(ufr => ufr.Role)
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+    }
+
+    public async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users.FindAsync(new object[] { id }, cancellationToken);
+    }
+
+    public async Task AddAsync(User user, CancellationToken cancellationToken = default)
+    {
+        await _context.Users.AddAsync(user, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users.AnyAsync(u => u.Email == email, cancellationToken);
+    }
+}
