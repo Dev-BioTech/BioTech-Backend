@@ -1,19 +1,35 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-
-
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["ApiGateWay/ApiGateWay.csproj", "ApiGateWay/"]
-RUN dotnet restore "ApiGateWay/ApiGateWay.csproj"
+
+# Copy solution file
+COPY BioTech-Backend.sln .
+
+# Copy all project files
+COPY ApiGateWay/*.csproj ./ApiGateWay/
+COPY AuthService.Application/*.csproj ./AuthService.Application/
+COPY AuthService.Domain/*.csproj ./AuthService.Domain/
+COPY AuthService.Presentation/*.csproj ./AuthService.Presentation/
+COPY Authservice.Infrastructure/*.csproj ./Authservice.Infrastructure/
+COPY FeedingService.Application/*.csproj ./FeedingService.Application/
+COPY FeedingService.Domain/*.csproj ./FeedingService.Domain/
+COPY FeedingService.Infrastructure/*.csproj ./FeedingService.Infrastructure/
+COPY FeedingService.Presentation/*.csproj ./FeedingService.Presentation/
+
+# Restore dependencies
+RUN dotnet restore ApiGateWay/ApiGateWay.csproj
+
+# Copy all source code
 COPY . .
-WORKDIR "/src/ApiGateWay"
-RUN dotnet build "ApiGateWay.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "ApiGateWay.csproj" -c Release -o /app/publish /p:UseAppHost=false
+# Build and publish
+WORKDIR /src/ApiGateWay
+RUN dotnet publish -c Release -o /app/publish
 
-FROM base AS final
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
+
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "ApiGateWay.dll"]

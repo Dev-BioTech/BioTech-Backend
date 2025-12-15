@@ -2,8 +2,7 @@
   auth-service:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: auth
+      dockerfile: AuthService.Presentation/Dockerfile
     ports:
       - "5001:8080"
     environment:
@@ -24,8 +23,7 @@
   feeding-service:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: feeding
+      dockerfile: FeedingService.Presentation/Dockerfile
     ports:
       - "5114:8080"
     environment:
@@ -45,8 +43,7 @@
   api-gateway:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: gateway
+      dockerfile: ApiGateWay/Dockerfile
     env_file:
       - .env
     ports:

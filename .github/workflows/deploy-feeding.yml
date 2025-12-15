@@ -1,0 +1,28 @@
+name: Deploy Feeding Service
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "FeedingService.Presentation/**"
+      - "FeedingService.Application/**"
+      - "FeedingService.Domain/**"
+      - "FeedingService.Infrastructure/**"
+      - ".github/workflows/deploy-feeding.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Railway
+        run: npm i -g @railway/cli
+
+      - name: Deploy
+        run: railway up --service feeding-service --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
