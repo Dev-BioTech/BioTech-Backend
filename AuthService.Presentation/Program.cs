@@ -38,6 +38,27 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.SetIsOriginAllowed(origin => 
+        {
+            // Allow localhost for development
+            if (origin.StartsWith("http://localhost")) return true;
+            // Allow any Vercel subdomain
+            if (origin.EndsWith(".vercel.app")) return true;
+            // Allow API Gateway
+            if (origin.Contains("railway.app")) return true;
+            return false;
+        })
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
+
 // Configure Port for Railway
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -80,6 +101,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
+
+app.UseRouting();
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
