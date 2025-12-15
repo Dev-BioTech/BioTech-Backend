@@ -9,6 +9,13 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Port for Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
+
 Env.Load();
 // Add services to the container
 builder.Services.AddControllers();
@@ -107,7 +114,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 app.UseCors("AllowGateway");
 
