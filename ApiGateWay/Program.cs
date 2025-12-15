@@ -22,15 +22,15 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVercel", policy =>
     {
-        policy.WithOrigins(
-            "https://*.vercel.app",  // Allow all Vercel subdomains (Note: WithOrigins with wildcards requires SetIsOriginAllowedToAllowWildcardSubdomains)
-            "http://localhost:5000",
-            "http://localhost:5001",
-            "http://localhost:5002",
-            "http://localhost:5003",
-            "http://localhost:5004"
-        )
-        .SetIsOriginAllowedToAllowWildcardSubdomains()
+        policy.SetIsOriginAllowed(origin => 
+        {
+            // Allow localhost for development
+            if (origin.StartsWith("http://localhost")) return true;
+            // Allow any Vercel subdomain
+            if (origin.EndsWith(".vercel.app")) return true;
+            // Allow specific production domains if added later
+            return false;
+        })
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
