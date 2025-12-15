@@ -40,7 +40,8 @@ builder.Services.AddCors(options =>
 // 4. Ocelot Configuration
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
-// Dynamic Ocelot Configuration: Override Host/Port from Environment Variables
+// Dynamic Ocelot Configuration for Railway
+// Railway doesn't have internal networking, so we need to use public URLs
 var routes = builder.Configuration.GetSection("Routes").GetChildren();
 foreach (var route in routes)
 {
@@ -48,19 +49,45 @@ foreach (var route in routes)
     foreach (var hostConfig in downstreamHosts)
     {
         var host = hostConfig.GetValue<string>("Host");
+        
+        // Check if we're running on Railway (environment variables will have full URLs)
         if (host == "auth-service")
         {
-            var envHost = Environment.GetEnvironmentVariable("AUTH_SERVICE_HOST");
-            var envPort = Environment.GetEnvironmentVariable("AUTH_SERVICE_PORT");
-            if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
-            if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
+            var authServiceUrl = Environment.GetEnvironmentVariable("AUTH_SERVICE_URL");
+            if (!string.IsNullOrEmpty(authServiceUrl))
+            {
+                // Parse the URL to extract host and port
+                var uri = new Uri(authServiceUrl);
+                hostConfig["Host"] = uri.Host;
+                hostConfig["Port"] = uri.Port.ToString();
+                route["DownstreamScheme"] = uri.Scheme;
+            }
+            else
+            {
+                // Fallback to separate host/port env vars (for Docker Compose)
+                var envHost = Environment.GetEnvironmentVariable("AUTH_SERVICE_HOST");
+                var envPort = Environment.GetEnvironmentVariable("AUTH_SERVICE_PORT");
+                if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
+                if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
+            }
         }
         else if (host == "feeding-service")
         {
-            var envHost = Environment.GetEnvironmentVariable("FEEDING_SERVICE_HOST");
-            var envPort = Environment.GetEnvironmentVariable("FEEDING_SERVICE_PORT");
-            if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
-            if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
+            var feedingServiceUrl = Environment.GetEnvironmentVariable("FEEDING_SERVICE_URL");
+            if (!string.IsNullOrEmpty(feedingServiceUrl))
+            {
+                var uri = new Uri(feedingServiceUrl);
+                hostConfig["Host"] = uri.Host;
+                hostConfig["Port"] = uri.Port.ToString();
+                route["DownstreamScheme"] = uri.Scheme;
+            }
+            else
+            {
+                var envHost = Environment.GetEnvironmentVariable("FEEDING_SERVICE_HOST");
+                var envPort = Environment.GetEnvironmentVariable("FEEDING_SERVICE_PORT");
+                if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
+                if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
+            }
         }
     }
 }
