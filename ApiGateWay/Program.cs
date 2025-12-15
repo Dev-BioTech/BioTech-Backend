@@ -4,41 +4,45 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Load the ocelot.json configuration file
-builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+// 1. Configure Port for Railway
+// Railway provides the PORT environment variable. We use this to tell Kestrel where to listen.
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
 
-// 2. Add Ocelot services to the container
-builder.Services.AddOcelot(builder.Configuration);
-
-// Add other services if needed (e.g., for authentication at the gateway)
+// 2. Add Services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS Configuration
-var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(',', ';') ?? new[] { "*" };
+// 3. Configure CORS (Merged User Request)
+// Allows specific Vercel subdomains + localhost for development
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigins",
-        builder =>
-        {
-            if (allowedOrigins.Contains("*"))
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }
-            else
-            {
-                builder.WithOrigins(allowedOrigins)
-                       .AllowAnyMethod()
-                       .AllowAnyHeader()
-                       .AllowCredentials();
-            }
-        });
+    options.AddPolicy("AllowVercel", policy =>
+    {
+        policy.WithOrigins(
+            "https://*.vercel.app",  // Allow all Vercel subdomains (Note: WithOrigins with wildcards requires SetIsOriginAllowedToAllowWildcardSubdomains)
+            "http://localhost:5000",
+            "http://localhost:5001",
+            "http://localhost:5002",
+            "http://localhost:5003",
+            "http://localhost:5004"
+        )
+        .SetIsOriginAllowedToAllowWildcardSubdomains()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
 });
 
-// 1. Add DB Context
+// 4. Ocelot Configuration
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+builder.Services.AddOcelot(builder.Configuration);
+
+// 5. Database Context (Required if Gateway accesses DB directly)
 var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
                        $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
                        $"Database={Environment.GetEnvironmentVariable("DB_DATABASE")};" +
@@ -46,22 +50,12 @@ var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" 
                        $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};" +
                        $"Ssl Mode={Environment.GetEnvironmentVariable("DB_SSL_MODE")};";
 
-// JWT Authentication
+// If you have a DbContext, ensure it is registered here, e.g.:
+// builder.Services.AddDbContext<ApiGateWay.Data.AuthDbContext>(options => options.UseNpgsql(connectionString));
+
+// 6. JWT Authentication
 var secretKey = builder.Configuration["JwtConfig:Secret"];
-
-// Port for deploy
-// Port for deploy
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(int.Parse(port));
-});
-
-// Fallback: Check for JWT_SECRET directly environment variable (useful if mapping fails)
-if (string.IsNullOrEmpty(secretKey))
-{
-    secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
-}
+if (string.IsNullOrEmpty(secretKey)) secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
 
 var issuer = builder.Configuration["JwtConfig:Issuer"];
 if (string.IsNullOrEmpty(issuer)) issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
@@ -69,50 +63,48 @@ if (string.IsNullOrEmpty(issuer)) issuer = Environment.GetEnvironmentVariable("J
 var audience = builder.Configuration["JwtConfig:Audience"];
 if (string.IsNullOrEmpty(audience)) audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 
-if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 16)
+if (!string.IsNullOrEmpty(secretKey) && secretKey.Length >= 16)
 {
-    throw new ArgumentException("JWT Secret is missing or too short. Checked 'JwtConfig:Secret' and 'JWT_SECRET' env var.");
-}
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer("Bearer", options =>
-{
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    builder.Services.AddAuthentication(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = issuer,
-        ValidAudience = audience,
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey))
-    };
-});
+        options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey))
+        };
+    });
+}
 
 var app = builder.Build();
 
+// 7. Pipeline Configuration
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Not needed on Railway, handled at edge
 
-app.UseCors("AllowSpecificOrigins");
+// 8. Use CORS (Must be before Auth)
+app.UseCors("AllowVercel");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 1. Map Controllers
-// This registers the /api/auth endpoints
 app.MapControllers();
 
-// 2. Use Ocelot Middleware
+// 9. Use Ocelot
 app.UseOcelot().Wait();
 
 app.Run();

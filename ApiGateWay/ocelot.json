@@ -9,7 +9,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/gateway/auth/{everything}",
+            "UpstreamPathTemplate": "/api/auth/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -26,7 +26,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/gateway/feeding/{everything}",
+            "UpstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
