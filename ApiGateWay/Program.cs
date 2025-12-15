@@ -40,6 +40,32 @@ builder.Services.AddCors(options =>
 
 // 4. Ocelot Configuration
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+
+// Dynamic Ocelot Configuration: Override Host/Port from Environment Variables
+var routes = builder.Configuration.GetSection("Routes").GetChildren();
+foreach (var route in routes)
+{
+    var downstreamHosts = route.GetSection("DownstreamHostAndPorts").GetChildren();
+    foreach (var hostConfig in downstreamHosts)
+    {
+        var host = hostConfig.GetValue<string>("Host");
+        if (host == "auth-service")
+        {
+            var envHost = Environment.GetEnvironmentVariable("AUTH_SERVICE_HOST");
+            var envPort = Environment.GetEnvironmentVariable("AUTH_SERVICE_PORT");
+            if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
+            if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
+        }
+        else if (host == "feeding-service")
+        {
+            var envHost = Environment.GetEnvironmentVariable("FEEDING_SERVICE_HOST");
+            var envPort = Environment.GetEnvironmentVariable("FEEDING_SERVICE_PORT");
+            if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
+            if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
+        }
+    }
+}
+
 builder.Services.AddOcelot(builder.Configuration);
 
 // 5. Database Context (Required if Gateway accesses DB directly)
