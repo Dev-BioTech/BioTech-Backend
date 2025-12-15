@@ -15,6 +15,29 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CORS Configuration
+var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(',', ';') ?? new[] { "*" };
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            if (allowedOrigins.Contains("*"))
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }
+            else
+            {
+                builder.WithOrigins(allowedOrigins)
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .AllowCredentials();
+            }
+        });
+});
+
 // 1. Add DB Context
 var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
                        $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
@@ -23,16 +46,15 @@ var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" 
                        $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};" +
                        $"Ssl Mode={Environment.GetEnvironmentVariable("DB_SSL_MODE")};";
 
-builder.Services.AddDbContext<ApiGateWay.Data.AuthDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
 // JWT Authentication
 var secretKey = builder.Configuration["JwtConfig:Secret"];
 
 // Port for deploy
+// Port for deploy
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(8080);
+    serverOptions.ListenAnyIP(int.Parse(port));
 });
 
 // Fallback: Check for JWT_SECRET directly environment variable (useful if mapping fails)
@@ -80,6 +102,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigins");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -87,13 +112,7 @@ app.UseAuthorization();
 // This registers the /api/auth endpoints
 app.MapControllers();
 
-// 2. Use Ocelot Middleware conditionally
-// We tell ASP.NET: "If the request does NOT start with /api/v1/Auth, then use Ocelot"
-// This prevents Ocelot from eating our local login requests.
-app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/v1/Auth", StringComparison.OrdinalIgnoreCase), 
-    appBuilder =>
-{
-    appBuilder.UseOcelot().Wait();
-});
+// 2. Use Ocelot Middleware
+app.UseOcelot().Wait();
 
 app.Run();

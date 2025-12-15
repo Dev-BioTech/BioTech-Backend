@@ -1,6 +1,23 @@
 {
     "Routes": [
         {
+            "DownstreamPathTemplate": "/api/Auth/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/auth/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE"
+            ]
+        },
+        {
             "DownstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
