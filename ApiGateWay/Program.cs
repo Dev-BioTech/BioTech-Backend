@@ -121,6 +121,9 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); // Not needed on Railway, handled at edge
 
+// Ensure Routing is called before CORS
+app.UseRouting();
+
 // 8. Use CORS (Must be before Auth)
 app.UseCors("AllowVercel");
 
