@@ -9,12 +9,13 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/auth/{everything}",
+            "UpstreamPathTemplate": "/api/Auth/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
                 "PUT",
-                "DELETE"
+                "DELETE",
+                "OPTIONS"
             ]
         },
         {
@@ -31,7 +32,8 @@
                 "GET",
                 "POST",
                 "PUT",
-                "DELETE"
+                "DELETE",
+                "OPTIONS"
             ],
             "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Bearer",

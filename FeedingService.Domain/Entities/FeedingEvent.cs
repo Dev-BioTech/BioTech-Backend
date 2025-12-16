@@ -16,8 +16,9 @@ public class FeedingEvent : IAuditableEntity
     public decimal TotalQuantity { get; set; }
     public int AnimalsFedCount { get; set; }
     public Money UnitCostAtMoment { get; set; }
-    public Money? CalculatedTotalCost { get; set; }
+    public Money? CalculatedTotalCost { get; private set; }
     public string? Observations { get; set; }
+    public bool IsCancelled { get; private set; }
     public int? RegisteredBy { get; set; }
     
     // Audit fields
@@ -31,6 +32,22 @@ public class FeedingEvent : IAuditableEntity
         SupplyDate = DateTime.UtcNow.Date;
         CreatedAt = DateTime.UtcNow;
         UnitCostAtMoment = Money.Zero();
+    }
+
+    public void CalculateCost()
+    {
+        if (UnitCostAtMoment != null)
+        {
+            CalculatedTotalCost = UnitCostAtMoment * TotalQuantity;
+        }
+    }
+
+    public void Cancel()
+    {
+        if (IsCancelled)
+            throw new InvalidOperationException("Event is already cancelled");
+            
+        IsCancelled = true;
     }
 
     public void Validate()
@@ -47,13 +64,15 @@ public class FeedingEvent : IAuditableEntity
         if (AnimalsFedCount <= 0)
             throw new ArgumentException("AnimalsFedCount must be greater than zero");
 
-        if (UnitCostAtMoment.Amount < 0)
-            throw new ArgumentException("UnitCostAtMoment cannot be negative");
+        // Money validation is handled by Value Object, but we check existence
+        if (UnitCostAtMoment == null)
+             throw new ArgumentNullException(nameof(UnitCostAtMoment));
 
-        if (!BatchId.HasValue && !AnimalId.HasValue)
-            throw new InvalidOperationException("Either BatchId or AnimalId must be provided");
+        // XOR Validation: Exactly one must be true
+        bool hasBatch = BatchId.HasValue;
+        bool hasAnimal = AnimalId.HasValue;
 
-        if (BatchId.HasValue && AnimalId.HasValue)
-            throw new InvalidOperationException("Cannot specify both BatchId and AnimalId");
+        if (hasBatch == hasAnimal) // Both true or both false
+            throw new InvalidOperationException("Exactly one of BatchId or AnimalId must be provided (XOR)");
     }
 }

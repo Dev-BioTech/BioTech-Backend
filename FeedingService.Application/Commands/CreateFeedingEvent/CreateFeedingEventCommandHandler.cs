@@ -37,6 +37,7 @@ public class CreateFeedingEventCommandHandler
         };
 
         feedingEvent.Validate();
+        feedingEvent.CalculateCost();
 
         var created = await _repository.AddAsync(feedingEvent, ct);
 

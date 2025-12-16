@@ -38,12 +38,57 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.SetIsOriginAllowed(origin => 
+        {
+            // Allow localhost for development
+            if (origin.StartsWith("http://localhost")) return true;
+            // Allow any Vercel subdomain
+            if (origin.EndsWith(".vercel.app")) return true;
+            // Allow API Gateway
+            if (origin.Contains("railway.app")) return true;
+            return false;
+        })
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
+
 // Configure Port for Railway
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.ListenAnyIP(int.Parse(port));
 });
+
+// Configure Database Connection from Environment Variables (Railway)
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+if (!string.IsNullOrEmpty(dbHost))
+{
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+    var dbName = Environment.GetEnvironmentVariable("DB_DATABASE");
+    var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+    var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+
+    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+}
+
+// Configure JWT from Environment Variables
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+if (!string.IsNullOrEmpty(jwtSecret)) builder.Configuration["Jwt:Secret"] = jwtSecret;
+
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+if (!string.IsNullOrEmpty(jwtIssuer)) builder.Configuration["Jwt:Issuer"] = jwtIssuer;
+
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+if (!string.IsNullOrEmpty(jwtAudience)) builder.Configuration["Jwt:Audience"] = jwtAudience;
 
 // Add Layer Dependencies
 builder.Services.AddApplication();
@@ -80,6 +125,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
+
+app.UseRouting();
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();

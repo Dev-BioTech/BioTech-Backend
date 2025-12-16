@@ -67,6 +67,18 @@ public class FeedingEventRepository : IFeedingEventRepository
             .ToListAsync(ct);
     }
 
+    public async Task<IEnumerable<FeedingEvent>> GetByProductIdAsync(
+        int productId, 
+        CancellationToken ct = default)
+    {
+        return await _context.FeedingEvents
+            .AsNoTracking()
+            .Where(f => f.ProductId == productId)
+            .OrderByDescending(f => f.SupplyDate)
+            .ThenByDescending(f => f.Id)
+            .ToListAsync(ct);
+    }
+
     public async Task<FeedingEvent> AddAsync(
         FeedingEvent feedingEvent, 
         CancellationToken ct = default)

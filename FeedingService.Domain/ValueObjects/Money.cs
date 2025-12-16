@@ -6,6 +6,9 @@ public sealed class Money : IEquatable<Money>
 
     private Money(decimal amount)
     {
+        if (amount < 0)
+            throw new ArgumentException("Money amount cannot be negative", nameof(amount));
+            
         Amount = Math.Round(amount, 2);
     }
 

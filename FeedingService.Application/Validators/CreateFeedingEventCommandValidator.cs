@@ -1,4 +1,4 @@
-using FeedingService.Application.Commands;
+using FeedingService.Application.Commands.CreateFeedingEvent;
 using FluentValidation;
 
 namespace FeedingService.Application.Validators;
