@@ -51,13 +51,26 @@ foreach (var route in routes)
         var host = hostConfig.GetValue<string>("Host");
         
         // Check if we're running on Railway (environment variables will have full URLs)
-        if (host == "auth-service")
+        // Map service definition names to their environment variable prefixes
+        var serviceEnvMap = new Dictionary<string, string>
         {
-            var authServiceUrl = Environment.GetEnvironmentVariable("AUTH_SERVICE_URL");
-            if (!string.IsNullOrEmpty(authServiceUrl))
+            { "auth-service", "AUTH_SERVICE" },
+            { "ai-service", "AI_SERVICE" },
+            { "feeding-service", "FEEDING_SERVICE" },
+            { "herd-service", "HERD_SERVICE" },
+            { "reproduction-service", "REPRODUCTION_SERVICE" },
+            { "health-service", "HEALTH_SERVICE" },
+            { "commercial-service", "COMMERCIAL_SERVICE" },
+            { "inventory-service", "INVENTORY_SERVICE" }
+        };
+
+        if (!string.IsNullOrEmpty(host) && serviceEnvMap.TryGetValue(host, out var envPrefix))
+        {
+            var serviceUrl = Environment.GetEnvironmentVariable($"{envPrefix}_URL");
+            if (!string.IsNullOrEmpty(serviceUrl))
             {
                 // Parse the URL to extract host and port
-                var uri = new Uri(authServiceUrl);
+                var uri = new Uri(serviceUrl);
                 hostConfig["Host"] = uri.Host;
                 hostConfig["Port"] = uri.Port.ToString();
                 route["DownstreamScheme"] = uri.Scheme;
@@ -65,26 +78,8 @@ foreach (var route in routes)
             else
             {
                 // Fallback to separate host/port env vars (for Docker Compose)
-                var envHost = Environment.GetEnvironmentVariable("AUTH_SERVICE_HOST");
-                var envPort = Environment.GetEnvironmentVariable("AUTH_SERVICE_PORT");
-                if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
-                if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
-            }
-        }
-        else if (host == "feeding-service")
-        {
-            var feedingServiceUrl = Environment.GetEnvironmentVariable("FEEDING_SERVICE_URL");
-            if (!string.IsNullOrEmpty(feedingServiceUrl))
-            {
-                var uri = new Uri(feedingServiceUrl);
-                hostConfig["Host"] = uri.Host;
-                hostConfig["Port"] = uri.Port.ToString();
-                route["DownstreamScheme"] = uri.Scheme;
-            }
-            else
-            {
-                var envHost = Environment.GetEnvironmentVariable("FEEDING_SERVICE_HOST");
-                var envPort = Environment.GetEnvironmentVariable("FEEDING_SERVICE_PORT");
+                var envHost = Environment.GetEnvironmentVariable($"{envPrefix}_HOST");
+                var envPort = Environment.GetEnvironmentVariable($"{envPrefix}_PORT");
                 if (!string.IsNullOrEmpty(envHost)) hostConfig["Host"] = envHost;
                 if (!string.IsNullOrEmpty(envPort)) hostConfig["Port"] = envPort;
             }
