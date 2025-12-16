@@ -14,6 +14,8 @@ public class AuthDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; } = null!;
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;
     public DbSet<UserFarmRole> UserFarmRoles { get; set; } = null!;
+    public DbSet<Tenant> Tenants { get; set; } = null!;
+    public DbSet<Farm> Farms { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -71,6 +73,36 @@ public class AuthDbContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
+        });
+
+        // Tenant Configuration
+        modelBuilder.Entity<Tenant>(entity =>
+        {
+            entity.ToTable("tenants");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(e => e.Name).HasColumnName("name").IsRequired();
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+        });
+
+        // Farm Configuration
+        modelBuilder.Entity<Farm>(entity =>
+        {
+            entity.ToTable("farms");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(e => e.Name).HasColumnName("name").IsRequired();
+            entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+            entity.Property(e => e.Address).HasColumnName("address");
+            entity.Property(e => e.Location).HasColumnName("location");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Tenant)
+                .WithMany(p => p.Farms)
+                .HasForeignKey(d => d.TenantId);
         });
     }
 }
