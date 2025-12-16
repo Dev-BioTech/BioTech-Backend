@@ -1,4 +1,4 @@
-namespace InventoryService.Presentation.Common;
+namespace HerdService.Presentation.Common;
 
 public class ApiResponse<T>
 {

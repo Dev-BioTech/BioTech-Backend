@@ -1,4 +1,4 @@
-namespace InventoryService.Presentation.Common;
+namespace ReproductionService.Presentation.Common;
 
 public class ApiResponse<T>
 {

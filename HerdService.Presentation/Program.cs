@@ -43,6 +43,10 @@ builder.Services.AddHealthChecks()
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
 
+// Register Gateway Auth
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<HerdService.Presentation.Services.GatewayAuthenticationService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

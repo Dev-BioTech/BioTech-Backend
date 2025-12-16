@@ -67,6 +67,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
 
+// Register Gateway Auth
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CommercialService.Presentation.Services.GatewayAuthenticationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

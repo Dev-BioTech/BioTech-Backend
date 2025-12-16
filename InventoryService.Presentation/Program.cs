@@ -12,6 +12,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
 
+// Register Gateway Auth
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<InventoryService.Presentation.Services.GatewayAuthenticationService>();
+
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(InventoryService.Application.Handlers.CreateInventoryItemCommandHandler).Assembly));
 
