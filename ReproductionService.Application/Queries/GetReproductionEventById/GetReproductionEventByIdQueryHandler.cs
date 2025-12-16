@@ -19,7 +19,7 @@ public class GetReproductionEventByIdQueryHandler : IRequestHandler<GetReproduct
         var entity = await _repository.GetByIdAsync(request.Id, ct);
 
         if (entity == null)
-            return null;
+            return null!; // Handled by Controller check
 
         return MapToResponse(entity);
     }
@@ -34,8 +34,8 @@ public class GetReproductionEventByIdQueryHandler : IRequestHandler<GetReproduct
             entity.EventType,
             entity.Observations,
             entity.MaleAnimalId,
-            entity.SemenBatchId,
-            entity.PregnancyResult,
+            entity.IsSuccessful, 
+            entity.ExpectedBirthDate, 
             entity.OffspringCount,
             entity.IsCancelled,
             entity.CreatedAt,

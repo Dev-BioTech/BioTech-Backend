@@ -26,9 +26,10 @@ public class CreateReproductionEventCommandHandler : IRequestHandler<CreateRepro
         )
         {
             MaleAnimalId = request.MaleAnimalId,
-            SemenBatchId = request.SemenBatchId,
-            PregnancyResult = request.PregnancyResult,
+            IsSuccessful = request.IsSuccessful, // Was PregnancyResult
+            ExpectedBirthDate = request.ExpectedBirthDate, 
             OffspringCount = request.OffspringCount
+            // SemenBatchId removed
         };
 
         entity.Validate();
@@ -48,8 +49,8 @@ public class CreateReproductionEventCommandHandler : IRequestHandler<CreateRepro
             entity.EventType,
             entity.Observations,
             entity.MaleAnimalId,
-            entity.SemenBatchId,
-            entity.PregnancyResult,
+            entity.IsSuccessful, // Was PregnancyResult, SemenBatchId removed
+            entity.ExpectedBirthDate, // Added
             entity.OffspringCount,
             entity.IsCancelled,
             entity.CreatedAt,

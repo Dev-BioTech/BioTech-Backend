@@ -1,6 +1,6 @@
 namespace CommercialService.Application.DTOs;
 
-public class CreateThirdPartyDto
+public record CreateThirdPartyDto
 {
     public int FarmId { get; set; }
     public string FullName { get; set; } = string.Empty;
@@ -14,10 +14,9 @@ public class CreateThirdPartyDto
     public string? Address { get; set; }
 }
 
-public class UpdateThirdPartyDto : CreateThirdPartyDto
+public record UpdateThirdPartyDto : CreateThirdPartyDto
 {
-    // Inherits everything, but maybe we don't allow changing FarmId or Identity easily?
-    // For simplicity, we reuse the structure but ID comes from route.
+    // Inherits everything
 }
 
 public class ThirdPartyDto

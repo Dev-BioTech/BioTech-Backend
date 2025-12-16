@@ -10,8 +10,9 @@ public record ReproductionEventResponse(
     ReproductionEventType EventType,
     string? Observations,
     int? MaleAnimalId,
-    int? SemenBatchId,
-    bool? PregnancyResult,
+    // int? SemenBatchId, // Removed
+    bool? IsSuccessful, // Was PregnancyResult
+    DateOnly? ExpectedBirthDate, // Added
     int? OffspringCount,
     bool IsCancelled,
     DateTime CreatedAt,

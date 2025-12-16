@@ -24,20 +24,19 @@ public class CreateReproductionEventCommandValidator : AbstractValidator<CreateR
             .IsInEnum()
             .WithMessage("Invalid EventType");
 
-        RuleFor(x => x.SemenBatchId)
-            .NotNull()
-            .When(x => x.EventType == ReproductionEventType.Insemination)
-            .WithMessage("SemenBatchId is required for Insemination");
+        // RuleFor(x => x.SemenBatchId) - Removed from Schema/Command
+            // .NotNull()
+            // .When(x => x.EventType == ReproductionEventType.Insemination);
 
         RuleFor(x => x.MaleAnimalId)
             .NotNull()
             .When(x => x.EventType == ReproductionEventType.NaturalMating)
             .WithMessage("MaleAnimalId is required for NaturalMating");
 
-        RuleFor(x => x.PregnancyResult)
+        RuleFor(x => x.IsSuccessful) // Was PregnancyResult
             .NotNull()
             .When(x => x.EventType == ReproductionEventType.PregnancyCheck)
-            .WithMessage("PregnancyResult is required for PregnancyCheck");
+            .WithMessage("IsSuccessful (Pregnancy Result) is required for PregnancyCheck");
 
         RuleFor(x => x.OffspringCount)
             .GreaterThanOrEqualTo(1)

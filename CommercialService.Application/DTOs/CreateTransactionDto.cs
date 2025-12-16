@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CommercialService.Application.DTOs;
 
-public class CreateTransactionDto
+public record CreateTransactionDto
 {
     [Required]
     public int FarmId { get; set; }
@@ -29,7 +29,7 @@ public class CreateTransactionDto
     public List<CreateProductDetailDto> ProductDetails { get; set; } = new();
 }
 
-public class CreateAnimalDetailDto
+public record CreateAnimalDetailDto
 {
     [Required]
     public long AnimalId { get; set; }
@@ -44,7 +44,7 @@ public class CreateAnimalDetailDto
     public decimal TransportCost { get; set; }
 }
 
-public class CreateProductDetailDto
+public record CreateProductDetailDto
 {
     [Required]
     public int ProductId { get; set; }
