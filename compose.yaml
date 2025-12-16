@@ -110,6 +110,30 @@
     networks:
       - biotech-network
 
+  health-service:
+    build:
+      context: .
+      dockerfile: HealthService.Presentation/HealthService.Dockerfile
+    ports:
+      - "5400:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PORT=8080
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_SSL_MODE=${DB_SSL_MODE}
+      - Gateway__Secret=secret123
+    depends_on:
+      auth-service:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    networks:
+      - biotech-network
+
   api-gateway:
     build:
       context: .
@@ -125,6 +149,8 @@
       - AUTH_SERVICE_PORT=8080
       - FEEDING_SERVICE_HOST=feeding-service
       - FEEDING_SERVICE_PORT=8080
+      - HEALTH_SERVICE_HOST=health-service
+      - HEALTH_SERVICE_PORT=8080
       - JwtConfig__Secret=${JWT_SECRET}
       - JwtConfig__Issuer=${JWT_ISSUER}
       - JwtConfig__Audience=${JWT_AUDIENCE}
