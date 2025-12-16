@@ -1,6 +1,25 @@
 {
     "Routes": [
         {
+            "DownstreamPathTemplate": "/api/Chat/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "ai-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/Chat/{everything}",
+            "UpstreamHttpMethod": [
+                "POST",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
             "DownstreamPathTemplate": "/api/Auth/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
