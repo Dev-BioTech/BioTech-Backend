@@ -6,4 +6,26 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ReproductionService.Application\ReproductionService.Application.csproj" />
+      <ProjectReference Include="..\ReproductionService.Domain\ReproductionService.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.Npgsql" Version="8.0.1" />
+      <PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.1" />
+      <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.1" />
+      <PackageReference Include="DotNetEnv" Version="3.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.0" />
+      <PackageReference Include="Npgsql" Version="8.0.3" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+    </ItemGroup>
+
 </Project>

@@ -7,7 +7,25 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.1" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.1" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Npgsql" Version="8.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="DotNetEnv">
+        <HintPath>..\..\..\.nuget\packages\dotnetenv\3.1.1\lib\netstandard1.3\DotNetEnv.dll</HintPath>
+      </Reference>
+      <Reference Include="MediatR">
+        <HintPath>..\..\..\.nuget\packages\mediatr\14.0.0\lib\net8.0\MediatR.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ReproductionService.Application\ReproductionService.Application.csproj" />
+      <ProjectReference Include="..\ReproductionService.Infrastructure\ReproductionService.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

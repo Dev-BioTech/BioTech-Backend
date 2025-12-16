@@ -24,7 +24,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\ReproductionService.Domain\ReproductionService.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+      <PackageReference Include="MediatR" Version="14.0.0" />
     </ItemGroup>
 
 </Project>
