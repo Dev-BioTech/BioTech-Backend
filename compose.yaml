@@ -87,6 +87,29 @@
     networks:
       - biotech-network
 
+  herd-service:
+    build:
+      context: .
+      dockerfile: HerdService.Presentation/HerdService.Dockerfile
+    ports:
+      - "5300:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PORT=8080
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=herd_db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_SSL_MODE=${DB_SSL_MODE}
+    depends_on:
+      auth-service:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    networks:
+      - biotech-network
+
   api-gateway:
     build:
       context: .
@@ -109,6 +132,8 @@
       auth-service:
         condition: service_started
       feeding-service:
+        condition: service_started
+      herd-service:
         condition: service_started
       postgres:
         condition: service_healthy

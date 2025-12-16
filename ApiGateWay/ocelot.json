@@ -39,6 +39,27 @@
                 "AuthenticationProviderKey": "Bearer",
                 "AllowedScopes": []
             }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/animals/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/animals/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
         }
     ],
     "GlobalConfiguration": {
