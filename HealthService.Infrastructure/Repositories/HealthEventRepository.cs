@@ -14,24 +14,107 @@ public class HealthEventRepository : IHealthEventRepository
         _context = context;
     }
 
-    public async Task<HealthEvent> AddAsync(HealthEvent healthEvent, CancellationToken cancellationToken)
+    public async Task<HealthEvent?> GetByIdAsync(long id, CancellationToken ct = default)
     {
-        await _context.HealthEvents.AddAsync(healthEvent, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        return await _context.HealthEvents
+            .FirstOrDefaultAsync(h => h.Id == id, ct);
+    }
+
+    public async Task<IEnumerable<HealthEvent>> GetByFarmIdAsync(
+        int farmId, 
+        DateOnly? fromDate, 
+        DateOnly? toDate,
+        string? eventType,
+        CancellationToken ct = default)
+    {
+        var query = _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.FarmId == farmId);
+
+        if (fromDate.HasValue)
+            query = query.Where(h => h.EventDate >= fromDate.Value);
+
+        if (toDate.HasValue)
+            query = query.Where(h => h.EventDate <= toDate.Value);
+
+        if (!string.IsNullOrWhiteSpace(eventType))
+            query = query.Where(h => h.EventType == eventType);
+
+        return await query
+            .OrderByDescending(h => h.EventDate)
+            .ThenByDescending(h => h.Id)
+            .ToListAsync(ct);
+    }
+
+    public async Task<IEnumerable<HealthEvent>> GetByAnimalIdAsync(long animalId, string? eventType, CancellationToken ct = default)
+    {
+        var query = _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.AnimalId == animalId);
+
+        if (!string.IsNullOrWhiteSpace(eventType))
+            query = query.Where(h => h.EventType == eventType);
+
+        return await query
+            .OrderByDescending(h => h.EventDate)
+            .ThenByDescending(h => h.Id)
+            .ToListAsync(ct);
+    }
+
+    public async Task<IEnumerable<HealthEvent>> GetByBatchIdAsync(int batchId, string? eventType, CancellationToken ct = default)
+    {
+        var query = _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.BatchId == batchId);
+
+        if (!string.IsNullOrWhiteSpace(eventType))
+            query = query.Where(h => h.EventType == eventType);
+
+        return await query
+            .OrderByDescending(h => h.EventDate)
+            .ThenByDescending(h => h.Id)
+            .ToListAsync(ct);
+    }
+
+    public async Task<IEnumerable<HealthEvent>> GetByEventTypeAsync(
+        string eventType, 
+        int farmId,
+        DateOnly? fromDate, 
+        DateOnly? toDate,
+        CancellationToken ct = default)
+    {
+        var query = _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.EventType == eventType && h.FarmId == farmId);
+
+        if (fromDate.HasValue)
+            query = query.Where(h => h.EventDate >= fromDate.Value);
+
+        if (toDate.HasValue)
+            query = query.Where(h => h.EventDate <= toDate.Value);
+
+        return await query
+            .OrderByDescending(h => h.EventDate)
+            .ThenByDescending(h => h.Id)
+            .ToListAsync(ct);
+    }
+
+    public async Task<HealthEvent> AddAsync(HealthEvent healthEvent, CancellationToken ct = default)
+    {
+        await _context.HealthEvents.AddAsync(healthEvent, ct);
+        await _context.SaveChangesAsync(ct);
         return healthEvent;
     }
 
-    public async Task<HealthEvent?> GetByIdAsync(long id, CancellationToken cancellationToken)
+    public async Task UpdateAsync(HealthEvent healthEvent, CancellationToken ct = default)
     {
-        return await _context.HealthEvents
-            .Include(he => he.Details)
-            .FirstOrDefaultAsync(he => he.Id == id, cancellationToken);
+        _context.HealthEvents.Update(healthEvent);
+        await _context.SaveChangesAsync(ct);
     }
 
-    public async Task<IEnumerable<HealthEvent>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task DeleteAsync(HealthEvent healthEvent, CancellationToken ct = default)
     {
-        return await _context.HealthEvents
-            .Include(he => he.Details)
-            .ToListAsync(cancellationToken);
+        _context.HealthEvents.Remove(healthEvent);
+        await _context.SaveChangesAsync(ct);
     }
 }

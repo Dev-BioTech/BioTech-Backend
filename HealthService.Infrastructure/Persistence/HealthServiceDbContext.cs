@@ -26,13 +26,6 @@ public class HealthServiceDbContext : DbContext
         modelBuilder.Entity<HealthEventDetail>().ToTable("health_event_details");
         modelBuilder.Entity<WithdrawalPeriod>().ToTable("withdrawal_periods");
 
-        // Simple configuration examples (can be expanded in separate files)
-        modelBuilder.Entity<HealthEvent>()
-            .OwnsOne(e => e.ServiceCost, m =>
-            {
-                m.Property(p => p.Amount).HasColumnName("service_cost");
-            });
-
         modelBuilder.Entity<HealthEventDetail>()
             .OwnsOne(e => e.UnitCostAtMoment, m =>
             {
