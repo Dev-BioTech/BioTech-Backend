@@ -16,5 +16,7 @@ public record TransactionCreatedEvent(
 public record TransactionItemDto(
     string ItemType, // "Animal" or "Product"
     long EntityId,   // AnimalId or ProductId
-    decimal Quantity // 1 for animals, N for products
+    decimal Quantity, // 1 for animals, N for products
+    decimal UnitPrice,
+    decimal TotalValue
 );

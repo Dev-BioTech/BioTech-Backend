@@ -89,19 +89,17 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         await _repository.AddTransactionAsync(transaction, cancellationToken);
 
         // Publish Domain Event
-        var items = new System.Collections.Generic.List<Domain.Events.TransactionItemDto>();
-        items.AddRange(transaction.AnimalDetails.Select(a => new Domain.Events.TransactionItemDto("Animal", a.AnimalId, 1)));
-        items.AddRange(transaction.ProductDetails.Select(p => new Domain.Events.TransactionItemDto("Product", p.ProductId, p.Quantity)));
+        var items = new List<Domain.Events.TransactionItemDto>();
+        items.AddRange(transaction.AnimalDetails.Select(a => new Domain.Events.TransactionItemDto("Animal", a.AnimalId, 1, a.FinalLineValue ?? a.BaseHeadPrice, a.FinalLineValue ?? a.BaseHeadPrice)));
+        items.AddRange(transaction.ProductDetails.Select(p => new Domain.Events.TransactionItemDto("Product", p.ProductId, p.Quantity, p.UnitPrice, p.LineSubtotal ?? 0)));
 
-        var domainEvent = new Domain.Events.TransactionCreatedEvent(
+        await _publisher.Publish(new Domain.Events.TransactionCreatedEvent(
             transaction.Id,
             transaction.FarmId,
             transaction.TransactionType,
             transaction.TransactionDate,
             items
-        );
-
-        await _publisher.Publish(domainEvent, cancellationToken);
+        ), cancellationToken);
 
         return transaction.Id;
     }
