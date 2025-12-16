@@ -34,4 +34,47 @@ public class HealthEventRepository : IHealthEventRepository
             .Include(he => he.Details)
             .ToListAsync(cancellationToken);
     }
+    public async Task<List<HealthEvent>> GetByFarmIdAsync(int farmId, int page, int pageSize, CancellationToken cancellationToken)
+    {
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(he => he.FarmId == farmId)
+            .OrderByDescending(he => he.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<HealthEvent>> GetByAnimalIdAsync(long animalId, int page, int pageSize, CancellationToken cancellationToken)
+    {
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(he => he.AnimalId == animalId)
+            .OrderByDescending(he => he.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<HealthEvent>> GetByBatchIdAsync(int batchId, int page, int pageSize, CancellationToken cancellationToken)
+    {
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(he => he.BatchId == batchId)
+            .OrderByDescending(he => he.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<HealthEvent>> GetByTypeAsync(string eventType, int farmId, int page, int pageSize, CancellationToken cancellationToken)
+    {
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(he => he.FarmId == farmId && he.EventType == eventType)
+            .OrderByDescending(he => he.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+    }
 }

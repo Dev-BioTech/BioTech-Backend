@@ -1,8 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using FluentValidation.AspNetCore;
-
 namespace HealthService.Application;
 
 public static class DependencyInjection

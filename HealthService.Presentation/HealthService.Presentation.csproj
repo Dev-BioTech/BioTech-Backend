@@ -7,11 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
+        <PackageReference Include="MediatR" Version="14.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\HealthService.Application\HealthService.Application.csproj" />
       <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+      <ProjectReference Include="..\HealthService.Infrastructure\HealthService.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
