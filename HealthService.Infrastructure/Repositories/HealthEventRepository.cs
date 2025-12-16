@@ -117,4 +117,57 @@ public class HealthEventRepository : IHealthEventRepository
         _context.HealthEvents.Remove(healthEvent);
         await _context.SaveChangesAsync(ct);
     }
+
+    public async Task<int> GetTotalEventsCountAsync(int farmId, CancellationToken ct = default)
+    {
+        return await _context.HealthEvents
+            .CountAsync(h => h.FarmId == farmId, ct);
+    }
+
+    public async Task<decimal> GetTotalCostAsync(int farmId, CancellationToken ct = default)
+    {
+        return await _context.HealthEvents
+            .Where(h => h.FarmId == farmId && h.Cost.HasValue)
+            .SumAsync(h => h.Cost!.Value, ct);
+    }
+
+    public async Task<int> GetSickAnimalsCountAsync(int farmId, CancellationToken ct = default)
+    {
+        // Logic: Count unique animals that have had a "Disease" or "Treatment" event in the last 30 days
+        var thirtyDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30));
+        return await _context.HealthEvents
+            .Where(h => h.FarmId == farmId && 
+                        (h.EventType == "Disease" || h.EventType == "Treatment") &&
+                        h.EventDate >= thirtyDaysAgo &&
+                        h.AnimalId.HasValue)
+            .Select(h => h.AnimalId)
+            .Distinct()
+            .CountAsync(ct);
+    }
+
+    public async Task<IEnumerable<HealthEvent>> GetUpcomingEventsAsync(int farmId, int limit, CancellationToken ct = default)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.FarmId == farmId && 
+                        h.RequiresFollowUp && 
+                        h.NextFollowUpDate.HasValue && 
+                        h.NextFollowUpDate >= today)
+            .OrderBy(h => h.NextFollowUpDate)
+            .Take(limit)
+            .ToListAsync(ct);
+    }
+
+    public async Task<IEnumerable<HealthEvent>> GetRecentTreatmentsAsync(int farmId, int limit, CancellationToken ct = default)
+    {
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.FarmId == farmId && 
+                        (h.EventType == "Treatment" || h.EventType == "Medication" || h.EventType == "Vaccination"))
+            .OrderByDescending(h => h.EventDate)
+            .ThenByDescending(h => h.Id)
+            .Take(limit)
+            .ToListAsync(ct);
+    }
 }

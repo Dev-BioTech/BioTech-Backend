@@ -105,4 +105,40 @@ public class HealthEventController : ControllerBase
         var result = await _mediator.Send(new GetHealthEventsByTypeQuery(type, effectiveFarmId.Value, fromDate, toDate));
         return Ok(ApiResponse<HealthEventListResponse>.Ok(result));
     }
+
+    [HttpGet("dashboard-stats")]
+    public async Task<ActionResult<ApiResponse<HealthDashboardStats>>> GetDashboardStats()
+    {
+        var effectiveFarmId = _authService.GetFarmId();
+
+        if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
+            return BadRequest(ApiResponse<HealthDashboardStats>.Fail("User is not associated with a valid Farm (Context Missing)"));
+
+        var result = await _mediator.Send(new GetHealthDashboardStatsQuery(effectiveFarmId.Value));
+        return Ok(ApiResponse<HealthDashboardStats>.Ok(result));
+    }
+
+    [HttpGet("upcoming")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<HealthEventResponse>>>> GetUpcoming([FromQuery] int limit = 10)
+    {
+        var effectiveFarmId = _authService.GetFarmId();
+
+        if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
+            return BadRequest(ApiResponse<IEnumerable<HealthEventResponse>>.Fail("User is not associated with a valid Farm (Context Missing)"));
+
+        var result = await _mediator.Send(new GetUpcomingHealthEventsQuery(effectiveFarmId.Value, limit));
+        return Ok(ApiResponse<IEnumerable<HealthEventResponse>>.Ok(result));
+    }
+
+    [HttpGet("recent-treatments")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<HealthEventResponse>>>> GetRecentTreatments([FromQuery] int limit = 10)
+    {
+        var effectiveFarmId = _authService.GetFarmId();
+
+        if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
+            return BadRequest(ApiResponse<IEnumerable<HealthEventResponse>>.Fail("User is not associated with a valid Farm (Context Missing)"));
+
+        var result = await _mediator.Send(new GetRecentTreatmentsQuery(effectiveFarmId.Value, limit));
+        return Ok(ApiResponse<IEnumerable<HealthEventResponse>>.Ok(result));
+    }
 }
