@@ -96,6 +96,9 @@ public class FeedingEventConfiguration : IEntityTypeConfiguration<FeedingEvent>
 
         builder.HasIndex(e => e.AnimalId)
             .HasDatabaseName("ix_feeding_events_animal_id");
+            
+        builder.HasIndex(e => e.ProductId)
+            .HasDatabaseName("ix_feeding_events_product_id");
 
         builder.HasIndex(e => e.SupplyDate)
             .HasDatabaseName("ix_feeding_events_supply_date");
@@ -106,6 +109,6 @@ public class FeedingEventConfiguration : IEntityTypeConfiguration<FeedingEvent>
         // Check constraint
         builder.ToTable(t => t.HasCheckConstraint(
             "check_feeding_destination",
-            "batch_id IS NOT NULL OR animal_id IS NOT NULL"));
+            "(batch_id IS NOT NULL) <> (animal_id IS NOT NULL)")); // XOR logic in SQL
     }
 }

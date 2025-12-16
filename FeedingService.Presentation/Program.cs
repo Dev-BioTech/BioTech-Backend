@@ -1,6 +1,6 @@
 using DotNetEnv;
 using FeedingService.Application;
-using FeedingService.Application.Commands;
+using FeedingService.Application.Commands.CreateFeedingEvent;
 using FeedingService.Infrastructure;
 using FeedingService.Presentation.Middlewares;
 using FeedingService.Presentation.Services;
