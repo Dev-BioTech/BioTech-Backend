@@ -41,20 +41,20 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/v1/animals/{everything}",
+            "DownstreamPathTemplate": "/api/v1/Reproduction/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "herd-service",
+                    "Host": "reproduction-service",
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/animals/{everything}",
+            "UpstreamPathTemplate": "/api/v1/Reproduction/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
-                "PUT",
-                "DELETE"
+                "DELETE",
+                "OPTIONS"
             ],
             "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Bearer",

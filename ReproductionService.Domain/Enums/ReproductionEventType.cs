@@ -3,9 +3,8 @@ namespace ReproductionService.Domain.Enums;
 public enum ReproductionEventType
 {
     Insemination = 1,
-    PregnancyCheck = 2,
-    Birth = 3,
-    Abortion = 4,
-    Weaning = 5,
-    HeatObservation = 6
+    NaturalMating = 2,
+    PregnancyCheck = 3,
+    Birth = 4,
+    Abortion = 5
 }

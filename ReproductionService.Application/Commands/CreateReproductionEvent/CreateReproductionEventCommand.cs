@@ -10,9 +10,9 @@ public record CreateReproductionEventCommand(
     long AnimalId,
     ReproductionEventType EventType,
     string? Observations,
-    decimal? Cost,
-    int? SireId,
-    bool? IsPregnant,
+    int? MaleAnimalId,
+    int? SemenBatchId,
+    bool? PregnancyResult,
     int? OffspringCount,
     int? RegisteredBy
 ) : IRequest<ReproductionEventResponse>;

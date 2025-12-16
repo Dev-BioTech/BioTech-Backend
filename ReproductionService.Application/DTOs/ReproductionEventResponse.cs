@@ -9,10 +9,12 @@ public record ReproductionEventResponse(
     long AnimalId,
     ReproductionEventType EventType,
     string? Observations,
-    decimal? Cost,
-    int? SireId,
-    bool? IsPregnant,
+    int? MaleAnimalId,
+    int? SemenBatchId,
+    bool? PregnancyResult,
     int? OffspringCount,
+    bool IsCancelled,
     DateTime CreatedAt,
-    int? CreatedBy
+    DateTime? UpdatedAt,
+    int? RegisteredBy
 );

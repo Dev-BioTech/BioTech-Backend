@@ -2,7 +2,6 @@ using MediatR;
 using ReproductionService.Application.DTOs;
 using ReproductionService.Application.Interfaces;
 using ReproductionService.Domain.Entities;
-using ReproductionService.Domain.ValueObjects;
 
 namespace ReproductionService.Application.Commands.CreateReproductionEvent;
 
@@ -15,39 +14,47 @@ public class CreateReproductionEventCommandHandler : IRequestHandler<CreateRepro
         _repository = repository;
     }
 
-    public async Task<ReproductionEventResponse> Handle(CreateReproductionEventCommand request, CancellationToken cancellationToken)
+    public async Task<ReproductionEventResponse> Handle(CreateReproductionEventCommand request, CancellationToken ct)
     {
-        var reproductionEvent = new ReproductionEvent
+        var entity = new ReproductionEvent(
+            request.FarmId,
+            request.AnimalId,
+            request.EventType,
+            request.EventDate,
+            request.RegisteredBy,
+            request.Observations
+        )
         {
-            FarmId = request.FarmId,
-            EventDate = request.EventDate,
-            AnimalId = request.AnimalId,
-            EventType = request.EventType,
-            Observations = request.Observations,
-            Cost = request.Cost.HasValue ? Money.FromDecimal(request.Cost.Value) : Money.Zero(),
-            SireId = request.SireId,
-            IsPregnant = request.IsPregnant,
-            OffspringCount = request.OffspringCount,
-            RegisteredBy = request.RegisteredBy
+            MaleAnimalId = request.MaleAnimalId,
+            SemenBatchId = request.SemenBatchId,
+            PregnancyResult = request.PregnancyResult,
+            OffspringCount = request.OffspringCount
         };
 
-        reproductionEvent.Validate();
+        entity.Validate();
 
-        var createdEvent = await _repository.AddAsync(reproductionEvent, cancellationToken);
+        var created = await _repository.AddAsync(entity, ct);
 
+        return MapToResponse(created);
+    }
+
+    private static ReproductionEventResponse MapToResponse(ReproductionEvent entity)
+    {
         return new ReproductionEventResponse(
-            createdEvent.Id,
-            createdEvent.FarmId,
-            createdEvent.EventDate,
-            createdEvent.AnimalId,
-            createdEvent.EventType,
-            createdEvent.Observations,
-            createdEvent.Cost?.Amount,
-            createdEvent.SireId,
-            createdEvent.IsPregnant,
-            createdEvent.OffspringCount,
-            createdEvent.CreatedAt,
-            createdEvent.CreatedBy
+            entity.Id,
+            entity.FarmId,
+            entity.EventDate,
+            entity.AnimalId,
+            entity.EventType,
+            entity.Observations,
+            entity.MaleAnimalId,
+            entity.SemenBatchId,
+            entity.PregnancyResult,
+            entity.OffspringCount,
+            entity.IsCancelled,
+            entity.CreatedAt,
+            entity.UpdatedAt,
+            entity.RegisteredBy
         );
     }
 }

@@ -12,16 +12,15 @@ public class ReproductionEvent : IAuditableEntity
     public long AnimalId { get; set; }
     public ReproductionEventType EventType { get; set; }
     public string? Observations { get; set; }
-    public Money? Cost { get; set; }
     public int? RegisteredBy { get; set; }
 
-    // Specific fields for different event types could be added here or in subclasses/value objects
-    // For simplicity, we'll keep it generic for now, maybe adding JSONB for specific data if needed later
-    // But following FeedingService pattern, we keep it flat if possible.
-
-    public int? SireId { get; set; } // For Insemination/Birth
-    public bool? IsPregnant { get; set; } // For PregnancyCheck
+    // Specific fields
+    public int? MaleAnimalId { get; set; } // For NaturalMating
+    public int? SemenBatchId { get; set; } // For Insemination
+    public bool? PregnancyResult { get; set; } // For PregnancyCheck
     public int? OffspringCount { get; set; } // For Birth
+
+    public bool IsCancelled { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; }
@@ -31,23 +30,65 @@ public class ReproductionEvent : IAuditableEntity
 
     public ReproductionEvent()
     {
-        EventDate = DateTime.UtcNow.Date;
+        // EF Core
+    }
+
+    public ReproductionEvent(
+        int farmId,
+        long animalId,
+        ReproductionEventType eventType,
+        DateTime eventDate,
+        int? registeredBy,
+        string? observations = null)
+    {
+        FarmId = new ExternalId(farmId);
+        AnimalId = animalId; // Assuming AnimalId is long, ExternalId wrapper might need adjustment or just use validation here. 
+                             // Requirements said "animal_id > 0".
+        if (animalId <= 0) throw new ArgumentException("AnimalId must be greater than zero");
+
+        EventType = eventType;
+        EventDate = new EventDate(eventDate);
+        RegisteredBy = registeredBy;
+        Observations = new Observation(observations);
         CreatedAt = DateTime.UtcNow;
-        Cost = Money.Zero();
+    }
+
+    public void Cancel()
+    {
+        if (IsCancelled)
+            throw new InvalidOperationException("Event is already cancelled");
+        
+        IsCancelled = true;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void Validate()
     {
-        if (FarmId <= 0)
-            throw new ArgumentException("FarmId must be greater than zero");
+        if (FarmId <= 0) throw new ArgumentException("FarmId must be greater than zero");
+        if (AnimalId <= 0) throw new ArgumentException("AnimalId must be greater than zero");
+        if (EventDate > DateTime.UtcNow.Date) throw new ArgumentException("EventDate cannot be in the future");
 
-        if (AnimalId <= 0)
-            throw new ArgumentException("AnimalId must be greater than zero");
+        switch (EventType)
+        {
+            case ReproductionEventType.Insemination:
+                if (!SemenBatchId.HasValue)
+                    throw new InvalidOperationException("SemenBatchId is required for Insemination");
+                break;
 
-        if (!Enum.IsDefined(typeof(ReproductionEventType), EventType))
-            throw new ArgumentException("Invalid EventType");
+            case ReproductionEventType.NaturalMating:
+                if (!MaleAnimalId.HasValue)
+                    throw new InvalidOperationException("MaleAnimalId is required for NaturalMating");
+                break;
 
-        if (Cost != null && Cost.Amount < 0)
-            throw new ArgumentException("Cost cannot be negative");
+            case ReproductionEventType.PregnancyCheck:
+                if (!PregnancyResult.HasValue)
+                    throw new InvalidOperationException("PregnancyResult is required for PregnancyCheck");
+                break;
+
+            case ReproductionEventType.Birth:
+                if (!OffspringCount.HasValue || OffspringCount < 1)
+                    throw new InvalidOperationException("OffspringCount must be >= 1 for Birth");
+                break;
+        }
     }
 }
