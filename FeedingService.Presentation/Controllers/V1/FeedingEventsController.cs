@@ -1,5 +1,6 @@
 using FeedingService.Application.Commands.CancelFeedingEvent;
 using FeedingService.Application.Commands.CreateFeedingEvent;
+using FeedingService.Application.Commands.RecalculateTotalCost;
 using FeedingService.Application.DTOs;
 using FeedingService.Application.Queries.GetFeedingEventById;
 using FeedingService.Application.Queries.GetFeedingEventsByAnimal;
@@ -170,9 +171,26 @@ public class FeedingEventsController : ControllerBase
     }
 
     /// <summary>
-    /// Cancel a feeding event (Soft Delete)
+    /// Recalculate the cost of a feeding event
     /// </summary>
-    [HttpDelete("{id}")]
+    [HttpPost("recalculate-cost")]
+    [ProducesResponseType(typeof(ApiResponse<FeedingEventResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RecalculateCost(
+        [FromBody] RecalculateTotalCostCommand command,
+        CancellationToken ct)
+    {
+        _logger.LogInformation("Recalculating cost for feeding event: {Id}", command.Id);
+
+        var result = await _mediator.Send(command, ct);
+
+        return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event cost recalculated successfully"));
+    }
+
+    /// <summary>
+    /// Cancel a feeding event
+    /// </summary>
+    [HttpPut("{id}/cancel")]
     [ProducesResponseType(typeof(ApiResponse<FeedingEventResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Cancel(long id, CancellationToken ct)
