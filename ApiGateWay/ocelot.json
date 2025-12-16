@@ -9,7 +9,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/auth/{everything}",
+            "UpstreamPathTemplate": "/api/Auth/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
