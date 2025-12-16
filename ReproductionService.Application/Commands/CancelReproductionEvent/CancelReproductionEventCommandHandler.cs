@@ -38,8 +38,8 @@ public class CancelReproductionEventCommandHandler : IRequestHandler<CancelRepro
             entity.EventType,
             entity.Observations,
             entity.MaleAnimalId,
-            entity.SemenBatchId,
-            entity.PregnancyResult,
+            entity.IsSuccessful, // Was PregnancyResult
+            entity.ExpectedBirthDate, // Added
             entity.OffspringCount,
             entity.IsCancelled,
             entity.CreatedAt,

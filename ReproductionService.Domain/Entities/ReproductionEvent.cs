@@ -15,9 +15,11 @@ public class ReproductionEvent : IAuditableEntity
     public int? RegisteredBy { get; set; }
 
     // Specific fields
+    // Specific fields
     public int? MaleAnimalId { get; set; } // For NaturalMating
-    public int? SemenBatchId { get; set; } // For Insemination
-    public bool? PregnancyResult { get; set; } // For PregnancyCheck
+    // public int? SemenBatchId { get; set; } // Removed: Not in SQL
+    public bool? IsSuccessful { get; set; } // Mapped to is_successful (was PregnancyResult)
+    public DateOnly? ExpectedBirthDate { get; set; } // Added: In SQL
     public int? OffspringCount { get; set; } // For Birth
 
     public bool IsCancelled { get; set; }
@@ -71,8 +73,12 @@ public class ReproductionEvent : IAuditableEntity
         switch (EventType)
         {
             case ReproductionEventType.Insemination:
-                if (!SemenBatchId.HasValue)
-                    throw new InvalidOperationException("SemenBatchId is required for Insemination");
+                // SQL Schema removed SemenBatchId. We assume MaleAnimalId might be used or just Notes.
+                // Removing strict validation for SemenBatchId as it no longer exists.
+                if (!MaleAnimalId.HasValue && string.IsNullOrWhiteSpace(Observations))
+                     // Weak validation fallback: assume either Male ID (Bull) or Notes (Batch Code) required?
+                     // For now, removing the check to allow compile and strictly follow Schema constraints (which has no SemenBatchId).
+                    break;
                 break;
 
             case ReproductionEventType.NaturalMating:
@@ -81,8 +87,8 @@ public class ReproductionEvent : IAuditableEntity
                 break;
 
             case ReproductionEventType.PregnancyCheck:
-                if (!PregnancyResult.HasValue)
-                    throw new InvalidOperationException("PregnancyResult is required for PregnancyCheck");
+                if (!IsSuccessful.HasValue)
+                    throw new InvalidOperationException("IsSuccessful (Pregnancy Result) is required for PregnancyCheck");
                 break;
 
             case ReproductionEventType.Birth:
