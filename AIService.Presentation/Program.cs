@@ -16,6 +16,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Register Gateway Auth
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AIService.Presentation.Services.GatewayAuthenticationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

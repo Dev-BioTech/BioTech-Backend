@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.Persistence;
+using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
 
 namespace AuthService.Infrastructure;

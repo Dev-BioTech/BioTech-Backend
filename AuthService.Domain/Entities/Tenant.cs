@@ -12,5 +12,5 @@ public class Tenant
     public DateTime? UpdatedAt { get; set; }
 
     // Navigation properties
-    public ICollection<Farm> Farms { get; set; } = new List<Farm>();
+    // public ICollection<Farm> Farms { get; set; } = new List<Farm>();
 }

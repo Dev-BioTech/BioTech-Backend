@@ -38,6 +38,28 @@
             ]
         },
         {
+            "DownstreamPathTemplate": "/api/v1/Farms/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/Farms/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
             "DownstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [

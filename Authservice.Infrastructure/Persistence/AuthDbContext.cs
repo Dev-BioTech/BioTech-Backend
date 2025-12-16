@@ -20,6 +20,18 @@ public class AuthDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        // Apply all configurations from the current assembly
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthDbContext).Assembly);
+        
+        // Ensure manual mappings that aren't in configurations are kept if necessary,
+        // OR rely on the assumption that other configurations exist or will be created.
+        // Looking at the file content, many entities are manually configured here.
+        // It is safer to KEEP the existing manual configurations for other entities 
+        // and ONLY REMOVE/REPLACE the Farm configuration.
+        // However, "ApplyConfigurationsFromAssembly" is a cleaner pattern.
+        // But to avoid breaking changes to other entities without checking if they have configurations,
+        // I will keep the existing manual configurations for non-Farm entities and remove the Farm block.
 
         // Map to existing tables (lowercase as per SQL provided)
         modelBuilder.Entity<User>().ToTable("users");
@@ -86,23 +98,16 @@ public class AuthDbContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
-
-        // Farm Configuration
-        modelBuilder.Entity<Farm>(entity =>
-        {
-            entity.ToTable("farms");
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
-            entity.Property(e => e.Name).HasColumnName("name").IsRequired();
-            entity.Property(e => e.TenantId).HasColumnName("tenant_id");
-            entity.Property(e => e.Address).HasColumnName("address");
-            entity.Property(e => e.Location).HasColumnName("location");
-            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
-            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
-
-            entity.HasOne(d => d.Tenant)
-                .WithMany(p => p.Farms)
-                .HasForeignKey(d => d.TenantId);
-        });
+        
+        // Farm Configuration is now handled by FarmConfiguration class via ApplyConfigurationsFromAssembly
+        // or effectively by the added file if I use ApplyConfigurationsFromAssembly.
+        // NOTE: Since I am not refactoring the WHOLE context to use configurations, I should manually instantiate it 
+        // OR just add the `new FarmConfiguration().Configure(modelBuilder.Entity<Farm>());` line if I want to be explicit without reflection
+        // BUT the best practice is consistent. 
+        // Given I just added FarmConfiguration, I will trust the user won't mind if I use `ApplyConfigurationsFromAssembly` 
+        // OR simply call the configuration.
+        // Let's use `new FarmConfiguration().Configure(modelBuilder.Entity<Farm>());` to be safe and explicit alongside others.
+        
+        new Configurations.FarmConfiguration().Configure(modelBuilder.Entity<Farm>());
     }
 }
