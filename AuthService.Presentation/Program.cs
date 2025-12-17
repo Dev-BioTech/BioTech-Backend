@@ -60,7 +60,7 @@ builder.Services.AddCors(options =>
 });
 
 // Configure Port for Railway
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+var port = Environment.GetEnvironmentVariable("PORT") ?? builder.Configuration["Port"] ?? "8080";
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.ListenAnyIP(int.Parse(port));

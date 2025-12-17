@@ -3,6 +3,10 @@ using ReproductionService.Application;
 using ReproductionService.Infrastructure;
 using ReproductionService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using ReproductionService.Presentation.Middlewares;
+using Microsoft.OpenApi.Models;
+
+Env.TraversePath().Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +31,69 @@ if (!string.IsNullOrEmpty(dbHost))
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 }
 
-Env.TraversePath().Load();
+
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Add Authentication (Fixes InvalidOperationException)
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options => {});
+
+// Add Authorization
+builder.Services.AddAuthorization();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowGateway", policy =>
+    {
+        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
+// Swagger Configuration
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Reproduction Service API",
+        Version = "v1",
+        Description = "API for managing reproduction events."
+    });
+
+    c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
+    {
+        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
+        Name = "X-Gateway-Secret",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Gateway"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Gateway"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -58,6 +119,12 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<GatewayAuthenticationMiddleware>();
+
+app.UseCors("AllowGateway");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

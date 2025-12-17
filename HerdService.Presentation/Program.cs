@@ -3,29 +3,18 @@ using HerdService.Application;
 using HerdService.Infrastructure;
 using HerdService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using HerdService.Presentation.Middlewares;
 using Microsoft.OpenApi.Models;
+
+Env.TraversePath().Load(); // Moved to top
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Port for Railway
-// Configure Port for Railway (Only if env var is present)
-var port = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrEmpty(port))
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    builder.WebHost.ConfigureKestrel(serverOptions =>
-    {
-        serverOptions.ListenAnyIP(int.Parse(port));
-    });
-}
-
-// ...
-
-// Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Herd Service API", Version = "v1" });
+    serverOptions.ListenAnyIP(int.Parse(port));
 });
 
 // Configure Database Connection from Environment Variables (Railway)
@@ -42,11 +31,69 @@ if (!string.IsNullOrEmpty(dbHost))
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 }
 
-Env.TraversePath().Load();
+
 
 builder.Services.AddControllers();
+
+// Add Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options => {});
+
+// Add Authorization
+builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowGateway", policy =>
+    {
+        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Herd Service API",
+        Version = "v1",
+        Description = "API for managing herd and animals."
+    });
+
+    c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
+    {
+        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
+        Name = "X-Gateway-Secret",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Gateway"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Gateway"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -72,6 +119,13 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<GatewayAuthenticationMiddleware>();
+
+app.UseCors("AllowGateway");
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
