@@ -43,7 +43,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.SetIsOriginAllowed(origin => 
+        policy.SetIsOriginAllowed(origin =>
         {
             // Allow localhost for development
             if (origin.StartsWith("http://localhost")) return true;

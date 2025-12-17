@@ -12,6 +12,7 @@ public record UpdateAnimalCommand(
     int? BreedId,
     int? CategoryId,
     string? Purpose,
+    string? Sex,
     DateOnly? BirthDate,
     string? Origin,
     DateOnly? EntryDate,

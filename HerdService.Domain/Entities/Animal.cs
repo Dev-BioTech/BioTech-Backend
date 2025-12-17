@@ -110,6 +110,7 @@ public class Animal
         int? breedId,
         int? categoryId,
         string? purpose,
+        string? sex = null,
         DateOnly? birthDate = null,
         string? origin = null,
         decimal? initialCost = null,
@@ -128,6 +129,13 @@ public class Animal
         if (breedId.HasValue) BreedId = breedId.Value;
         if (categoryId.HasValue) CategoryId = categoryId.Value;
         if (!string.IsNullOrEmpty(purpose)) Purpose = purpose;
+
+        if (!string.IsNullOrEmpty(sex))
+        {
+            var validSexes = new[] { "M", "F" };
+            if (!validSexes.Contains(sex)) throw new ArgumentException("Sex must be 'M' or 'F'");
+            Sex = sex;
+        }
 
         if (birthDate.HasValue)
         {

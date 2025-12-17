@@ -33,19 +33,33 @@ public class TransactionsController : ControllerBase
         // Override User and Farm Context? Prompt says "FarmId is mandatory" but Gateway Auth implies we trust the header.
         // We should probably enforce FarmId matches context or set it from context.
         // Strategy: Set RegisteredBy from context. Verify FarmId.
-        
+
         var userId = _authService.GetUserId();
         var farmId = _authService.GetFarmId();
-        
-        if (!farmId.HasValue) return BadRequest(ApiResponse<long>.Fail("User is not associated with a valid Farm"));
-        
-        if (dto.FarmId != 0 && dto.FarmId != farmId.Value)
-             return Unauthorized(ApiResponse<long>.Fail("FarmId mismatch with Gateway Context"));
-        
+
+        if (dto.FarmId != 0)
+        {
+            if (!_authService.HasAccessToFarm(dto.FarmId))
+                return Unauthorized(ApiResponse<long>.Fail("User does not have access to the specified Farm"));
+
+            // If valid, we use dto.FarmId. 
+            // We don't check against farmId (context) because context might be default.
+        }
+        else
+        {
+            // If not provided in DTO, fallback to context
+            if (!farmId.HasValue) return BadRequest(ApiResponse<long>.Fail("User is not associated with a valid Farm"));
+            // We will modify the DTO to use the context farm
+        }
+
         // Ensure DTO uses context farm if 0 or matches.
-        var secureDto = dto with { FarmId = farmId.Value }; // Assuming record or modifiable
+        // Ensure DTO uses the correct farm
+        var finalFarmId = dto.FarmId != 0 ? dto.FarmId : (farmId ?? 0);
+        if (finalFarmId == 0) return BadRequest(ApiResponse<long>.Fail("FarmId is required"));
+
+        var secureDto = dto with { FarmId = finalFarmId };
         // Actually dto might be class. Let's assume CreateTransactionCommand takes userId separately.
-        
+
         // Command expects userId constraint
         var transactionId = await _mediator.Send(new CreateTransactionCommand(secureDto, userId ?? 0));
         return CreatedAtAction(nameof(GetTransactionById), new { id = transactionId }, ApiResponse<long>.Ok(transactionId, "Transaction created successfully"));
@@ -61,7 +75,7 @@ public class TransactionsController : ControllerBase
     {
         var farmId = _authService.GetFarmId();
         if (!farmId.HasValue) return BadRequest(ApiResponse<List<TransactionSummaryDto>>.Fail("User is not associated with a valid Farm"));
-        
+
         var result = await _mediator.Send(new CommercialService.Application.Queries.GetTransactionsQuery(farmId.Value, fromDate, toDate, type, page, pageSize));
         return Ok(ApiResponse<List<TransactionSummaryDto>>.Ok(result));
     }
@@ -70,13 +84,13 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult<ApiResponse<TransactionFullDto>>> GetTransactionById(long id)
     {
         var result = await _mediator.Send(new CommercialService.Application.Queries.GetTransactionByIdQuery(id));
-        if (result == null) 
+        if (result == null)
             return NotFound(ApiResponse<TransactionFullDto>.Fail("Transaction not found"));
-            
+
         // Verify ownership? Handler likely filters strictly, but good practice to check logic if ID is global.
         var farmId = _authService.GetFarmId();
         if (result.FarmId != farmId)
-             return NotFound(ApiResponse<TransactionFullDto>.Fail("Transaction not found")); // Mask unauthorized as not found
+            return NotFound(ApiResponse<TransactionFullDto>.Fail("Transaction not found")); // Mask unauthorized as not found
 
         return Ok(ApiResponse<TransactionFullDto>.Ok(result));
     }

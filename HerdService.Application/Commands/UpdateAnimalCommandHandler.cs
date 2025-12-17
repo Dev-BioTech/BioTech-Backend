@@ -27,6 +27,7 @@ public class UpdateAnimalCommandHandler : IRequestHandler<UpdateAnimalCommand, A
             request.BreedId,
             request.CategoryId,
             request.Purpose,
+            request.Sex,
             request.BirthDate,
             request.Origin,
             request.InitialCost,
