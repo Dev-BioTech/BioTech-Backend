@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using InventoryService.Application.Interfaces;
 using InventoryService.Domain.Entities;
+using InventoryService.Infrastructure.Persistence;
 
-namespace InventoryService.Infrastructure.Persistence;
+namespace InventoryService.Infrastructure.Repositories;
 
 public class InventoryRepository : IInventoryRepository
 {
