@@ -44,7 +44,16 @@ public class GatewayAuthenticationService
 
     public int? GetFarmId()
     {
-        // 1. Get all authorized tokens from "farm_role" claim
+        // 1. Try to get farmId from simple claim (set by GatewayAuthenticationMiddleware from X-Farm-Id header)
+        var farmIdClaim = _httpContextAccessor.HttpContext?.User
+            .FindFirst("farmId")?.Value;
+
+        if (!string.IsNullOrEmpty(farmIdClaim) && int.TryParse(farmIdClaim, out int simpleFarmId))
+        {
+            return simpleFarmId;
+        }
+
+        // 2. Get all authorized tokens from "farm_role" claim (for more complex scenarios)
         var farmRoleClaims = _httpContextAccessor.HttpContext?.User
             .FindAll("farm_role")
             .Select(c => c.Value)
@@ -62,36 +71,18 @@ public class GatewayAuthenticationService
             }
         }
 
-        // 2. Check for X-Farm-Id header
+        // 3. Check for X-Farm-Id header directly
         var headerValue = _httpContextAccessor.HttpContext?.Request.Headers["X-Farm-Id"].ToString();
         if (!string.IsNullOrEmpty(headerValue) && int.TryParse(headerValue, out int headerFarmId))
         {
-            if (authorizedFarmIds.Contains(headerFarmId))
+            if (authorizedFarmIds.Count == 0 || authorizedFarmIds.Contains(headerFarmId))
             {
                 return headerFarmId;
             }
         }
 
-        // 3. Fallback: Return the first authorized farm
+        // 4. Fallback: Return the first authorized farm
         return authorizedFarmIds.FirstOrDefault();
-    }
-
-    public bool HasAccessToFarm(int farmId)
-    {
-        var farmRoleClaims = _httpContextAccessor.HttpContext?.User
-            .FindAll("farm_role")
-            .Select(c => c.Value)
-            .ToList() ?? new List<string>();
-
-        foreach (var claim in farmRoleClaims)
-        {
-            var parts = claim.Split(':');
-            if (parts.Length > 0 && int.TryParse(parts[0], out int id))
-            {
-                if (id == farmId) return true;
-            }
-        }
-        return false;
     }
 
     public bool IsInRole(string role)
