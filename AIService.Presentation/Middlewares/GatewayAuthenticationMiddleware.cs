@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace AIService.Presentation.Middlewares;
-
 
 /// <summary>
 /// Middleware that validates requests come from the API Gateway and extracts user information from headers
@@ -25,8 +27,9 @@ public class GatewayAuthenticationMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        // Skip authentication for health check endpoints
-        if (context.Request.Path.StartsWithSegments("/health"))
+        // Skip authentication for health check endpoints and Swagger
+        if (context.Request.Path.StartsWithSegments("/health") || 
+            context.Request.Path.StartsWithSegments("/swagger"))
         {
             await _next(context);
             return;

@@ -9,6 +9,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Port for Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
+
 Env.Load();
 
 builder.Services.AddControllers();
@@ -113,15 +120,11 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AI Service API V1");
-        c.RoutePrefix = string.Empty;
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AI Service API V1");
+});
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
@@ -134,4 +137,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
