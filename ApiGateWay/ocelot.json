@@ -38,7 +38,7 @@
             ]
         },
         {
-            "DownstreamPathTemplate": "/api/Farm/{everything}",
+            "DownstreamPathTemplate": "/api/v1/Farms/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -46,7 +46,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/Farm/{everything}",
+            "UpstreamPathTemplate": "/api/v1/Farms/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
