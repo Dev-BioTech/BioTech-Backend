@@ -1,140 +1,179 @@
 # BioTech API Documentation
 
-Base URL: `http://localhost:5000` (Local) / `https://biotech-backend-production.up.railway.app` (Railway)
+**Base URL:** `http://localhost:5000` (Local) | `https://biotech-backend-production.up.railway.app` (Railway)
 
-This document outlines the available API endpoints exposed through the API Gateway.
+All endpoints are accessed through the API Gateway. Authentication required unless specified.
+
+---
 
 ## 🤖 AI Service
-**Base Path:** `/api/Chat`
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/Chat` | Send a message to the AI assistant and get a response. |
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| `POST` | `/api/Chat` | Send message to AI assistant | ✅ |
+
+---
 
 ## 🔐 Auth Service
-**Base Path:** `/api/Auth`
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/Auth/login` | Authenticate a user and receive a JWT. |
-| `POST` | `/api/Auth/register` | Register a new user. |
-| `GET` | `/api/Auth/profile` | Get the authenticated user's profile. |
-| `PUT` | `/api/Auth/profile` | Update the authenticated user's profile. |
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| `POST` | `/api/Auth/login` | User login | ❌ |
+| `POST` | `/api/Auth/register` | Register new user | ❌ |
+| `GET` | `/api/auth/profile` | Get user profile | ✅ |
+| `PUT` | `/api/auth/profile` | Update user profile | ✅ |
 
-### 🚜 Farms
-**Base Path:** `/api/Farm`
-*(Note: Ocelot maps `/api/Farm` to AuthService. Ensure backend controller matches or routes are updated.)*
+### Farms
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/Farm` | Create a new farm. |
-| `GET` | `/api/Farm/{id}` | Get a farm by its ID. |
-| `GET` | `/api/Farm/tenant/{userId}` | Get all farms associated with a user (tenant). |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/v1/Farms` | Create farm | - | ✅ |
+| `GET` | `/api/v1/Farms/{id}` | Get farm by ID | - | ✅ |
+| `GET` | `/api/v1/Farms/tenant/{userId}` | Get farms by tenant | `includeInactive` | ✅ |
+
+---
 
 ## 🍽️ Feeding Service
-**Base Path:** `/api/v1/FeedingEvents`
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/v1/FeedingEvents/{id}` | Get feeding event by ID. |
-| `GET` | `/api/v1/FeedingEvents/farm/{farmId}` | Get feeding events for a farm. |
-| `GET` | `/api/v1/FeedingEvents/batch/{batchId}` | Get feeding events for a batch. |
-| `GET` | `/api/v1/FeedingEvents/product/{productId}` | Get feeding events for a product. |
-| `GET` | `/api/v1/FeedingEvents/animal/{animalId}` | Get feeding events for a specific animal. |
-| `POST` | `/api/v1/FeedingEvents` | Create a new feeding event. |
-| `POST` | `/api/v1/FeedingEvents/recalculate-cost` | Recalculate the cost of a feeding event. |
-| `PUT` | `/api/v1/FeedingEvents/{id}/cancel` | Cancel (soft delete) a feeding event. |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/v1/FeedingEvents` | Create feeding event | - | ✅ |
+| `GET` | `/api/v1/FeedingEvents/{id}` | Get by ID | - | ✅ |
+| `GET` | `/api/v1/FeedingEvents/farm/{farmId}` | Get by farm | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/FeedingEvents/batch/{batchId}` | Get by batch | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/FeedingEvents/product/{productId}` | Get by product | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/FeedingEvents/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
+| `POST` | `/api/v1/FeedingEvents/recalculate-cost` | Recalculate cost | - | ✅ |
+| `PUT` | `/api/v1/FeedingEvents/{id}/cancel` | Cancel event | - | ✅ |
+
+---
 
 ## 🧬 Reproduction Service
-**Base Path:** `/api/v1/Reproduction`
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/v1/Reproduction/{id}` | Get reproduction event by ID. |
-| `GET` | `/api/v1/Reproduction/animal/{animalId}` | Get reproduction events for an animal. |
-| `GET` | `/api/v1/Reproduction/farm/{farmId}` | Get reproduction events for a farm. |
-| `GET` | `/api/v1/Reproduction/type/{type}` | Get reproduction events by type (e.g., Insemination). |
-| `POST` | `/api/v1/Reproduction` | Create a new reproduction event. |
-| `DELETE` | `/api/v1/Reproduction/{id}` | Cancel/Delete a reproduction event. |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/v1/Reproduction` | Create event | - | ✅ |
+| `GET` | `/api/v1/Reproduction/{id}` | Get by ID | - | ✅ |
+| `GET` | `/api/v1/Reproduction/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/Reproduction/farm` | Get by farm (context) | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/Reproduction/farm/{farmId}` | Get by farm ID | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/Reproduction/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
+| `PUT` | `/api/v1/Reproduction/{id}/cancel` | Cancel event | - | ✅ |
 
-## � Herd Service (Animals)
-**Base Path:** `/api/v1/animals`
+---
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/v1/animals` | Get animals (Query params: `farmId`, `status`, `includeInactive`). |
-| `GET` | `/api/v1/animals/{id}` | Get animal by ID. |
-| `POST` | `/api/v1/animals` | Register a new animal. |
-| `PUT` | `/api/v1/animals/{id}` | Update animal details. |
-| `DELETE` | `/api/v1/animals/{id}` | Delete an animal. |
-| `POST` | `/api/v1/animals/{id}/movements` | Register a movement (e.g., pasture change). |
-| `PUT` | `/api/v1/animals/{id}/weight` | Update animal weight. |
-| `PUT` | `/api/v1/animals/{id}/batch` | Move animal to a different batch. |
-| `PUT` | `/api/v1/animals/{id}/sell` | Mark animal as sold. |
-| `PUT` | `/api/v1/animals/{id}/dead` | Mark animal as dead. |
+## 🐄 Herd Service - Animals
 
-### Other Herd Resources
-The Herd service also exposes:
-- `/api/v1/batches`
-- `/api/v1/breeds`
-- `/api/v1/categories`
-- `/api/v1/movement-types`
-- `/api/v1/paddocks`
-*(Assume standard CRUD pattern for these resources)*
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/v1/animals` | Register animal | - | ✅ |
+| `GET` | `/api/v1/animals` | Get animals | `farmId`, `status`, `includeInactive` | ✅ |
+| `GET` | `/api/v1/animals/{id}` | Get by ID | - | ✅ |
+| `PUT` | `/api/v1/animals/{id}` | Update animal | - | ✅ |
+| `DELETE` | `/api/v1/animals/{id}` | Delete animal | - | ✅ |
+| `POST` | `/api/v1/animals/{id}/movements` | Register movement | - | ✅ |
+| `PUT` | `/api/v1/animals/{id}/weight` | Update weight | - | ✅ |
+| `PUT` | `/api/v1/animals/{id}/batch` | Move to batch | - | ✅ |
+| `PUT` | `/api/v1/animals/{id}/sell` | Mark as sold | - | ✅ |
+| `PUT` | `/api/v1/animals/{id}/dead` | Mark as dead | - | ✅ |
+
+**Note:** Herd Service also exposes `/api/v1/batches`, `/api/v1/breeds`, `/api/v1/categories`, `/api/v1/movement-types`, `/api/v1/paddocks` (standard CRUD).
+
+---
 
 ## 🏥 Health Service
-**Base Path:** `/api/HealthEvent`
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/HealthEvent` | Register a new health event. |
-| `GET` | `/api/HealthEvent/farm` | Get events by farm (Query: `fromDate`, `toDate`, `eventType`). |
-| `GET` | `/api/HealthEvent/animal/{animalId}` | Get events for an animal. |
-| `GET` | `/api/HealthEvent/batch/{batchId}` | Get events for a batch. |
-| `GET` | `/api/HealthEvent/type/{type}` | Get events by type. |
-| `GET` | `/api/HealthEvent/dashboard-stats` | Get health dashboard statistics. |
-| `GET` | `/api/HealthEvent/upcoming` | Get upcoming health events/treatments. |
-| `GET` | `/api/HealthEvent/recent-treatments` | Get recent treatments. |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/HealthEvent` | Register event | - | ✅ |
+| `GET` | `/api/HealthEvent/farm` | Get by farm (context) | `page`, `pageSize` | ✅ |
+| `GET` | `/api/HealthEvent/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
+| `GET` | `/api/HealthEvent/batch/{batchId}` | Get by batch | `page`, `pageSize` | ✅ |
+| `GET` | `/api/HealthEvent/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
+| `GET` | `/api/HealthEvent/dashboard-stats` | Dashboard stats | - | ✅ |
+| `GET` | `/api/HealthEvent/upcoming` | Upcoming events | `limit` | ✅ |
+| `GET` | `/api/HealthEvent/recent-treatments` | Recent treatments | `limit` | ✅ |
 
-## � Commercial Service
-**Base Path:** `/api/transactions`
+---
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/transactions` | Create a new transaction. |
-| `GET` | `/api/transactions` | Get transactions (Query: `farmId`, `type`, `date`). |
-| `GET` | `/api/transactions/{id}` | Get transaction by ID. |
-| `GET` | `/api/transactions/{id}/animals` | Get animals involved in a transaction. |
-| `GET` | `/api/transactions/{id}/products` | Get products involved in a transaction. |
+## 💼 Commercial Service
 
-**Base Path:** `/api/third-parties`
+### Transactions
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/third-parties` | Create a third party (customer/supplier). |
-| `PUT` | `/api/third-parties/{id}` | Update a third party. |
-| `GET` | `/api/third-parties` | Get third parties. |
-| `GET` | `/api/third-parties/{id}` | Get third party by ID. |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/transactions` | Create transaction | - | ✅ |
+| `GET` | `/api/transactions` | Get transactions | `fromDate`, `toDate`, `type`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/transactions/{id}` | Get by ID | - | ✅ |
+| `GET` | `/api/transactions/{id}/animals` | Get transaction animals | - | ✅ |
+| `GET` | `/api/transactions/{id}/products` | Get transaction products | - | ✅ |
 
-## � Inventory Service
-**Base Path:** `/api/Products`
+### Third Parties
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/Products` | Create a new product. |
-| `GET` | `/api/Products` | Get products (Query: `farmId`). |
-| `GET` | `/api/Products/low-stock` | Get low stock products. |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/third-parties` | Create third party | - | ✅ |
+| `PUT` | `/api/third-parties/{id}` | Update third party | - | ✅ |
+| `GET` | `/api/third-parties` | Get third parties | `isSupplier`, `isCustomer`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/third-parties/{id}` | Get by ID | - | ✅ |
 
-**Base Path:** `/api/Inventory`
+---
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/Inventory` | Create inventory item. |
-| `GET` | `/api/Inventory/farm/{farmId}` | Get inventory items by farm. |
+## 📦 Inventory Service
 
-**Base Path:** `/api/InventoryMovements`
+### Products
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/InventoryMovements` | Register inventory movement (in/out). |
-| `GET` | `/api/InventoryMovements/product/{productId}` | Get movement history (Kardex) for a product. |
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/Products` | Create product | - | ✅ |
+| `GET` | `/api/Products` | Get products | `farmId` (required) | ✅ |
+| `GET` | `/api/Products/low-stock` | Get low stock | `farmId` (required) | ✅ |
+
+### Inventory
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/Inventory` | Create inventory item | - | ✅ |
+| `GET` | `/api/Inventory/farm/{farmId}` | Get by farm | `page`, `pageSize` | ✅ |
+
+### Inventory Movements
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `POST` | `/api/InventoryMovements` | Register movement | - | ✅ |
+| `GET` | `/api/InventoryMovements/product/{productId}` | Get Kardex | - | ✅ |
+
+---
+
+## 📝 Integration Notes
+
+### Authentication
+- Include JWT token: `Authorization: Bearer <token>`
+- Get token from `/api/Auth/login`
+
+### Farm Context
+- Most endpoints filter by user's `farmId` from JWT
+- Some require explicit `farmId` query parameter
+
+### Pagination
+- Default: `page=1`, `pageSize=10`
+- Example: `?page=2&pageSize=20`
+
+### Date Format
+- ISO 8601: `YYYY-MM-DD`
+- Example: `fromDate=2024-01-01`
+
+### Response Format
+```json
+{
+  "success": true,
+  "message": "Success message",
+  "data": {},
+  "errors": []
+}
+```
+
+---
+
+**Last Updated:** 2024-12-16  
+**Version:** 1.0
