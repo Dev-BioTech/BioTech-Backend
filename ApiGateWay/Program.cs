@@ -95,7 +95,12 @@ foreach (var route in routes)
     }
 }
 
-builder.Services.AddOcelot(builder.Configuration);
+// Register GatewayHeaderHandler
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<ApiGateWay.Handlers.GatewayHeaderHandler>();
+
+builder.Services.AddOcelot(builder.Configuration)
+    .AddDelegatingHandler<ApiGateWay.Handlers.GatewayHeaderHandler>(true);
 
 // 5. Database Context (Required if Gateway accesses DB directly)
 var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +

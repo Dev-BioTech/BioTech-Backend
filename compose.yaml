@@ -144,7 +144,13 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
       - Gemini__ApiKey=${GEMINI_API_KEY}
+      - AnthropicApi__ApiKey=${ANTHROPIC_API_KEY}
       - Gateway__Secret=secret123
+      - ServiceUrls__HerdService=${HERD_SERVICE_URL:-http://herd-service:8080}
+      - ServiceUrls__HealthService=${HEALTH_SERVICE_URL:-http://health-service:8080}
+      - ServiceUrls__FeedingService=${FEEDING_SERVICE_URL:-http://feeding-service:8080}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - biotech-network
 
