@@ -94,4 +94,44 @@ public class GatewayAuthenticationService
     {
         return _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
     }
+
+    public bool HasAccessToFarm(int farmId)
+    {
+        // 1. Check simple claim
+        var farmIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst("farmId")?.Value;
+        if (!string.IsNullOrEmpty(farmIdClaim) && int.TryParse(farmIdClaim, out int simpleFarmId))
+        {
+            if (simpleFarmId == farmId) return true;
+        }
+
+        // 2. Check farm_role claims
+        var farmRoleClaims = _httpContextAccessor.HttpContext?.User
+            .FindAll("farm_role")
+            .Select(c => c.Value)
+            .ToList() ?? new List<string>();
+
+        var authorizedFarmIds = new List<int>();
+        foreach (var claim in farmRoleClaims)
+        {
+            var parts = claim.Split(':');
+            if (parts.Length > 0 && int.TryParse(parts[0], out int id))
+            {
+                authorizedFarmIds.Add(id);
+                if (id == farmId) return true;
+            }
+        }
+
+        // 3. Fallback: If no roles defined, trust the header (development/simple mode)
+        // Only if we haven't found explicit authorization yet
+        if (authorizedFarmIds.Count == 0 && string.IsNullOrEmpty(farmIdClaim))
+        {
+            var headerValue = _httpContextAccessor.HttpContext?.Request.Headers["X-Farm-Id"].ToString();
+            if (!string.IsNullOrEmpty(headerValue) && int.TryParse(headerValue, out int headerFarmId))
+            {
+                if (headerFarmId == farmId) return true;
+            }
+        }
+        
+        return false;
+    }
 }
