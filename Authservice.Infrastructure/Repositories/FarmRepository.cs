@@ -40,28 +40,27 @@ public class FarmRepository : IFarmRepository
     public async Task<Farm> AddAsync(Farm farm, int? userId, CancellationToken ct = default)
     {
         await _context.Farms.AddAsync(farm, ct);
+        await _context.SaveChangesAsync(ct);
         
         if (userId.HasValue)
         {
-            // Assign default role (e.g., 'Owner' or similar). 
-            // Assuming Role ID 1 or looking up.
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "ADMIN" || r.Name == "OWNER", ct); 
-            // Fallback or throw if no role found? 
+            var role = await _context.Roles
+                .FirstOrDefaultAsync(r => r.Name == "ADMIN" || r.Name == "OWNER", ct);
+            
             if (role != null)
             {
                 var userFarmRole = new UserFarmRole
                 {
                     UserId = userId.Value,
-                    Farm = farm, // Entity Framework will handle the ID assignment after SaveChanges? 
-                                 // Actually for AddAsync(farm) we might need to save farm first OR add to context.
-                                 // Adding to navigation property of UserFarmRole is safer.
+                    FarmId = farm.Id,
                     RoleId = role.Id
                 };
+                
                 await _context.UserFarmRoles.AddAsync(userFarmRole, ct);
+                await _context.SaveChangesAsync(ct);
             }
         }
-
-        await _context.SaveChangesAsync(ct);
+        
         return farm;
     }
 
