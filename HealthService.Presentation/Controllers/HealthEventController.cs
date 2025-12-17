@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HealthService.Application.Commands;
 using HealthService.Application.Queries;
@@ -144,32 +143,5 @@ public class HealthEventController : ControllerBase
 
         var result = await _mediator.Send(new GetRecentTreatmentsQuery(effectiveFarmId.Value, limit));
         return Ok(ApiResponse<IEnumerable<HealthEventResponse>>.Ok(result));
-    }
-    [HttpGet("farm/{farmId}")]
-    public async Task<ActionResult<List<HealthEventResponse>>> GetByFarm(int farmId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-    {
-        var result = await _sender.Send(new HealthService.Application.Queries.GetHealthEventsByFarm.GetHealthEventsByFarmQuery(farmId, page, pageSize));
-        return Ok(result);
-    }
-
-    [HttpGet("animal/{animalId}")]
-    public async Task<ActionResult<List<HealthEventResponse>>> GetByAnimal(long animalId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-    {
-        var result = await _sender.Send(new HealthService.Application.Queries.GetHealthEventsByAnimal.GetHealthEventsByAnimalQuery(animalId, page, pageSize));
-        return Ok(result);
-    }
-
-    [HttpGet("batch/{batchId}")]
-    public async Task<ActionResult<List<HealthEventResponse>>> GetByBatch(int batchId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-    {
-        var result = await _sender.Send(new HealthService.Application.Queries.GetHealthEventsByBatch.GetHealthEventsByBatchQuery(batchId, page, pageSize));
-        return Ok(result);
-    }
-
-    [HttpGet("type/{type}")]
-    public async Task<ActionResult<List<HealthEventResponse>>> GetByType(string type, [FromQuery] int farmId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-    {
-        var result = await _sender.Send(new HealthService.Application.Queries.GetHealthEventsByType.GetHealthEventsByTypeQuery(type, farmId, page, pageSize));
-        return Ok(result);
     }
 }

@@ -6,6 +6,40 @@ System.AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Port for Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
+
+// Configure Database Connection from Environment Variables (Railway)
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+if (!string.IsNullOrEmpty(dbHost))
+{
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+    var dbName = Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
+    var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+    var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+
+    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+}
+
+// Configure JWT from Environment Variables
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
+if (!string.IsNullOrEmpty(jwtSecret))
+{
+    builder.Configuration["Jwt:Secret"] = jwtSecret;
+    builder.Configuration["Jwt:Issuer"] = jwtIssuer ?? "BioTech";
+    builder.Configuration["Jwt:Audience"] = jwtAudience ?? "BioTech";
+}
+
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
