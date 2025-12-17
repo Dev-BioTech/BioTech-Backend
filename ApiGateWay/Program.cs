@@ -69,11 +69,19 @@ foreach (var route in routes)
             var serviceUrl = Environment.GetEnvironmentVariable($"{envPrefix}_URL");
             if (!string.IsNullOrEmpty(serviceUrl))
             {
-                // Parse the URL to extract host and port
-                var uri = new Uri(serviceUrl);
-                hostConfig["Host"] = uri.Host;
-                hostConfig["Port"] = uri.Port.ToString();
-                route["DownstreamScheme"] = uri.Scheme;
+                try
+                {
+                    // Parse the URL to extract host and port
+                    var uri = new Uri(serviceUrl);
+                    hostConfig["Host"] = uri.Host;
+                    hostConfig["Port"] = uri.Port.ToString();
+                    route["DownstreamScheme"] = uri.Scheme;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"WARNING: Invalid URI for {host} (Value: '{serviceUrl}'): {ex.Message}");
+                    // Fallback to existing or empty values to prevent crash
+                }
             }
             else
             {
