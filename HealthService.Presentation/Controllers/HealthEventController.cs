@@ -57,56 +57,53 @@ public class HealthEventController : ControllerBase
     }
 
     [HttpGet("farm")]
-    public async Task<ActionResult<ApiResponse<HealthEventListResponse>>> GetByFarm(
-        [FromQuery] DateOnly? fromDate,
-        [FromQuery] DateOnly? toDate,
-        [FromQuery] string? eventType)
+    public async Task<ActionResult<ApiResponse<List<HealthEventResponse>>>> GetByFarm(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         var effectiveFarmId = _authService.GetFarmId();
 
         if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
-            return BadRequest(ApiResponse<HealthEventListResponse>.Fail("User is not associated with a valid Farm (Context Missing)"));
+            return BadRequest(ApiResponse<List<HealthEventResponse>>.Fail("User is not associated with a valid Farm (Context Missing)"));
 
-        var query = new GetHealthEventsByFarmQuery(effectiveFarmId.Value, fromDate, toDate, eventType);
+        var query = new GetHealthEventsByFarmQuery(effectiveFarmId.Value, page, pageSize);
         var result = await _mediator.Send(query);
-        return Ok(ApiResponse<HealthEventListResponse>.Ok(result));
+        return Ok(ApiResponse<List<HealthEventResponse>>.Ok(result));
     }
 
     [HttpGet("animal/{animalId}")]
-    public async Task<ActionResult<ApiResponse<HealthEventListResponse>>> GetByAnimal(
+    public async Task<ActionResult<ApiResponse<List<HealthEventResponse>>>> GetByAnimal(
         long animalId,
-        [FromQuery] string? eventType)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        // Ideally we should verify if the animal belongs to the user's farm, 
-        // but that requires cross-service check or animal duplication. 
-        // For now, adhering to strict microservice boundaries without direct DB access to Animal table.
-        var result = await _mediator.Send(new GetHealthEventsByAnimalQuery(animalId, eventType));
-        return Ok(ApiResponse<HealthEventListResponse>.Ok(result));
+        var result = await _mediator.Send(new GetHealthEventsByAnimalQuery(animalId, page, pageSize));
+        return Ok(ApiResponse<List<HealthEventResponse>>.Ok(result));
     }
 
     [HttpGet("batch/{batchId}")]
-    public async Task<ActionResult<ApiResponse<HealthEventListResponse>>> GetByBatch(
+    public async Task<ActionResult<ApiResponse<List<HealthEventResponse>>>> GetByBatch(
         int batchId,
-        [FromQuery] string? eventType)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        // Similar constraint logic applies here
-        var result = await _mediator.Send(new GetHealthEventsByBatchQuery(batchId, eventType));
-        return Ok(ApiResponse<HealthEventListResponse>.Ok(result));
+        var result = await _mediator.Send(new GetHealthEventsByBatchQuery(batchId, page, pageSize));
+        return Ok(ApiResponse<List<HealthEventResponse>>.Ok(result));
     }
 
     [HttpGet("type/{type}")]
-    public async Task<ActionResult<ApiResponse<HealthEventListResponse>>> GetByType(
+    public async Task<ActionResult<ApiResponse<List<HealthEventResponse>>>> GetByType(
         string type,
-        [FromQuery] DateOnly? fromDate,
-        [FromQuery] DateOnly? toDate)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         var effectiveFarmId = _authService.GetFarmId();
 
         if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
-            return BadRequest(ApiResponse<HealthEventListResponse>.Fail("User is not associated with a valid Farm (Context Missing)"));
+            return BadRequest(ApiResponse<List<HealthEventResponse>>.Fail("User is not associated with a valid Farm (Context Missing)"));
 
-        var result = await _mediator.Send(new GetHealthEventsByTypeQuery(type, effectiveFarmId.Value, fromDate, toDate));
-        return Ok(ApiResponse<HealthEventListResponse>.Ok(result));
+        var result = await _mediator.Send(new GetHealthEventsByTypeQuery(type, effectiveFarmId.Value, page, pageSize));
+        return Ok(ApiResponse<List<HealthEventResponse>>.Ok(result));
     }
 
     [HttpGet("dashboard-stats")]
