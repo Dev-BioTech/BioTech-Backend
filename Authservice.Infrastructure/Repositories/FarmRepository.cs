@@ -44,21 +44,26 @@ public class FarmRepository : IFarmRepository
         
         if (userId.HasValue)
         {
+            // Ensure OWNER role exists, create if not present
             var role = await _context.Roles
-                .FirstOrDefaultAsync(r => r.Name == "ADMIN" || r.Name == "OWNER", ct);
+                .FirstOrDefaultAsync(r => r.Name == "Owner", ct);
             
-            if (role != null)
+            if (role == null)
             {
-                var userFarmRole = new UserFarmRole
-                {
-                    UserId = userId.Value,
-                    FarmId = farm.Id,
-                    RoleId = role.Id
-                };
-                
-                await _context.UserFarmRoles.AddAsync(userFarmRole, ct);
+                role = new Role { Name = "Owner", Description = "Farm Owner with full access" };
+                await _context.Roles.AddAsync(role, ct);
                 await _context.SaveChangesAsync(ct);
             }
+            
+            var userFarmRole = new UserFarmRole
+            {
+                UserId = userId.Value,
+                FarmId = farm.Id,
+                RoleId = role.Id
+            };
+            
+            await _context.UserFarmRoles.AddAsync(userFarmRole, ct);
+            await _context.SaveChangesAsync(ct);
         }
         
         return farm;
