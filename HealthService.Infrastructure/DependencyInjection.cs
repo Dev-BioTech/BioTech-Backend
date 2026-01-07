@@ -20,15 +20,24 @@ public static class DependencyInjection
         // Database
         services.AddDbContext<HealthServiceDbContext>(options =>
         {
-            var host = Environment.GetEnvironmentVariable("DB_HOST");
-            var port = Environment.GetEnvironmentVariable("DB_PORT");
-            var database = Environment.GetEnvironmentVariable("DB_DATABASE") ?? "biotech_db"; // Default or specific name
-            var user = Environment.GetEnvironmentVariable("DB_USER");
-            var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
-            var sslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
+            var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
+            string connectionString;
 
-            var connectionString =
-                $"Host={host};Port={port};Database={database};Username={user};Password={password};SslMode={sslMode};";
+            if (!string.IsNullOrEmpty(pgUri))
+            {
+                connectionString = pgUri;
+            }
+            else
+            {
+                var host = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+                var port = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
+                var database = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? "biotech_db";
+                var user = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+                var password = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+                var sslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
+
+                connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SslMode={sslMode};";
+            }
 
             options.UseNpgsql(connectionString, npgsqlOptions =>
             {

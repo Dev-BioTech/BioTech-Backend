@@ -7,6 +7,14 @@ namespace InventoryService.Domain.Interfaces;
 
 public interface IInventoryRepository
 {
-    Task AddMovementAsync(InventoryMovement movement, CancellationToken cancellationToken);
-    Task<IEnumerable<InventoryMovement>> GetMovementsByProductIdAsync(int productId, CancellationToken cancellationToken);
+    // InventoryItem methods
+    Task<InventoryItem?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<InventoryItem>> GetByFarmIdAsync(int farmId, int page, int pageSize, CancellationToken cancellationToken = default);
+    Task AddAsync(InventoryItem item, CancellationToken cancellationToken = default);
+    Task UpdateAsync(InventoryItem item, CancellationToken cancellationToken = default);
+    Task DeleteAsync(InventoryItem item, CancellationToken cancellationToken = default);
+
+    // InventoryMovement methods
+    Task AddMovementAsync(InventoryMovement movement, CancellationToken cancellationToken = default);
+    Task<IEnumerable<InventoryMovement>> GetMovementsByProductIdAsync(int productId, CancellationToken cancellationToken = default);
 }
