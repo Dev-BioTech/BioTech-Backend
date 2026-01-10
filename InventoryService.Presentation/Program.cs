@@ -2,12 +2,14 @@ using Shared.Infrastructure.Extensions;
 using InventoryService.Application;
 using InventoryService.Infrastructure;
 using InventoryService.Presentation.Middlewares;
+using DotNetEnv;
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
+Env.Load();
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -50,18 +52,26 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.ListenAnyIP(int.Parse(port));
 });
 
-// Configure Database Connection from Environment Variables (Railway)
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-if (!string.IsNullOrEmpty(dbHost))
+// Configure Database Connection from Environment Variables (Clever Cloud / Railway)
+var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
+if (!string.IsNullOrEmpty(pgUri))
 {
-    var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
-    var dbName = Environment.GetEnvironmentVariable("DB_DATABASE");
-    var dbUser = Environment.GetEnvironmentVariable("DB_USER");
-    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-    var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = pgUri;
+}
+else
+{
+    var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+    if (!string.IsNullOrEmpty(dbHost))
+    {
+        var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
+        var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE");
+        var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+        var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
 
-    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
-    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+        var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
+        builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+    }
 }
 
 // Configure Gateway Secret from Environment Variables

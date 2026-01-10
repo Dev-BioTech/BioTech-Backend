@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InventoryService.Application.Handlers;
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, long>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
 {
     private readonly IProductRepository _repository;
 
@@ -18,7 +18,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         _repository = repository;
     }
 
-    public async Task<long> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var dto = request.Dto;
 

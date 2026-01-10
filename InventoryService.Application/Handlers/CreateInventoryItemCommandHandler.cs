@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using InventoryService.Application.DTOs;
-using InventoryService.Application.Interfaces;
+using InventoryService.Domain.Interfaces;
 using InventoryService.Domain.Entities;
 using MediatR;
 using InventoryService.Application.Commands;
@@ -33,7 +33,7 @@ public class CreateInventoryItemCommandHandler : IRequestHandler<CreateInventory
         // Let's assume if we get a response, it's valid.
 
         var item = new InventoryItem(request.Name, request.Quantity, request.Unit, request.FarmId);
-        await _repository.AddAsync(item);
+        await _repository.AddAsync(item, cancellationToken);
 
         return new InventoryItemDto
         {

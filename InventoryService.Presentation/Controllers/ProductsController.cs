@@ -20,7 +20,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<long>> CreateProduct(CreateProductDto dto)
+    public async Task<ActionResult<int>> CreateProduct(CreateProductDto dto)
     {
         var id = await _mediator.Send(new CreateProductCommand(dto));
         return CreatedAtAction(nameof(GetProducts), new { id }, id); // Ideally GetById, but GetProducts is fine for now

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using InventoryService.Application.Interfaces;
+using InventoryService.Domain.Interfaces;
 using InventoryService.Domain.Entities;
 using InventoryService.Infrastructure.Persistence;
 
@@ -17,12 +18,12 @@ public class InventoryRepository : IInventoryRepository
         _context = context;
     }
 
-    public async Task<InventoryItem> GetByIdAsync(int id)
+    public async Task<InventoryItem?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.InventoryItems.FindAsync(id);
+        return await _context.InventoryItems.FindAsync(new object[] { id }, cancellationToken);
     }
 
-    public async Task<IEnumerable<InventoryItem>> GetByFarmIdAsync(int farmId, int page, int pageSize)
+    public async Task<IEnumerable<InventoryItem>> GetByFarmIdAsync(int farmId, int page, int pageSize, CancellationToken cancellationToken = default)
     {
         return await _context.InventoryItems
             .AsNoTracking()
@@ -30,24 +31,39 @@ public class InventoryRepository : IInventoryRepository
             .OrderByDescending(i => i.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task AddAsync(InventoryItem item)
+    public async Task AddAsync(InventoryItem item, CancellationToken cancellationToken = default)
     {
-        await _context.InventoryItems.AddAsync(item);
-        await _context.SaveChangesAsync();
+        await _context.InventoryItems.AddAsync(item, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateAsync(InventoryItem item)
+    public async Task UpdateAsync(InventoryItem item, CancellationToken cancellationToken = default)
     {
         _context.InventoryItems.Update(item);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(InventoryItem item)
+    public async Task DeleteAsync(InventoryItem item, CancellationToken cancellationToken = default)
     {
         _context.InventoryItems.Remove(item);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task AddMovementAsync(InventoryMovement movement, CancellationToken cancellationToken = default)
+    {
+        await _context.InventoryMovements.AddAsync(movement, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<InventoryMovement>> GetMovementsByProductIdAsync(int productId, CancellationToken cancellationToken = default)
+    {
+        return await _context.InventoryMovements
+            .AsNoTracking()
+            .Where(m => m.ProductId == productId)
+            .OrderByDescending(m => m.MovementDate)
+            .ToListAsync(cancellationToken);
     }
 }
