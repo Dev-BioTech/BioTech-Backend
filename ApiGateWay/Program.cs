@@ -1,6 +1,7 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Shared.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,24 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 3. Configure CORS (Merged User Request)
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowVercel", policy =>
-    {
-        policy.SetIsOriginAllowed(origin => 
-        {
-            // Allow localhost for development
-            if (origin.StartsWith("http://localhost")) return true;
-            // Allow any Vercel subdomain
-            if (origin.EndsWith(".vercel.app")) return true;
-            // Allow specific production domains if added later
-            return false;
-        })
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
-    });
-});
+builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
 // 4. Ocelot Configuration
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
@@ -160,7 +144,7 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 
 // 8. Use CORS (Must be before Auth)
-app.UseCors("AllowVercel");
+app.UseCors("BioTechCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

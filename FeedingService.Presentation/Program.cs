@@ -1,3 +1,4 @@
+using Shared.Infrastructure.Extensions;
 using DotNetEnv;
 using FeedingService.Application;
 using FeedingService.Application.Commands.CreateFeedingEvent;
@@ -52,16 +53,7 @@ builder.Services.AddScoped<GatewayAuthenticationService>();
 builder.Services.AddAuthorization();
 
 // CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowGateway", policy =>
-    {
-        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
+builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -134,7 +126,7 @@ app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
-app.UseCors("AllowGateway");
+app.UseCors("BioTechCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

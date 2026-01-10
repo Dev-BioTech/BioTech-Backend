@@ -1,3 +1,4 @@
+using Shared.Infrastructure.Extensions;
 using DotNetEnv;
 using HerdService.Application;
 using HerdService.Infrastructure;
@@ -54,16 +55,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 
 // Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowGateway", policy =>
-    {
-        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
+builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -128,7 +120,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
-app.UseCors("AllowGateway");
+app.UseCors("BioTechCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

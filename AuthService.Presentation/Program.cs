@@ -1,6 +1,8 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
-using DotNetEnv;
+
+using Shared.Infrastructure.Extensions;
+
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -42,25 +44,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.SetIsOriginAllowed(origin =>
-        {
-            // Allow localhost for development
-            if (origin.StartsWith("http://localhost")) return true;
-            // Allow any Vercel subdomain
-            if (origin.EndsWith(".vercel.app")) return true;
-            // Allow API Gateway
-            if (origin.Contains("railway.app")) return true;
-            return false;
-        })
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
-    });
-});
+builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
 // Configure Port for Railway
 var port = Environment.GetEnvironmentVariable("PORT") ?? builder.Configuration["Port"] ?? "8080";
@@ -146,7 +130,7 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 app.UseRouting();
-app.UseCors("AllowFrontend");
+app.UseCors("BioTechCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

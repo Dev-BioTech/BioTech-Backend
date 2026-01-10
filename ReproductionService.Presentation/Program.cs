@@ -1,3 +1,4 @@
+using Shared.Infrastructure.Extensions;
 using DotNetEnv;
 using ReproductionService.Application;
 using ReproductionService.Infrastructure;
@@ -57,16 +58,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowGateway", policy =>
-    {
-        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
+builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
 // Swagger Configuration
 builder.Services.AddSwaggerGen(c =>
@@ -130,7 +122,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
-app.UseCors("AllowGateway");
+app.UseCors("BioTechCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

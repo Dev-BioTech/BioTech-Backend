@@ -1,3 +1,4 @@
+using Shared.Infrastructure.Extensions;
 using InventoryService.Application;
 using InventoryService.Infrastructure;
 using InventoryService.Presentation.Middlewares;
@@ -42,25 +43,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.SetIsOriginAllowed(origin =>
-        {
-            // Allow localhost for development
-            if (origin.StartsWith("http://localhost")) return true;
-            // Allow any Vercel subdomain
-            if (origin.EndsWith(".vercel.app")) return true;
-            // Allow API Gateway
-            if (origin.Contains("railway.app")) return true;
-            return false;
-        })
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
-    });
-});
+builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
 // Configure Port for Railway
 var port = Environment.GetEnvironmentVariable("PORT") ?? builder.Configuration["Port"] ?? "8080";
@@ -126,7 +109,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseRouting();
-app.UseCors("AllowFrontend");
+app.UseCors("BioTechCorsPolicy");
 
 app.UseAuthorization();
 
