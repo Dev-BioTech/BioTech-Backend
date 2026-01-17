@@ -1,6 +1,7 @@
 using System.Security.Claims;
 
-namespace ReproductionService.Presentation.Middlewares;
+namespace CommercialService.Presentation.Middlewares;
+
 
 /// <summary>
 /// Middleware that validates requests come from the API Gateway and extracts user information from headers

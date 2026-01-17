@@ -48,7 +48,8 @@ public class GatewayHeaderHandler : DelegatingHandler
                 // Username
                 var username = user.FindFirst(ClaimTypes.Name)?.Value 
                             ?? user.FindFirst("name")?.Value 
-                            ?? user.FindFirst("username")?.Value;
+                            ?? user.FindFirst("username")?.Value
+                            ?? user.FindFirst("fullName")?.Value; // Pick up fullName from AuthService
                 if (!string.IsNullOrEmpty(username))
                 {
                     request.Headers.TryAddWithoutValidation("X-User-Name", username);
@@ -60,6 +61,15 @@ public class GatewayHeaderHandler : DelegatingHandler
                 {
                     roles = user.FindAll("role").Select(c => c.Value).ToList();
                 }
+                
+                // Also pick up farm_role and extract the role part if needed, or send as is
+                var farmRoles = user.FindAll("farm_role").Select(c => c.Value).ToList();
+                if (farmRoles.Any())
+                {
+                    // For now, we add them to the roles list or send them separately
+                    roles.AddRange(farmRoles);
+                }
+
                 if (roles.Any())
                 {
                     request.Headers.TryAddWithoutValidation("X-User-Roles", string.Join(",", roles));
@@ -68,6 +78,17 @@ public class GatewayHeaderHandler : DelegatingHandler
                 // Farm ID (business-specific claim)
                 var farmId = user.FindFirst("farmId")?.Value 
                           ?? user.FindFirst("FarmId")?.Value;
+                
+                // If farmId is missing, try to extract it from the first farm_role (Format: FarmId:RoleName)
+                if (string.IsNullOrEmpty(farmId) && farmRoles.Any())
+                {
+                    var firstFarmRole = farmRoles.First();
+                    if (firstFarmRole.Contains(':'))
+                    {
+                        farmId = firstFarmRole.Split(':')[0];
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(farmId))
                 {
                     request.Headers.TryAddWithoutValidation("X-Farm-Id", farmId);

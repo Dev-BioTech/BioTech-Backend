@@ -3,6 +3,7 @@
 ## Updated & Enhanced
 ## -----------------------------------------
 
+.env
 # BUILD DIRECTORIES
 [Bb]in/
 [Oo]bj/

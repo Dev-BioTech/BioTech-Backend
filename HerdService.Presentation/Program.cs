@@ -16,25 +16,35 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Port for Railway
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.ConfigureKestrel(serverOptions =>
+// Configure Port for Railway / Cloud (Only if PORT is set)
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
 {
-    serverOptions.ListenAnyIP(int.Parse(port));
-});
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(int.Parse(port));
+    });
+}
 
-// Configure Database Connection from Environment Variables (Railway)
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+// Configure Database Connection from Environment Variables (using individual variables)
+var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
+var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME");
+var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Prefer";
+
 if (!string.IsNullOrEmpty(dbHost))
 {
-    var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
-    var dbName = Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME");
-    var dbUser = Environment.GetEnvironmentVariable("DB_USER");
-    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-    var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
-
     var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+}
+
+// Configure Gateway Secret from Environment Variables
+var gatewaySecret = Environment.GetEnvironmentVariable("GATEWAY_SECRET");
+if (!string.IsNullOrEmpty(gatewaySecret))
+{
+    builder.Configuration["Gateway:Secret"] = gatewaySecret;
 }
 
 
@@ -75,8 +85,28 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Gateway"
     });
 
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        },
         {
             new OpenApiSecurityScheme
             {

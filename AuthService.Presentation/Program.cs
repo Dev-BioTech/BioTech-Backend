@@ -1,6 +1,6 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
-
+using DotNetEnv;
 using Shared.Infrastructure.Extensions;
 
 
@@ -17,6 +17,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "AuthService", Version = "v1" });
+
+    c.AddSecurityDefinition("Gateway", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
+        Name = "X-Gateway-Secret",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Gateway"
+    });
 
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
@@ -39,6 +48,17 @@ builder.Services.AddSwaggerGen(c =>
                 }
             },
             new string[] {}
+        },
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Gateway"
+                }
+            },
+            new string[] {}
         }
     });
 });
@@ -46,33 +66,28 @@ builder.Services.AddSwaggerGen(c =>
 // Configure CORS
 builder.Services.AddGlobalCors("BioTechCorsPolicy");
 
-// Configure Port for Railway
-var port = Environment.GetEnvironmentVariable("PORT") ?? builder.Configuration["Port"] ?? "8080";
-builder.WebHost.ConfigureKestrel(serverOptions =>
+// Configure Port for Railway / Cloud (Only if PORT is set)
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
 {
-    serverOptions.ListenAnyIP(int.Parse(port));
-});
-
-// Configure Database Connection from Environment Variables (Clever Cloud / Railway)
-var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
-if (!string.IsNullOrEmpty(pgUri))
-{
-    builder.Configuration["ConnectionStrings:DefaultConnection"] = pgUri;
-}
-else
-{
-    var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
-    if (!string.IsNullOrEmpty(dbHost))
+    builder.WebHost.ConfigureKestrel(serverOptions =>
     {
-        var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
-        var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE");
-        var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-        var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
-        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+        serverOptions.ListenAnyIP(int.Parse(port));
+    });
+}
 
-        var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
-        builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
-    }
+// Configure Database Connection from Environment Variables (using individual variables)
+var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
+var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE");
+var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+
+if (!string.IsNullOrEmpty(dbHost))
+{
+    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 }
 
 // Configure JWT from Environment Variables

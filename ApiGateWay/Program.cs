@@ -5,13 +5,15 @@ using Shared.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configure Port for Railway
-// Railway provides the PORT environment variable. We use this to tell Kestrel where to listen.
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-builder.WebHost.ConfigureKestrel(serverOptions =>
+// 1. Configure Port for Railway / Cloud (Only if PORT is set)
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
 {
-    serverOptions.ListenAnyIP(int.Parse(port));
-});
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(int.Parse(port));
+    });
+}
 
 // 2. Add Services
 builder.Services.AddControllers();
@@ -98,13 +100,13 @@ var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" 
 // builder.Services.AddDbContext<ApiGateWay.Data.AuthDbContext>(options => options.UseNpgsql(connectionString));
 
 // 6. JWT Authentication
-var secretKey = builder.Configuration["JwtConfig:Secret"];
+var secretKey = builder.Configuration["Jwt:Secret"];
 if (string.IsNullOrEmpty(secretKey)) secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-var issuer = builder.Configuration["JwtConfig:Issuer"];
+var issuer = builder.Configuration["Jwt:Issuer"];
 if (string.IsNullOrEmpty(issuer)) issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
 
-var audience = builder.Configuration["JwtConfig:Audience"];
+var audience = builder.Configuration["Jwt:Audience"];
 if (string.IsNullOrEmpty(audience)) audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 
 if (!string.IsNullOrEmpty(secretKey) && secretKey.Length >= 16)
