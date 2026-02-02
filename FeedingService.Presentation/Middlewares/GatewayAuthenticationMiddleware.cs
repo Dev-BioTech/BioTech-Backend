@@ -1,5 +1,9 @@
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 namespace FeedingService.Presentation.Middlewares;
 
 
@@ -12,25 +16,21 @@ public class GatewayAuthenticationMiddleware
     private readonly RequestDelegate _next;
     private readonly IConfiguration _configuration;
     private readonly ILogger<GatewayAuthenticationMiddleware> _logger;
-    private readonly IHostEnvironment _env;
 
     public GatewayAuthenticationMiddleware(
         RequestDelegate next,
         IConfiguration configuration,
-        ILogger<GatewayAuthenticationMiddleware> logger,
-        IHostEnvironment env)
+        ILogger<GatewayAuthenticationMiddleware> logger)
     {
         _next = next;
         _configuration = configuration;
         _logger = logger;
-        _env = env;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
-        // Skip authentication for health check endpoints and Swagger
-        if (context.Request.Path.StartsWithSegments("/health") || 
-            context.Request.Path.StartsWithSegments("/swagger"))
+        // Skip authentication for health check endpoints
+        if (context.Request.Path.StartsWithSegments("/health"))
         {
             await _next(context);
             return;
@@ -43,7 +43,7 @@ public class GatewayAuthenticationMiddleware
             await context.Response.WriteAsJsonAsync(new
             {
                 success = false,
-                message = "Unauthorized: Invalid gateway token or source. Use X-Gateway-Secret in Swagger.",
+                message = "Unauthorized: Invalid gateway token or source",
                 timestamp = DateTime.UtcNow
             });
             return;
@@ -52,11 +52,23 @@ public class GatewayAuthenticationMiddleware
         // Extract user information from headers sent by Gateway
         var userClaims = ExtractUserClaims(context);
         
-        // DEV MODE: If no headers and in Development, inject default test user
-        if (!userClaims.Any() && _env.IsDevelopment())
+        // Auto-Inject Mock User for Local Development (if no headers present)
+        if (!userClaims.Any())
         {
-            _logger.LogInformation("Dev Mode: Injecting default test user claims");
-            userClaims = GetDefaultDevClaims();
+             var env = context.RequestServices.GetService<IWebHostEnvironment>();
+             if (env != null && env.IsDevelopment())
+             {
+                 var remoteIp = context.Connection.RemoteIpAddress;
+                 if (remoteIp != null && IPAddress.IsLoopback(remoteIp))
+                 {
+                     _logger.LogWarning("Identity Injection: Using Mock Admin User for Local Development.");
+                     userClaims.Add(new Claim(ClaimTypes.NameIdentifier, "debug-user-id"));
+                     userClaims.Add(new Claim("userId", "debug-user-id"));
+                     userClaims.Add(new Claim(ClaimTypes.Name, "Debug Admin"));
+                     userClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                     userClaims.Add(new Claim(ClaimTypes.Email, "admin@debug.local"));
+                 }
+             }
         }
 
         if (userClaims.Any())
@@ -70,6 +82,18 @@ public class GatewayAuthenticationMiddleware
 
     private bool ValidateGatewayRequest(HttpContext context)
     {
+        // 0. Bypass for Localhost in Development
+        var env = context.RequestServices.GetService<IWebHostEnvironment>();
+        if (env != null && env.IsDevelopment())
+        {
+            var remoteIp = context.Connection.RemoteIpAddress;
+            if (remoteIp != null && IPAddress.IsLoopback(remoteIp))
+            {
+                _logger.LogWarning("Security Bypass: Allowing Localhost request in Development mode.");
+                return true;
+            }
+        }
+
         // Validation 1: Check shared secret
         var gatewaySecret = context.Request.Headers["X-Gateway-Secret"].FirstOrDefault();
         var expectedSecret = _configuration["Gateway:Secret"];
@@ -79,6 +103,18 @@ public class GatewayAuthenticationMiddleware
             _logger.LogWarning("Request rejected: Invalid or missing gateway secret from IP {IP}", 
                 context.Connection.RemoteIpAddress);
             return false;
+        }
+
+        // Validation 2: Optional IP whitelist validation
+        var allowedIPs = _configuration.GetSection("Gateway:AllowedIPs").Get<string[]>();
+        if (allowedIPs != null && allowedIPs.Length > 0)
+        {
+            var remoteIP = context.Connection.RemoteIpAddress?.ToString();
+            if (remoteIP == null || !allowedIPs.Contains(remoteIP))
+            {
+                _logger.LogWarning("Request rejected: IP {IP} not in whitelist", remoteIP);
+                return false;
+            }
         }
 
         return true;
@@ -120,7 +156,7 @@ public class GatewayAuthenticationMiddleware
             }
         }
 
-        // Extract farm ID
+        // Extract farm ID (business-specific claim)
         var farmId = context.Request.Headers["X-Farm-Id"].FirstOrDefault();
         if (!string.IsNullOrEmpty(farmId))
         {
@@ -128,20 +164,5 @@ public class GatewayAuthenticationMiddleware
         }
 
         return claims;
-    }
-
-    private List<Claim> GetDefaultDevClaims()
-    {
-        return new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, "1"),
-            new Claim("userId", "1"),
-            new Claim(ClaimTypes.Email, "dev@biotech.com"),
-            new Claim(ClaimTypes.Name, "Dev Admin"),
-            new Claim(ClaimTypes.Role, "Admin"),
-            new Claim(ClaimTypes.Role, "Owner"),
-            new Claim("farmId", "1"),
-            new Claim("farm_role", "1:Owner")
-        };
     }
 }

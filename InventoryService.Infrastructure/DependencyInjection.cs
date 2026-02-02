@@ -17,23 +17,22 @@ public static class DependencyInjection
 
         services.AddDbContext<InventoryDbContext>(options =>
         {
-            var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
-            string connectionString;
-
-            if (!string.IsNullOrEmpty(pgUri))
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            
+            // Fallback: If null, try to construct it (safety net)
+            if (string.IsNullOrEmpty(connectionString)) 
             {
-                connectionString = pgUri;
-            }
-            else
-            {
-                var host = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
-                var port = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
-                var database = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE");
-                var user = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-                var password = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
-                var sslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
-
-                connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SslMode={sslMode};";
+                 var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
+                 if (!string.IsNullOrEmpty(pgUri) && pgUri.StartsWith("postgresql://"))
+                 {
+                     try 
+                     {
+                        var uri = new Uri(pgUri);
+                        var userInfo = uri.UserInfo.Split(':');
+                        connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};Ssl Mode=Require;Trust Server Certificate=true;";
+                     }
+                     catch { /* use defaults */ }
+                 }
             }
 
             options.UseNpgsql(connectionString);

@@ -12,15 +12,27 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Use the connection string already configured in Program.cs
+        // Load .env variables
+        Env.Load();
+
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        
-        // Fallback to localhost if nothing is configured
+
+        // Fallback safety net
         if (string.IsNullOrEmpty(connectionString))
         {
-            connectionString = "Host=localhost;Database=reproduction_db;Username=postgres;Password=postgres;";
+             var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
+             if (!string.IsNullOrEmpty(pgUri) && pgUri.StartsWith("postgresql://"))
+             {
+                 try 
+                 {
+                    var uri = new Uri(pgUri);
+                    var userInfo = uri.UserInfo.Split(':');
+                    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};Ssl Mode=Require;Trust Server Certificate=true;";
+                 }
+                 catch { /* use defaults */ }
+             }
         }
-
+        
         services.AddDbContext<ReproductionDbContext>(options =>
             options.UseNpgsql(connectionString));
 

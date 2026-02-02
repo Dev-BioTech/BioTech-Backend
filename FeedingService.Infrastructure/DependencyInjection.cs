@@ -16,16 +16,29 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Load .env variables
+        Env.Load();
+
         // Database
         services.AddDbContext<FeedingDbContext>(options =>
         {
-            // Use the connection string already configured in Program.cs
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             
-            // Fallback to localhost if nothing is configured
-            if (string.IsNullOrEmpty(connectionString))
+            // Fallback for direct instantiation scenarios where configuration might be missing
+            if (string.IsNullOrEmpty(connectionString)) 
             {
-                connectionString = "Host=localhost;Database=feeding_db;Username=postgres;Password=postgres;";
+                 // Try to build it robustly if missing from config (e.g. design time)
+                 var pgUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI");
+                 if (!string.IsNullOrEmpty(pgUri) && pgUri.StartsWith("postgresql://"))
+                 {
+                     try 
+                     {
+                        var uri = new Uri(pgUri);
+                        var userInfo = uri.UserInfo.Split(':');
+                        connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};Ssl Mode=Require;Trust Server Certificate=true;";
+                     }
+                     catch { /* use defaults */ }
+                 }
             }
 
             options.UseNpgsql(connectionString, npgsqlOptions =>
@@ -37,7 +50,7 @@ public static class DependencyInjection
                     errorCodesToAdd: null);
             });
 
-            if (configuration.GetValue<bool>("Database:EnableSensitiveDataLogging"))
+            if (Environment.GetEnvironmentVariable("DB_SENSITIVE_LOGGING") == "true")
             {
                 options.EnableSensitiveDataLogging();
             }

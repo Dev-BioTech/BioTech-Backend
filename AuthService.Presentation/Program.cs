@@ -1,15 +1,13 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
 using DotNetEnv;
-using Shared.Infrastructure.Extensions;
-
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-var builder = WebApplication.CreateBuilder(args);
-
 Env.Load();
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -17,15 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "AuthService", Version = "v1" });
-
-    c.AddSecurityDefinition("Gateway", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
-        Name = "X-Gateway-Secret",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Gateway"
-    });
 
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
@@ -48,25 +37,32 @@ builder.Services.AddSwaggerGen(c =>
                 }
             },
             new string[] {}
-        },
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Gateway"
-                }
-            },
-            new string[] {}
         }
     });
 });
 
 // Configure CORS
-builder.Services.AddGlobalCors("BioTechCorsPolicy");
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.SetIsOriginAllowed(origin =>
+        {
+            // Allow localhost for development
+            if (origin.StartsWith("http://localhost")) return true;
+            // Allow any Vercel subdomain
+            if (origin.EndsWith(".vercel.app")) return true;
+            // Allow API Gateway
+            if (origin.Contains("railway.app")) return true;
+            return false;
+        })
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
 
-// Configure Port for Railway / Cloud (Only if PORT is set)
+// Configure Port for Railway
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
@@ -76,21 +72,86 @@ if (!string.IsNullOrEmpty(port))
     });
 }
 
-// Configure Database Connection from Environment Variables (using individual variables)
-var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
-var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
-var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE");
-var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
-var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+// Configure Database Connection
+// ------------------------------------------------------------------------------------------------
+// [STANDARD CONFIGURATION]
+// Database, JWT, and Gateway Configuration - Unified for Local and PaaS (Clever Cloud/Railway)
+// ------------------------------------------------------------------------------------------------
 
-if (!string.IsNullOrEmpty(dbHost))
+// 1. Database Connection
+var connectionString = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
+                       Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
+                       Environment.GetEnvironmentVariable("DB_URL");
+
+if (!string.IsNullOrEmpty(connectionString))
 {
-    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
+    // Case 1: URI with scheme (postgresql://...) - Common in PaaS
+    if (connectionString.StartsWith("postgresql://"))
+    {
+        try 
+        {
+            var uri = new Uri(connectionString);
+            var userInfo = uri.UserInfo.Split(':');
+            var host = uri.Host;
+            var parsedPort = uri.Port > 0 ? uri.Port : 5432;
+            var path = uri.AbsolutePath.TrimStart('/');
+            var user = userInfo.Length > 0 ? userInfo[0] : "";
+            var pass = userInfo.Length > 1 ? userInfo[1] : "";
+            
+            // Build standard connection string
+            connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Config Error] Failed to parse URI connection string: {ex.Message}");
+            // Fallback: Use string manipulation if Uri parsing fails
+            if (connectionString.Contains("@"))
+            {
+                 connectionString = connectionString.Replace("postgresql://", "Host=");
+                 var userInfoSplit = connectionString.IndexOf('@');
+                 var userPassPart = connectionString.Substring(5, userInfoSplit - 5);
+                 var hostPortDbPart = connectionString.Substring(userInfoSplit + 1);
+
+                 var userPass = userPassPart.Split(':');
+                 var hostPortDb = hostPortDbPart.Split('/');
+                 var hostPort = hostPortDb[0].Split(':');
+
+                 var host = hostPort[0];
+                 var dbPort = hostPort.Length > 1 ? hostPort[1] : "5432";
+                 var dbName = hostPortDb[1];
+                 var user = userPass[0];
+                 var password = userPass[1];
+
+                 connectionString = $"Host={host};Port={dbPort};Database={dbName};Username={user};Password={password};Ssl Mode=Require;Trust Server Certificate=true;";
+            }
+        }
+    }
+}
+else
+{
+    // Case 2: Individual variables - Common in Local/Docker
+    var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+    if (!string.IsNullOrEmpty(dbHost))
+    {
+        var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
+        if (string.IsNullOrEmpty(dbPort)) dbPort = "5432";
+        
+        var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
+        var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+        var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
+
+        connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
+    }
+}
+
+// Set the configuration
+if (!string.IsNullOrEmpty(connectionString))
+{
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 }
 
-// Configure JWT from Environment Variables
+// 2. JWT Configuration
 var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
 if (!string.IsNullOrEmpty(jwtSecret)) builder.Configuration["Jwt:Secret"] = jwtSecret;
 
@@ -99,6 +160,10 @@ if (!string.IsNullOrEmpty(jwtIssuer)) builder.Configuration["Jwt:Issuer"] = jwtI
 
 var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 if (!string.IsNullOrEmpty(jwtAudience)) builder.Configuration["Jwt:Audience"] = jwtAudience;
+
+// 3. Gateway Secret
+var gatewaySecret = Environment.GetEnvironmentVariable("GATEWAY_SECRET");
+if (!string.IsNullOrEmpty(gatewaySecret)) builder.Configuration["Gateway:Secret"] = gatewaySecret;
 
 // Add Layer Dependencies
 builder.Services.AddApplication();
@@ -145,11 +210,19 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 app.UseRouting();
-app.UseCors("BioTechCorsPolicy");
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Version Endpoint
+app.MapGet("/version", () => new 
+{ 
+    Service = "AuthService", 
+    Version = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "1.0.0",
+    Environment = app.Environment.EnvironmentName
+});
 
 app.Run();
