@@ -1,4 +1,8 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HealthService.Presentation.Middlewares;
 
@@ -43,6 +47,25 @@ public class GatewayAuthenticationMiddleware
         // Extract user information from headers sent by Gateway
         var userClaims = ExtractUserClaims(context);
         
+        // Auto-Inject Mock User for Local Development (if no headers present)
+        if (!userClaims.Any())
+        {
+             var env = context.RequestServices.GetService<IWebHostEnvironment>();
+             if (env != null && env.IsDevelopment())
+             {
+                 var remoteIp = context.Connection.RemoteIpAddress;
+                 if (remoteIp != null && IPAddress.IsLoopback(remoteIp))
+                 {
+                     _logger.LogWarning("Identity Injection: Using Mock Admin User for Local Development.");
+                     userClaims.Add(new Claim(ClaimTypes.NameIdentifier, "debug-user-id"));
+                     userClaims.Add(new Claim("userId", "debug-user-id"));
+                     userClaims.Add(new Claim(ClaimTypes.Name, "Debug Admin"));
+                     userClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                     userClaims.Add(new Claim(ClaimTypes.Email, "admin@debug.local"));
+                 }
+             }
+        }
+
         if (userClaims.Any())
         {
             var identity = new ClaimsIdentity(userClaims, "Gateway");
@@ -54,6 +77,18 @@ public class GatewayAuthenticationMiddleware
 
     private bool ValidateGatewayRequest(HttpContext context)
     {
+        // 0. Bypass for Localhost in Development
+        var env = context.RequestServices.GetService<IWebHostEnvironment>();
+        if (env != null && env.IsDevelopment())
+        {
+            var remoteIp = context.Connection.RemoteIpAddress;
+            if (remoteIp != null && IPAddress.IsLoopback(remoteIp))
+            {
+                _logger.LogWarning("Security Bypass: Allowing Localhost request in Development mode.");
+                return true;
+            }
+        }
+
         // Validation 1: Check shared secret
         var gatewaySecret = context.Request.Headers["X-Gateway-Secret"].FirstOrDefault();
         var expectedSecret = _configuration["Gateway:Secret"];
