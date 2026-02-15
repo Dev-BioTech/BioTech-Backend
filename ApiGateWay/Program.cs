@@ -249,9 +249,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// 9. Use Ocelot
-app.UseOcelot().Wait();
-
 // Version Endpoint
 app.MapGet("/version", () => new 
 { 
@@ -259,5 +256,8 @@ app.MapGet("/version", () => new
     Version = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "1.0.0",
     Environment = app.Environment.EnvironmentName
 });
+
+// 9. Use Ocelot - MUST BE LAST
+app.UseOcelot().Wait();
 
 app.Run();
