@@ -1,6 +1,8 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
 using DotNetEnv;
+using Shared.Infrastructure.Extensions;
+using AuthService.Infrastructure.Persistence;
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -214,6 +216,9 @@ app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<AuthDbC ontext>();
 
 app.MapControllers();
 

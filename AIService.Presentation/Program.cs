@@ -1,6 +1,8 @@
 using AIService.Application;
 using AIService.Infrastructure;
 using DotNetEnv;
+using Shared.Infrastructure.Extensions;
+using AIService.Infrastructure.Persistence;
 
 Env.Load();
 
@@ -147,6 +149,9 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Often disabled in internal microservices behind gateway
 
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<DiagnosticDbContext>();
 
 app.MapControllers();
 

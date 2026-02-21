@@ -1,11 +1,8 @@
-using DotNetEnv;
-using FeedingService.Application;
-using FeedingService.Application.Commands.CreateFeedingEvent;
-using FeedingService.Infrastructure;
-using FeedingService.Presentation.Middlewares;
 using FeedingService.Presentation.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Shared.Infrastructure.Extensions;
+using FeedingService.Infrastructure.Persistence;
 
 Env.Load();
 
@@ -220,6 +217,9 @@ app.UseCors("AllowGateway");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<FeedingDbContext>();
 
 app.MapControllers();
 
