@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using CommercialService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace CommercialService.Presentation.Controllers;
 

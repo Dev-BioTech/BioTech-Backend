@@ -5,7 +5,7 @@ using HerdService.Application.Commands;
 using HerdService.Application.Queries;
 using HerdService.Application.DTOs;
 using HerdService.Presentation.Services;
-using HerdService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace HerdService.Presentation.Controllers.V1;
 

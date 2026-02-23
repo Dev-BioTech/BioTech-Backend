@@ -38,6 +38,9 @@ public class GatewayAuthenticationMiddleware
         // Validate request comes from Gateway
         if (!ValidateGatewayRequest(context))
         {
+            _logger.LogWarning("Unauthorized: Gateway validation failed for request to {Path} from {IP}", 
+                context.Request.Path, context.Connection.RemoteIpAddress);
+
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsJsonAsync(new
             {

@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,9 @@ public class GatewayAuthenticationMiddleware
         // Validate request comes from Gateway
         if (!ValidateGatewayRequest(context))
         {
+            _logger.LogWarning("Unauthorized: Gateway validation failed for request to {Path} from {IP}", 
+                context.Request.Path, context.Connection.RemoteIpAddress);
+
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsJsonAsync(new
             {
@@ -72,6 +76,17 @@ public class GatewayAuthenticationMiddleware
 
     private bool ValidateGatewayRequest(HttpContext context)
     {
+        // 0. Bypass for Localhost in Development
+        if (_env.IsDevelopment())
+        {
+            var remoteIp = context.Connection.RemoteIpAddress;
+            if (remoteIp != null && IPAddress.IsLoopback(remoteIp))
+            {
+                _logger.LogWarning("Security Bypass: Allowing Localhost request in Development mode.");
+                return true;
+            }
+        }
+
         // Validation 1: Check shared secret
         var gatewaySecret = context.Request.Headers["X-Gateway-Secret"].FirstOrDefault();
         var expectedSecret = _configuration["Gateway:Secret"];
