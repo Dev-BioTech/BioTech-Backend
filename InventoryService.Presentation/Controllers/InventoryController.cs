@@ -5,7 +5,7 @@ using InventoryService.Application.Commands;
 using InventoryService.Application.DTOs;
 using InventoryService.Application.Queries;
 using System.Collections.Generic;
-using InventoryService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace InventoryService.Presentation.Controllers;
 

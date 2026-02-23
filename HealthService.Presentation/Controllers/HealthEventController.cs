@@ -4,7 +4,7 @@ using HealthService.Application.Commands;
 using HealthService.Application.Queries;
 using HealthService.Application.DTOs;
 using HealthService.Presentation.Services;
-using HealthService.Presentation.Common;
+using Shared.Infrastructure.Common;
 using FluentValidation;
 using HealthService.Application.Queries.GetHealthEventsByAnimal;
 using HealthService.Application.Queries.GetHealthEventsByBatch;

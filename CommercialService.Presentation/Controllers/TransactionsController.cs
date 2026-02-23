@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 
-using CommercialService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace CommercialService.Presentation.Controllers;
 

@@ -3,6 +3,7 @@ using AuthService.Infrastructure;
 using DotNetEnv;
 using Shared.Infrastructure.Extensions;
 using AuthService.Infrastructure.Persistence;
+using AuthService.Presentation.Middlewares;
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -213,6 +214,9 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 app.UseRouting();
+
+app.UseMiddleware<GatewayAuthenticationMiddleware>();
+
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();

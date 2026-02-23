@@ -23,6 +23,8 @@
       dockerfile: AuthService.Presentation/Dockerfile
     ports:
       - "5001:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
@@ -35,6 +37,7 @@
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
     depends_on:
       postgres:
         condition: service_healthy
@@ -47,15 +50,22 @@
       dockerfile: FeedingService.Presentation/Dockerfile
     ports:
       - "5114:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_DATABASE} # Note: Feeding service might use DB_NAME or DB_DATABASE, keeping consistency with previous
+      - DB_DATABASE=${DB_DATABASE} # Standardized
+      - DB_NAME=${DB_DATABASE}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_SSLMODE=${DB_SSL_MODE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
     depends_on:
       auth-service:
         condition: service_started
@@ -70,6 +80,8 @@
       dockerfile: ReproductionService.Presentation/Dockerfile
     ports:
       - "5200:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
@@ -79,6 +91,10 @@
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_SSL_MODE=${DB_SSL_MODE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
     depends_on:
       auth-service:
         condition: service_started
@@ -93,6 +109,8 @@
       dockerfile: HerdService.Presentation/Dockerfile
     ports:
       - "5300:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
@@ -102,6 +120,10 @@
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_SSL_MODE=${DB_SSL_MODE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
     depends_on:
       auth-service:
         condition: service_started
@@ -116,6 +138,8 @@
       dockerfile: HealthService.Presentation/Dockerfile
     ports:
       - "5400:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
@@ -125,7 +149,11 @@
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_SSL_MODE=${DB_SSL_MODE}
-      - Gateway__Secret=secret123
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
+      - Gateway__Secret=${GATEWAY_SECRET:-secret123}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
     depends_on:
       auth-service:
         condition: service_started
@@ -140,12 +168,15 @@
       dockerfile: AIService.Presentation/Dockerfile
     ports:
       - "5500:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
       - Gemini__ApiKey=${GEMINI_API_KEY}
       - AnthropicApi__ApiKey=${ANTHROPIC_API_KEY}
-      - Gateway__Secret=secret123
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
+      - Gateway__Secret=${GATEWAY_SECRET:-secret123}
       - ServiceUrls__HerdService=${HERD_SERVICE_URL:-http://herd-service:8080}
       - ServiceUrls__HealthService=${HEALTH_SERVICE_URL:-http://health-service:8080}
       - ServiceUrls__FeedingService=${FEEDING_SERVICE_URL:-http://feeding-service:8080}
@@ -160,6 +191,8 @@
       dockerfile: CommercialService.Presentation/Dockerfile
     ports:
       - "5600:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
@@ -169,6 +202,7 @@
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_SSL_MODE=${DB_SSL_MODE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
@@ -186,6 +220,8 @@
       dockerfile: InventoryService.Presentation/Dockerfile
     ports:
       - "5700:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
@@ -195,6 +231,10 @@
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_SSL_MODE=${DB_SSL_MODE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
     depends_on:
       auth-service:
         condition: service_started
@@ -220,6 +260,7 @@
       - FEEDING_SERVICE_PORT=8080
       - HEALTH_SERVICE_HOST=health-service
       - HEALTH_SERVICE_PORT=8080
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-secret123}
       - JwtConfig__Secret=${JWT_SECRET}
       - JwtConfig__Issuer=${JWT_ISSUER}
       - JwtConfig__Audience=${JWT_AUDIENCE}

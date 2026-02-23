@@ -9,7 +9,7 @@ using ReproductionService.Application.Queries.GetReproductionEventsByAnimal;
 using ReproductionService.Application.Queries.GetReproductionEventsByFarm;
 using ReproductionService.Application.Queries.GetReproductionEventsByType;
 using ReproductionService.Domain.Enums;
-using ReproductionService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace ReproductionService.Presentation.Controllers;
 
