@@ -1,6 +1,8 @@
 using CommercialService.Application;
 using CommercialService.Infrastructure;
 using DotNetEnv;
+using Shared.Infrastructure.Extensions;
+using CommercialService.Infrastructure.Persistence;
 
 // Enable legacy timestamp behavior
 System.AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -191,6 +193,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<CommercialDbContext>();
 
 app.MapControllers();
 

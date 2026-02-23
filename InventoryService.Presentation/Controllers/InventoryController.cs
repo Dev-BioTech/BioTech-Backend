@@ -10,7 +10,7 @@ using InventoryService.Presentation.Common;
 namespace InventoryService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/inventory")]
 public class InventoryController : ControllerBase
 {
     private readonly IMediator _mediator;

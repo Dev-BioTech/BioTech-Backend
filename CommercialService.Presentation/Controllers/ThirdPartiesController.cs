@@ -12,7 +12,7 @@ using CommercialService.Presentation.Common;
 namespace CommercialService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/third-parties")]
+[Route("api/v1/third-parties")]
 [Authorize]
 public class ThirdPartiesController : ControllerBase
 {

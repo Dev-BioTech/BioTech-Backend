@@ -10,7 +10,7 @@ using HerdService.Presentation.Common;
 namespace HerdService.Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/animals")]
 public class AnimalsController : ControllerBase
 {
     private readonly IMediator _mediator;

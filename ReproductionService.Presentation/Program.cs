@@ -1,10 +1,10 @@
 using DotNetEnv;
+using Microsoft.OpenApi.Models;
+using Shared.Infrastructure.Extensions;
 using ReproductionService.Application;
 using ReproductionService.Infrastructure;
 using ReproductionService.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using ReproductionService.Presentation.Middlewares;
-using Microsoft.OpenApi.Models;
 
 Env.TraversePath().Load();
 
@@ -207,15 +207,10 @@ app.UseCors("AllowGateway");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-app.MapHealthChecks("/health");
+// Apply automatic migrations on startup
+app.ApplyMigrations<ReproductionDbContext>();
 
-// Apply migrations (Manual check)
-using (var scope = app.Services.CreateScope())
-{
-    // var dbContext = scope.ServiceProvider.GetRequiredService<ReproductionDbContext>();
-    // dbContext.Database.Migrate(); 
-}
+app.MapControllers();
 
 // Version Endpoint
 app.MapGet("/version", () => new 
