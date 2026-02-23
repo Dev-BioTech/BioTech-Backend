@@ -3,6 +3,7 @@ using DotNetEnv;
 using HerdService.Presentation.Middlewares;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Middlewares;
 using HerdService.Application;
 using HerdService.Infrastructure;
 using HerdService.Infrastructure.Persistence;
@@ -205,7 +206,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseCors("AllowGateway");

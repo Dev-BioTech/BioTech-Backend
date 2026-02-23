@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using AuthService.Application.Commands;
 using AuthService.Application.DTOs;
+using Shared.Infrastructure.Common;
 
 namespace AuthService.Presentation.Controllers;
 
@@ -18,23 +19,34 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginDto loginDto)
+    public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Login([FromBody] LoginDto loginDto)
     {
         try
         {
             var response = await _mediator.Send(new LoginCommand(loginDto));
-            return Ok(response);
+            return Ok(ApiResponse<AuthResponseDto>.Ok(response, "Login successful"));
         }
         catch (UnauthorizedAccessException)
         {
-            return Unauthorized("Invalid credentials");
+            return Unauthorized(ApiResponse<AuthResponseDto>.Fail("Invalid credentials"));
         }
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<int>> Register([FromBody] RegisterUserDto registerDto)
+    public async Task<ActionResult<ApiResponse<int>>> Register([FromBody] RegisterUserDto registerDto)
     {
-        var userId = await _mediator.Send(new RegisterUserCommand(registerDto));
-        return CreatedAtAction(nameof(Login), null, new { id = userId });
+        try
+        {
+            var userId = await _mediator.Send(new RegisterUserCommand(registerDto));
+            return CreatedAtAction(nameof(Login), null, ApiResponse<int>.Ok(userId, "User registered successfully"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ApiResponse<int>.Fail(ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<int>.Fail("An error occurred during registration", new[] { ex.Message }));
+        }
     }
 }

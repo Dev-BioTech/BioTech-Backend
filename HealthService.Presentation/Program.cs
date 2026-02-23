@@ -2,10 +2,11 @@ using System.Reflection;
 using DotNetEnv;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
-using HealthService.Presentation.Middlewares;
 using HealthService.Infrastructure.Persistence;
 using HealthService.Application;
 using HealthService.Infrastructure;
+using HealthService.Presentation.Middlewares;
+using Shared.Infrastructure.Middlewares;
 
 Env.Load();
 
@@ -168,7 +169,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 app.UseAuthorization();
 

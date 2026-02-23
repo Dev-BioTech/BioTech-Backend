@@ -3,6 +3,7 @@ using CommercialService.Infrastructure;
 using DotNetEnv;
 using Shared.Infrastructure.Extensions;
 using CommercialService.Infrastructure.Persistence;
+using Shared.Infrastructure.Middlewares;
 
 // Enable legacy timestamp behavior
 System.AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -191,6 +192,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -3,6 +3,7 @@ using AuthService.Infrastructure;
 using DotNetEnv;
 using Shared.Infrastructure.Extensions;
 using AuthService.Infrastructure.Persistence;
+using Shared.Infrastructure.Middlewares;
 using AuthService.Presentation.Middlewares;
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
@@ -215,6 +216,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseCors("AllowFrontend");

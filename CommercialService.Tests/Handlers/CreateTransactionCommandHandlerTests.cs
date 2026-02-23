@@ -115,7 +115,7 @@ public class CreateTransactionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_Should_Throw_Exception_If_Subtotal_Mismatch()
+    public void Handle_Should_Throw_Exception_If_Subtotal_Mismatch()
     {
         // This is a "nice to have" test if we had validation logic for totals.
         // Currently the handler is trusted to just save what is sent.

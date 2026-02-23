@@ -1,6 +1,7 @@
 using InventoryService.Presentation.Middlewares;
 using DotNetEnv;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Middlewares;
 using InventoryService.Infrastructure.Persistence;
 using InventoryService.Application;
 using InventoryService.Infrastructure;
@@ -201,7 +202,7 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 // Add Middlewares
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseRouting();

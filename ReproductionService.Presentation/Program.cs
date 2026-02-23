@@ -1,6 +1,7 @@
 using DotNetEnv;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Middlewares;
 using ReproductionService.Application;
 using ReproductionService.Infrastructure;
 using ReproductionService.Infrastructure.Persistence;
@@ -199,7 +200,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseCors("AllowGateway");
