@@ -1,5 +1,10 @@
+using DotNetEnv;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
+using ReproductionService.Application;
+using ReproductionService.Infrastructure;
+using ReproductionService.Infrastructure.Persistence;
+using ReproductionService.Presentation.Middlewares;
 
 Env.TraversePath().Load();
 

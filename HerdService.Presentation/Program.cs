@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using DotNetEnv;
 using HerdService.Presentation.Middlewares;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
+using HerdService.Application;
+using HerdService.Infrastructure;
+using HerdService.Infrastructure.Persistence;
 
 
 Env.TraversePath().Load(); // Moved to top

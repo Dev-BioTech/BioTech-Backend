@@ -14,7 +14,7 @@ using HealthService.Application.Queries.GetHealthEventsByType;
 namespace HealthService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/health-event")]
 public class HealthEventController : ControllerBase
 {
     private readonly IMediator _mediator;

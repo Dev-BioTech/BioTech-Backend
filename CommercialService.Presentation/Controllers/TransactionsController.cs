@@ -14,7 +14,7 @@ namespace CommercialService.Presentation.Controllers;
 
 
 [ApiController]
-[Route("api/transactions")]
+[Route("api/v1/transactions")]
 [Authorize]
 public class TransactionsController : ControllerBase
 {

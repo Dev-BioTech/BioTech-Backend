@@ -14,7 +14,7 @@ using ReproductionService.Presentation.Common;
 namespace ReproductionService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/reproduction")]
 [Authorize]
 public class ReproductionController : ControllerBase
 {

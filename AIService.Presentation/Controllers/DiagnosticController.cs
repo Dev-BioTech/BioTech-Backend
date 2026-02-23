@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AIService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/diagnostic")]
 public class DiagnosticController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -60,14 +60,12 @@ public class DiagnosticController : ControllerBase
 
     // Patterns endpoint - placeholder or requires simple query
     [HttpGet("patterns")]
-    public async Task<ActionResult> GetPatterns()
+    public ActionResult GetPatterns()
     {
         // For MVP, returning empty list or implementation if needed. 
-        // User asked for GET /api/Diagnostic/patterns. 
+        // User asked for GET /api/v1/diagnostic/patterns. 
         // I haven't implemented a Query for this yet, so I'll return a placeholder or implement it quickly.
-        // Returning TODO for now to stick to plan, or empty list.
-        return Ok(newList<object>());
+        // Returning empty list for now.
+        return Ok(new List<object>());
     }
-    
-    private List<object> newList<T>() => new List<object>();
 }

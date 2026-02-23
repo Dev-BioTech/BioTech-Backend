@@ -1,6 +1,11 @@
 using System.Reflection;
+using DotNetEnv;
+using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
+using HealthService.Presentation.Middlewares;
 using HealthService.Infrastructure.Persistence;
+using HealthService.Application;
+using HealthService.Infrastructure;
 
 Env.Load();
 

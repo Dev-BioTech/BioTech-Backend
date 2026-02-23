@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -218,7 +219,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Apply automatic migrations on startup
-app.ApplyMigrations<AuthDbC ontext>();
+app.ApplyMigrations<AuthDbContext>();
 
 app.MapControllers();
 

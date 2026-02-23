@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace InventoryService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/products")]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -1,7 +1,7 @@
 {
     "Routes": [
         {
-            "DownstreamPathTemplate": "/api/Chat/{everything}",
+            "DownstreamPathTemplate": "/api/v1/chat/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -9,7 +9,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/Chat/{everything}",
+            "UpstreamPathTemplate": "/api/v1/chat/{everything}",
             "UpstreamHttpMethod": [
                 "POST",
                 "OPTIONS"
@@ -20,7 +20,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/Auth/{everything}",
+            "DownstreamPathTemplate": "/api/v1/auth/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -28,7 +28,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/Auth/{everything}",
+            "UpstreamPathTemplate": "/api/v1/auth/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -38,7 +38,7 @@
             ]
         },
         {
-            "DownstreamPathTemplate": "/api/v1/Farms/{everything}",
+            "DownstreamPathTemplate": "/api/v1/farms/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -46,7 +46,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/Farms/{everything}",
+            "UpstreamPathTemplate": "/api/v1/farms/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -60,7 +60,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
+            "DownstreamPathTemplate": "/api/v1/feeding-events/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -68,7 +68,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
+            "UpstreamPathTemplate": "/api/v1/feeding-events/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -82,7 +82,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/v1/Reproduction/{everything}",
+            "DownstreamPathTemplate": "/api/v1/reproduction/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -90,7 +90,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/Reproduction/{everything}",
+            "UpstreamPathTemplate": "/api/v1/reproduction/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -235,7 +235,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/HealthEvent/{everything}",
+            "DownstreamPathTemplate": "/api/v1/health-event/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -243,7 +243,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/HealthEvent/{everything}",
+            "UpstreamPathTemplate": "/api/v1/health-event/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -257,7 +257,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/transactions/{everything}",
+            "DownstreamPathTemplate": "/api/v1/transactions/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -265,7 +265,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/transactions/{everything}",
+            "UpstreamPathTemplate": "/api/v1/transactions/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -279,7 +279,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/third-parties/{everything}",
+            "DownstreamPathTemplate": "/api/v1/third-parties/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -287,7 +287,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/third-parties/{everything}",
+            "UpstreamPathTemplate": "/api/v1/third-parties/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -301,7 +301,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/Products/{everything}",
+            "DownstreamPathTemplate": "/api/v1/products/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -309,7 +309,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/Products/{everything}",
+            "UpstreamPathTemplate": "/api/v1/products/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -323,7 +323,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/Inventory/{everything}",
+            "DownstreamPathTemplate": "/api/v1/inventory/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -331,7 +331,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/Inventory/{everything}",
+            "UpstreamPathTemplate": "/api/v1/inventory/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -345,7 +345,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/InventoryMovements/{everything}",
+            "DownstreamPathTemplate": "/api/v1/inventory-movements/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -353,7 +353,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/InventoryMovements/{everything}",
+            "UpstreamPathTemplate": "/api/v1/inventory-movements/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",

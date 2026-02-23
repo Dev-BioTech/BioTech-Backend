@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthService.Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/farms")]
 [Authorize]
 [Produces("application/json")]
 public class FarmsController : ControllerBase
