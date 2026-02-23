@@ -14,12 +14,12 @@ public class DiagnosticSessionRepository : IDiagnosticSessionRepository
         _context = context;
     }
 
-    public async Task<DiagnosticSession> GetByIdAsync(long id)
+    public async Task<DiagnosticSession?> GetByIdAsync(long id)
     {
         return await _context.DiagnosticSessions.FindAsync(id);
     }
 
-    public async Task<DiagnosticSession> GetBySessionIdAsync(string sessionId)
+    public async Task<DiagnosticSession?> GetBySessionIdAsync(string sessionId)
     {
         return await _context.DiagnosticSessions.FirstOrDefaultAsync(s => s.SessionId == sessionId);
     }

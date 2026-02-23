@@ -13,7 +13,7 @@ public class UpdateAnimalWeightCommandHandler : IRequestHandler<UpdateAnimalWeig
         _animalRepository = animalRepository;
     }
 
-    public async Task<AnimalResponse> Handle(UpdateAnimalWeightCommand request, CancellationToken cancellationToken)
+    public Task<AnimalResponse> Handle(UpdateAnimalWeightCommand request, CancellationToken cancellationToken)
     {
         // Schema mismatch: 'animals' table does not have weight columns.
         throw new NotImplementedException("Animal table does not support weight updates. Please use Calving/WeightService.");

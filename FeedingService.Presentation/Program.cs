@@ -7,6 +7,7 @@ using FeedingService.Infrastructure.Persistence;
 using FeedingService.Application;
 using FeedingService.Infrastructure;
 using FeedingService.Presentation.Middlewares;
+using Shared.Infrastructure.Middlewares;
 using FeedingService.Application.Commands.CreateFeedingEvent;
 
 Env.Load();
@@ -213,7 +214,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh

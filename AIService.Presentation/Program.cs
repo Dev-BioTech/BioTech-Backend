@@ -3,6 +3,7 @@ using AIService.Infrastructure;
 using DotNetEnv;
 using Shared.Infrastructure.Extensions;
 using AIService.Infrastructure.Persistence;
+using Shared.Infrastructure.Middlewares;
 
 Env.Load();
 
@@ -148,6 +149,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); // Often disabled in internal microservices behind gateway
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 // Apply automatic migrations on startup
