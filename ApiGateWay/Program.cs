@@ -247,17 +247,20 @@ app.UseCors("AllowVercel");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
 
-// 9. Use Ocelot
-app.UseOcelot().Wait();
-
-// Version Endpoint
-app.MapGet("/version", () => new 
-{ 
-    Service = "ApiGateWay", 
-    Version = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "1.0.0",
-    Environment = app.Environment.EnvironmentName
+    // Version Endpoint
+    endpoints.MapGet("/version", () => new 
+    { 
+        Service = "ApiGateWay", 
+        Version = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "1.0.0",
+        Environment = app.Environment.EnvironmentName
+    });
 });
+
+// 9. Use Ocelot - MUST BE AFTER UseEndpoints to allow local routes to be matched first
+app.UseOcelot().Wait();
 
 app.Run();
