@@ -1,7 +1,10 @@
-using InventoryService.Application;
-using InventoryService.Infrastructure;
 using InventoryService.Presentation.Middlewares;
 using DotNetEnv;
+using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Middlewares;
+using InventoryService.Infrastructure.Persistence;
+using InventoryService.Application;
+using InventoryService.Infrastructure;
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -173,13 +176,16 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 // Add Middlewares
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseRouting();
 app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<InventoryDbContext>();
 
 app.MapControllers();
 

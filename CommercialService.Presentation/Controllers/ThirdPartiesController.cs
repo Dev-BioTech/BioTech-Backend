@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using CommercialService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace CommercialService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/third-parties")]
+[Route("api/v1/third-parties")]
 [Authorize]
 public class ThirdPartiesController : ControllerBase
 {

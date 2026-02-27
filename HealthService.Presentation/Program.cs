@@ -1,9 +1,12 @@
+using System.Reflection;
 using DotNetEnv;
+using Microsoft.OpenApi.Models;
+using Shared.Infrastructure.Extensions;
+using HealthService.Infrastructure.Persistence;
 using HealthService.Application;
 using HealthService.Infrastructure;
 using HealthService.Presentation.Middlewares;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
+using Shared.Infrastructure.Middlewares;
 
 Env.Load();
 
@@ -140,9 +143,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<HealthServiceDbContext>();
+
 app.MapControllers();
 app.MapHealthChecks("/health");
 

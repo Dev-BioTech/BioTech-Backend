@@ -1,10 +1,12 @@
+using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using HerdService.Presentation.Middlewares;
+using Microsoft.OpenApi.Models;
+using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Middlewares;
 using HerdService.Application;
 using HerdService.Infrastructure;
 using HerdService.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using HerdService.Presentation.Middlewares;
-using Microsoft.OpenApi.Models;
 
 
 Env.TraversePath().Load(); // Moved to top
@@ -178,21 +180,18 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<GatewayAuthenticationMiddleware>();
 
 app.UseCors("AllowGateway");
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
-app.MapHealthChecks("/health");
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<HerdDbContext>();
-    dbContext.Database.EnsureCreated();
-}
+// Apply automatic migrations on startup
+app.ApplyMigrations<HerdDbContext>();
+
+app.MapControllers();
 
 // Version Endpoint
 app.MapGet("/version", () => new 

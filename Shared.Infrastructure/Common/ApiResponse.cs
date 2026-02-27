@@ -1,4 +1,4 @@
-namespace HerdService.Presentation.Common;
+namespace Shared.Infrastructure.Common;
 
 public class ApiResponse<T>
 {

@@ -1,12 +1,11 @@
 using System.Security.Claims;
 using System.Net;
 
-namespace CommercialService.Presentation.Middlewares;
-
+namespace AuthService.Presentation.Middlewares;
 
 /// <summary>
 /// Middleware that validates requests come from the API Gateway and extracts user information from headers
-/// This is the recommended approach (Option 2) where only the Gateway validates JWT tokens
+/// This allows direct service testing with X-Gateway-Secret in development
 /// </summary>
 public class GatewayAuthenticationMiddleware
 {
@@ -53,13 +52,13 @@ public class GatewayAuthenticationMiddleware
             return;
         }
 
-        // Extract user information from headers sent by Gateway
+        // Extract user information from headers sent by Gateway (for simulate header injection)
         var userClaims = ExtractUserClaims(context);
         
         // DEV MODE: If no headers and in Development, inject default test user
         if (!userClaims.Any() && _env.IsDevelopment())
         {
-            _logger.LogInformation("Dev Mode: Injecting default test user claims");
+            _logger.LogInformation("Dev Mode: Injecting default test user claims for manual testing");
             userClaims = GetDefaultDevClaims();
         }
 

@@ -11,7 +11,7 @@ using System;
 namespace AuthService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/auth/profile")]
+[Route("api/v1/auth/profile")]
 [Authorize]
 public class ProfileController : ControllerBase
 {

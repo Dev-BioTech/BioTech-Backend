@@ -5,6 +5,8 @@
       dockerfile: AuthService.Presentation/Dockerfile
     ports:
       - "5001:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
@@ -22,11 +24,19 @@
       dockerfile: FeedingService.Presentation/Dockerfile
     ports:
       - "5114:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
       - POSTGRESQL_ADDON_URI=${FEEDING_SERVICE_DB_URI}
       - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+    depends_on:
+      auth-service:
+        condition: service_started
     networks:
       - biotech-network
 
@@ -36,11 +46,19 @@
       dockerfile: ReproductionService.Presentation/Dockerfile
     ports:
       - "5200:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
       - POSTGRESQL_ADDON_URI=${REPRODUCTION_SERVICE_DB_URI}
       - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+    depends_on:
+      auth-service:
+        condition: service_started
     networks:
       - biotech-network
 
@@ -50,6 +68,8 @@
       dockerfile: HerdService.Presentation/Dockerfile
     ports:
       - "5300:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
@@ -64,6 +84,8 @@
       dockerfile: HealthService.Presentation/Dockerfile
     ports:
       - "5400:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
@@ -78,6 +100,8 @@
       dockerfile: AIService.Presentation/Dockerfile
     ports:
       - "5500:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
@@ -96,6 +120,8 @@
       dockerfile: CommercialService.Presentation/Dockerfile
     ports:
       - "5600:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
@@ -113,11 +139,19 @@
       dockerfile: InventoryService.Presentation/Dockerfile
     ports:
       - "5700:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
       - POSTGRESQL_ADDON_URI=${INVENTORY_SERVICE_DB_URI}
       - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+    depends_on:
+      auth-service:
+        condition: service_started
     networks:
       - biotech-network
 
@@ -137,6 +171,21 @@
       - AUTH_SERVICE_HOST=auth-service
       - FEEDING_SERVICE_HOST=feeding-service
       - HEALTH_SERVICE_HOST=health-service
+    depends_on:
+      auth-service:
+        condition: service_started
+      feeding-service:
+        condition: service_started
+      herd-service:
+        condition: service_started
+      health-service:
+        condition: service_started
+      reproduction-service:
+        condition: service_started
+      commercial-service:
+        condition: service_started
+      inventory-service:
+        condition: service_started
     networks:
       - biotech-network
 

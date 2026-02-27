@@ -5,12 +5,12 @@ using HerdService.Application.Commands;
 using HerdService.Application.Queries;
 using HerdService.Application.DTOs;
 using HerdService.Presentation.Services;
-using HerdService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace HerdService.Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/animals")]
 public class AnimalsController : ControllerBase
 {
     private readonly IMediator _mediator;
