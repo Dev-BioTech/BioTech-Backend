@@ -1,22 +1,4 @@
 ﻿services:
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "5438:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - biotech-network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   auth-service:
     build:
       context: .
@@ -26,18 +8,11 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_SSL_MODE=${DB_SSL_MODE}
+      - POSTGRESQL_ADDON_URI=${AUTH_SERVICE_DB_URI}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
     networks:
       - biotech-network
 
@@ -50,17 +25,8 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_DATABASE} # Note: Feeding service might use DB_NAME or DB_DATABASE, keeping consistency with previous
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_SSLMODE=${DB_SSL_MODE}
-    depends_on:
-      auth-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
+      - POSTGRESQL_ADDON_URI=${FEEDING_SERVICE_DB_URI}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
     networks:
       - biotech-network
 
@@ -73,17 +39,8 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_SSL_MODE=${DB_SSL_MODE}
-    depends_on:
-      auth-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
+      - POSTGRESQL_ADDON_URI=${REPRODUCTION_SERVICE_DB_URI}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
     networks:
       - biotech-network
 
@@ -96,15 +53,8 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
+      - POSTGRESQL_ADDON_URI=${HERD_SERVICE_DB_URI}
       - GATEWAY_SECRET=${GATEWAY_SECRET}
-    depends_on:
-      auth-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
     networks:
       - biotech-network
 
@@ -117,18 +67,8 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_SSL_MODE=${DB_SSL_MODE}
+      - POSTGRESQL_ADDON_URI=${HEALTH_SERVICE_DB_URI}
       - GATEWAY_SECRET=${GATEWAY_SECRET}
-    depends_on:
-      auth-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
     networks:
       - biotech-network
 
@@ -144,11 +84,9 @@
       - Gemini__ApiKey=${GEMINI_API_KEY}
       - AnthropicApi__ApiKey=${ANTHROPIC_API_KEY}
       - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - ServiceUrls__HerdService=${HERD_SERVICE_URL:-http://herd-service:8080}
-      - ServiceUrls__HealthService=${HEALTH_SERVICE_URL:-http://health-service:8080}
-      - ServiceUrls__FeedingService=${FEEDING_SERVICE_URL:-http://feeding-service:8080}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ServiceUrls__HerdService=http://herd-service:8080
+      - ServiceUrls__HealthService=http://health-service:8080
+      - ServiceUrls__FeedingService=http://feeding-service:8080
     networks:
       - biotech-network
 
@@ -161,20 +99,11 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_SSL_MODE=${DB_SSL_MODE}
+      - POSTGRESQL_ADDON_URI=${COMMERCIAL_SERVICE_DB_URI}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
-    depends_on:
-      auth-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
     networks:
       - biotech-network
 
@@ -187,17 +116,8 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_SSL_MODE=${DB_SSL_MODE}
-    depends_on:
-      auth-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
+      - POSTGRESQL_ADDON_URI=${INVENTORY_SERVICE_DB_URI}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
     networks:
       - biotech-network
 
@@ -205,39 +125,18 @@
     build:
       context: .
       dockerfile: ApiGateWay/Dockerfile
-    env_file:
-      - .env
     ports:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
       - AUTH_SERVICE_HOST=auth-service
-      - AUTH_SERVICE_PORT=8080
       - FEEDING_SERVICE_HOST=feeding-service
-      - FEEDING_SERVICE_PORT=8080
       - HEALTH_SERVICE_HOST=health-service
-      - HEALTH_SERVICE_PORT=8080
-      - JwtConfig__Secret=${JWT_SECRET}
-      - JwtConfig__Issuer=${JWT_ISSUER}
-      - JwtConfig__Audience=${JWT_AUDIENCE}
-    depends_on:
-      auth-service:
-        condition: service_started
-      feeding-service:
-        condition: service_started
-      herd-service:
-        condition: service_started
-      health-service:
-        condition: service_started
-      reproduction-service:
-        condition: service_started
-      commercial-service:
-        condition: service_started
-      inventory-service:
-        condition: service_started
-      postgres:
-        condition: service_healthy
     networks:
       - biotech-network
 

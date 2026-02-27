@@ -33,7 +33,6 @@ var connectionString = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI"
 
 if (!string.IsNullOrEmpty(connectionString))
 {
-    // Case 1: URI with scheme (postgresql://...) - Common in PaaS
     if (connectionString.StartsWith("postgresql://"))
     {
         try 
@@ -46,54 +45,29 @@ if (!string.IsNullOrEmpty(connectionString))
             var user = userInfo.Length > 0 ? userInfo[0] : "";
             var pass = userInfo.Length > 1 ? userInfo[1] : "";
             
-            // Build standard connection string
             connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Config Error] Failed to parse URI connection string: {ex.Message}");
-            // Fallback: Use string manipulation if Uri parsing fails
-            if (connectionString.Contains("@"))
-            {
-                 connectionString = connectionString.Replace("postgresql://", "Host=");
-                 var userInfoSplit = connectionString.IndexOf('@');
-                 var userPassPart = connectionString.Substring(5, userInfoSplit - 5);
-                 var hostPortDbPart = connectionString.Substring(userInfoSplit + 1);
-
-                 var userPass = userPassPart.Split(':');
-                 var hostPortDb = hostPortDbPart.Split('/');
-                 var hostPort = hostPortDb[0].Split(':');
-
-                 var host = hostPort[0];
-                 var dbPort = hostPort.Length > 1 ? hostPort[1] : "5432";
-                 var dbName = hostPortDb[1];
-                 var user = userPass[0];
-                 var password = userPass[1];
-
-                 connectionString = $"Host={host};Port={dbPort};Database={dbName};Username={user};Password={password};Ssl Mode=Require;Trust Server Certificate=true;";
-            }
+            Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
         }
     }
 }
 else
 {
-    // Case 2: Individual variables - Common in Local/Docker
-    var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+    var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
     if (!string.IsNullOrEmpty(dbHost))
     {
-        var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
-        if (string.IsNullOrEmpty(dbPort)) dbPort = "5432";
-        
-        var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
-        var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-        var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+        var dbName = Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
+        var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+        var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
         var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
 
         connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
     }
 }
 
-// Set the configuration
 if (!string.IsNullOrEmpty(connectionString))
 {
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
