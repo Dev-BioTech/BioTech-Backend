@@ -30,55 +30,73 @@ if (!string.IsNullOrEmpty(port))
 // ------------------------------------------------------------------------------------------------
 
 // 1. Database Connection
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var configConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = "";
 
+// Priority 1: Direct POSTGRESQL_ADDON_URI (Clever Cloud specific)
+var addonUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
+               Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
+               Environment.GetEnvironmentVariable("DB_URL");
+
+if (!string.IsNullOrEmpty(addonUri) && addonUri.StartsWith("postgresql://"))
+{
+    try 
+    {
+        var uri = new Uri(addonUri);
+        var userInfo = uri.UserInfo.Split(':');
+        var host = uri.Host;
+        var parsedPort = uri.Port > 0 ? uri.Port : 5432;
+        var path = uri.AbsolutePath.TrimStart('/');
+        var user = userInfo.Length > 0 ? userInfo[0] : "";
+        var pass = userInfo.Length > 1 ? userInfo[1] : "";
+        
+        connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
+        Console.WriteLine($"[Config] Using connection string from POSTGRESQL_ADDON_URI (Host: {host}, Port: {parsedPort})");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
+    }
+}
+
+// Priority 2: Individual variables
 if (string.IsNullOrEmpty(connectionString))
 {
-    connectionString = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
-                       Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
-                       Environment.GetEnvironmentVariable("DB_URL");
-
-    if (!string.IsNullOrEmpty(connectionString))
+    var dbHost = Environment.GetEnvironmentVariable("FEEDING_DB_HOST") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+    if (!string.IsNullOrEmpty(dbHost))
     {
-        if (connectionString.StartsWith("postgresql://"))
+        var dbPort = Environment.GetEnvironmentVariable("FEEDING_DB_PORT") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+        var dbName = Environment.GetEnvironmentVariable("FEEDING_DB_NAME") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
+        var dbUser = Environment.GetEnvironmentVariable("FEEDING_DB_USER") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+        var dbPassword = Environment.GetEnvironmentVariable("FEEDING_DB_PASSWORD") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+
+        if (!string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPassword))
         {
-            try 
-            {
-                var uri = new Uri(connectionString);
-                var userInfo = uri.UserInfo.Split(':');
-                var host = uri.Host;
-                var parsedPort = uri.Port > 0 ? uri.Port : 5432;
-                var path = uri.AbsolutePath.TrimStart('/');
-                var user = userInfo.Length > 0 ? userInfo[0] : "";
-                var pass = userInfo.Length > 1 ? userInfo[1] : "";
-                
-                connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
-            }
+            connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
+            Console.WriteLine($"[Config] Compiled connection string from individual variables (Host: {dbHost}, Port: {dbPort})");
         }
     }
-    else
-    {
-        var dbHost = Environment.GetEnvironmentVariable("FEEDING_DB_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
-        if (!string.IsNullOrEmpty(dbHost))
-        {
-            var dbPort = Environment.GetEnvironmentVariable("FEEDING_DB_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-            var dbName = Environment.GetEnvironmentVariable("FEEDING_DB_NAME") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
-            var dbUser = Environment.GetEnvironmentVariable("FEEDING_DB_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-            var dbPassword = Environment.GetEnvironmentVariable("FEEDING_DB_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
-            var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+}
 
-            connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
-        }
+// Priority 3: Fallback to configuration if it doesn't look like an empty template
+if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(configConnectionString))
+{
+    // Basic check to see if it's a template like "Host=;Port=;..."
+    if (!configConnectionString.Contains("Host=;") && !configConnectionString.Contains("Port=;"))
+    {
+        connectionString = configConnectionString;
+        Console.WriteLine("[Config] Using connection string from configuration/env var.");
     }
 }
 
 if (!string.IsNullOrEmpty(connectionString))
 {
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+}
+else
+{
+    Console.WriteLine("[Config Warning] No database connection string found!");
 }
 
 // 2. JWT Configuration
