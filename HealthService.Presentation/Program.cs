@@ -29,44 +29,49 @@ if (!string.IsNullOrEmpty(port))
 // ------------------------------------------------------------------------------------------------
 
 // 1. Database Connection
-var connectionString = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    connectionString = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
                        Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
                        Environment.GetEnvironmentVariable("DB_URL");
 
-if (!string.IsNullOrEmpty(connectionString))
-{
-    if (connectionString.StartsWith("postgresql://"))
+    if (!string.IsNullOrEmpty(connectionString))
     {
-        try 
+        if (connectionString.StartsWith("postgresql://"))
         {
-            var uri = new Uri(connectionString);
-            var userInfo = uri.UserInfo.Split(':');
-            var host = uri.Host;
-            var parsedPort = uri.Port > 0 ? uri.Port : 5432;
-            var path = uri.AbsolutePath.TrimStart('/');
-            var user = userInfo.Length > 0 ? userInfo[0] : "";
-            var pass = userInfo.Length > 1 ? userInfo[1] : "";
-            
-            connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
+            try 
+            {
+                var uri = new Uri(connectionString);
+                var userInfo = uri.UserInfo.Split(':');
+                var host = uri.Host;
+                var parsedPort = uri.Port > 0 ? uri.Port : 5432;
+                var path = uri.AbsolutePath.TrimStart('/');
+                var user = userInfo.Length > 0 ? userInfo[0] : "";
+                var pass = userInfo.Length > 1 ? userInfo[1] : "";
+                
+                connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
+            }
         }
     }
-}
-else
-{
-    var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-    if (!string.IsNullOrEmpty(dbHost))
+    else
     {
-        var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-        var dbName = Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
-        var dbUser = Environment.GetEnvironmentVariable("DB_USER");
-        var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
+        var dbHost = Environment.GetEnvironmentVariable("HEALTH_DB_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
+        if (!string.IsNullOrEmpty(dbHost))
+        {
+            var dbPort = Environment.GetEnvironmentVariable("HEALTH_DB_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+            var dbName = Environment.GetEnvironmentVariable("HEALTH_DB_NAME") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
+            var dbUser = Environment.GetEnvironmentVariable("HEALTH_DB_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
+            var dbPassword = Environment.GetEnvironmentVariable("HEALTH_DB_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
+            var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
 
-        connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
+            connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
+        }
     }
 }
 

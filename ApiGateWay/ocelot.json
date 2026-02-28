@@ -1,6 +1,20 @@
 {
     "Routes": [
         {
+            "DownstreamPathTemplate": "/version",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/version",
+            "UpstreamHttpMethod": [
+                "GET"
+            ]
+        },
+        {
             "DownstreamPathTemplate": "/api/v1/chat/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
@@ -29,6 +43,24 @@
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/auth/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/auth/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/auth/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
