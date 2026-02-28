@@ -87,61 +87,63 @@ if (!string.IsNullOrEmpty(port))
 var configConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var connectionString = "";
 
-// Priority 1: Direct POSTGRESQL_ADDON_URI (Clever Cloud specific)
-var addonUri = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
-               Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
-               Environment.GetEnvironmentVariable("DB_URL");
-
-if (!string.IsNullOrEmpty(addonUri) && addonUri.StartsWith("postgresql://"))
-{
-    try 
-    {
-        var uri = new Uri(addonUri);
-        var userInfo = uri.UserInfo.Split(':');
-        var host = uri.Host;
-        var parsedPort = uri.Port > 0 ? uri.Port : 5432;
-        var path = uri.AbsolutePath.TrimStart('/');
-        var user = userInfo.Length > 0 ? userInfo[0] : "";
-        var pass = userInfo.Length > 1 ? userInfo[1] : "";
-        
-        connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
-        Console.WriteLine($"[Config] Using connection string from POSTGRESQL_ADDON_URI (Host: {host}, Port: {parsedPort})");
+// Helper to get non-empty environment variable
+string GetEnv(params string[] names) {
+    foreach (var name in names) {
+        var val = Environment.GetEnvironmentVariable(name);
+        if (!string.IsNullOrEmpty(val)) return val;
     }
-    catch (Exception ex)
+    return null;
+}
+
+// Priority 1: Individual variables (Ensures port overrides like 50013 are used)
+var dbHost = GetEnv("AUTH_DB_HOST", "POSTGRESQL_ADDON_HOST", "DB_HOST");
+if (!string.IsNullOrEmpty(dbHost))
+{
+    var dbPort = GetEnv("AUTH_DB_PORT", "POSTGRESQL_ADDON_PORT", "DB_PORT") ?? "5432";
+    var dbName = GetEnv("AUTH_DB_NAME", "POSTGRESQL_ADDON_DB", "DB_DATABASE", "DB_NAME") ?? "biotech_db";
+    var dbUser = GetEnv("AUTH_DB_USER", "POSTGRESQL_ADDON_USER", "DB_USER");
+    var dbPassword = GetEnv("AUTH_DB_PASSWORD", "POSTGRESQL_ADDON_PASSWORD", "DB_PASSWORD");
+    var dbSslMode = GetEnv("DB_SSL_MODE") ?? "Require";
+
+    if (!string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPassword))
     {
-        Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
+        connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
+        Console.WriteLine($"[Config] Using individual variables (Host: {dbHost}, Port: {dbPort})");
     }
 }
 
-// Priority 2: Individual variables
+// Priority 2: Direct POSTGRESQL_ADDON_URI
 if (string.IsNullOrEmpty(connectionString))
 {
-    var dbHost = Environment.GetEnvironmentVariable("AUTH_DB_HOST") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
-    if (!string.IsNullOrEmpty(dbHost))
+    var addonUri = GetEnv("POSTGRESQL_ADDON_URI", "DATABASE_URL", "DB_URL");
+    if (!string.IsNullOrEmpty(addonUri) && addonUri.StartsWith("postgresql://"))
     {
-        var dbPort = Environment.GetEnvironmentVariable("AUTH_DB_PORT") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-        var dbName = Environment.GetEnvironmentVariable("AUTH_DB_NAME") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
-        var dbUser = Environment.GetEnvironmentVariable("AUTH_DB_USER") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-        var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD") ?? Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
-        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
-
-        if (!string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPassword))
+        try 
         {
-            connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
-            Console.WriteLine($"[Config] Compiled connection string from individual variables (Host: {dbHost}, Port: {dbPort})");
+            var uri = new Uri(addonUri);
+            var userInfo = uri.UserInfo.Split(':');
+            var host = uri.Host;
+            var parsedPort = uri.Port > 0 ? uri.Port : 5432;
+            var path = uri.AbsolutePath.TrimStart('/');
+            var user = userInfo.Length > 0 ? userInfo[0] : "";
+            var pass = userInfo.Length > 1 ? userInfo[1] : "";
+            
+            connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
+            Console.WriteLine($"[Config] Using Addon URI (Host: {host}, Port: {parsedPort})");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
         }
     }
 }
 
-// Priority 3: Fallback to configuration if it doesn't look like an empty template
-if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(configConnectionString))
+// Priority 3: Fallback to configuration
+if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(configConnectionString) && !configConnectionString.Contains("Host=;"))
 {
-    // Basic check to see if it's a template like "Host=;Port=;..."
-    if (!configConnectionString.Contains("Host=;") && !configConnectionString.Contains("Port=;"))
-    {
-        connectionString = configConnectionString;
-        Console.WriteLine("[Config] Using connection string from configuration/env var.");
-    }
+    connectionString = configConnectionString;
+    Console.WriteLine("[Config] Using configuration fallback.");
 }
 
 if (!string.IsNullOrEmpty(connectionString))
