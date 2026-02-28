@@ -1,16 +1,32 @@
 ﻿services:
+
   auth-service:
     build:
       context: .
       dockerfile: AuthService.Presentation/Dockerfile
-    ports:
-      - "5001:8080"
     env_file:
       - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - POSTGRESQL_ADDON_URI=${AUTH_SERVICE_DB_URI}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${AUTH_DB_HOST};Port=${AUTH_DB_PORT};Database=${AUTH_DB_NAME};Username=${AUTH_DB_USER};Password=${AUTH_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
+    networks:
+      - biotech-network
+
+  commercial-service:
+    build:
+      context: .
+      dockerfile: CommercialService.Presentation/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - PORT=8080
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${COMMERCIAL_DB_HOST};Port=${COMMERCIAL_DB_PORT};Database=${COMMERCIAL_DB_NAME};Username=${COMMERCIAL_DB_USER};Password=${COMMERCIAL_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
@@ -22,59 +38,16 @@
     build:
       context: .
       dockerfile: FeedingService.Presentation/Dockerfile
-    ports:
-      - "5114:8080"
     env_file:
       - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - POSTGRESQL_ADDON_URI=${FEEDING_SERVICE_DB_URI}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${FEEDING_DB_HOST};Port=${FEEDING_DB_PORT};Database=${FEEDING_DB_NAME};Username=${FEEDING_DB_USER};Password=${FEEDING_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
       - GATEWAY_SECRET=${GATEWAY_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
-    depends_on:
-      auth-service:
-        condition: service_started
-    networks:
-      - biotech-network
-
-  reproduction-service:
-    build:
-      context: .
-      dockerfile: ReproductionService.Presentation/Dockerfile
-    ports:
-      - "5200:8080"
-    env_file:
-      - .env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - POSTGRESQL_ADDON_URI=${REPRODUCTION_SERVICE_DB_URI}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
-    depends_on:
-      auth-service:
-        condition: service_started
-    networks:
-      - biotech-network
-
-  herd-service:
-    build:
-      context: .
-      dockerfile: HerdService.Presentation/Dockerfile
-    ports:
-      - "5300:8080"
-    env_file:
-      - .env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - POSTGRESQL_ADDON_URI=${HERD_SERVICE_DB_URI}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
     networks:
       - biotech-network
 
@@ -82,50 +55,29 @@
     build:
       context: .
       dockerfile: HealthService.Presentation/Dockerfile
-    ports:
-      - "5400:8080"
     env_file:
       - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - POSTGRESQL_ADDON_URI=${HEALTH_SERVICE_DB_URI}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${HEALTH_DB_HOST};Port=${HEALTH_DB_PORT};Database=${HEALTH_DB_NAME};Username=${HEALTH_DB_USER};Password=${HEALTH_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
       - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
     networks:
       - biotech-network
 
-  ai-service:
+  herd-service:
     build:
       context: .
-      dockerfile: AIService.Presentation/Dockerfile
-    ports:
-      - "5500:8080"
+      dockerfile: HerdService.Presentation/Dockerfile
     env_file:
       - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - Gemini__ApiKey=${GEMINI_API_KEY}
-      - AnthropicApi__ApiKey=${ANTHROPIC_API_KEY}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - ServiceUrls__HerdService=http://herd-service:8080
-      - ServiceUrls__HealthService=http://health-service:8080
-      - ServiceUrls__FeedingService=http://feeding-service:8080
-    networks:
-      - biotech-network
-
-  commercial-service:
-    build:
-      context: .
-      dockerfile: CommercialService.Presentation/Dockerfile
-    ports:
-      - "5600:8080"
-    env_file:
-      - .env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - POSTGRESQL_ADDON_URI=${COMMERCIAL_SERVICE_DB_URI}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${HERD_DB_HOST};Port=${HERD_DB_PORT};Database=${HERD_DB_NAME};Username=${HERD_DB_USER};Password=${HERD_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
       - GATEWAY_SECRET=${GATEWAY_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
@@ -137,21 +89,53 @@
     build:
       context: .
       dockerfile: InventoryService.Presentation/Dockerfile
-    ports:
-      - "5700:8080"
     env_file:
       - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
-      - POSTGRESQL_ADDON_URI=${INVENTORY_SERVICE_DB_URI}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${INVENTORY_DB_HOST};Port=${INVENTORY_DB_PORT};Database=${INVENTORY_DB_NAME};Username=${INVENTORY_DB_USER};Password=${INVENTORY_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
       - GATEWAY_SECRET=${GATEWAY_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
-    depends_on:
-      auth-service:
-        condition: service_started
+    networks:
+      - biotech-network
+
+  reproduction-service:
+    build:
+      context: .
+      dockerfile: ReproductionService.Presentation/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - PORT=8080
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Host=${REPRODUCTION_DB_HOST};Port=${REPRODUCTION_DB_PORT};Database=${REPRODUCTION_DB_NAME};Username=${REPRODUCTION_DB_USER};Password=${REPRODUCTION_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+    networks:
+      - biotech-network
+
+  ai-service:
+    build:
+      context: .
+      dockerfile: AIService.Presentation/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - PORT=8080
+      - Gemini__ApiKey=${GEMINI_API_KEY}
+      - AnthropicApi__ApiKey=${ANTHROPIC_API_KEY}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - ServiceUrls__HerdService=http://herd-service:8080
+      - ServiceUrls__HealthService=http://health-service:8080
+      - ServiceUrls__FeedingService=http://feeding-service:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - biotech-network
 
@@ -161,16 +145,24 @@
       dockerfile: ApiGateWay/Dockerfile
     ports:
       - "5000:8080"
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - PORT=8080
+      - AUTH_SERVICE_HOST=auth-service
+      - AUTH_SERVICE_PORT=8080
+      - FEEDING_SERVICE_HOST=feeding-service
+      - FEEDING_SERVICE_PORT=8080
+      - HEALTH_SERVICE_HOST=health-service
+      - HEALTH_SERVICE_PORT=8080
       - GATEWAY_SECRET=${GATEWAY_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
-      - AUTH_SERVICE_HOST=auth-service
-      - FEEDING_SERVICE_HOST=feeding-service
-      - HEALTH_SERVICE_HOST=health-service
+      - JwtConfig__Secret=${JWT_SECRET}
+      - JwtConfig__Issuer=${JWT_ISSUER}
+      - JwtConfig__Audience=${JWT_AUDIENCE}
     depends_on:
       auth-service:
         condition: service_started
@@ -192,6 +184,3 @@
 networks:
   biotech-network:
     driver: bridge
-
-volumes:
-  postgres_data:
