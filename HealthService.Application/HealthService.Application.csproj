@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\HealthService.Domain\HealthService.Domain.csproj" />
+      <ProjectReference Include="..\AuthService.Application\AuthService.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>

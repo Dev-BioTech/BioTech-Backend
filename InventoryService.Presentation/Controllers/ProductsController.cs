@@ -5,11 +5,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentValidation;
 
-namespace InventoryService.Presentation.Controllers;
+namespace InventoryService.Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -20,10 +21,19 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> CreateProduct(CreateProductDto dto)
+    public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto dto)
     {
-        var id = await _mediator.Send(new CreateProductCommand(dto));
-        return CreatedAtAction(nameof(GetProducts), new { id }, id); // Ideally GetById, but GetProducts is fine for now
+        var result = await _mediator.Send(new CreateProductCommand(dto));
+        return CreatedAtAction(nameof(GetProductById), new { id = result.Id }, result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDto>> GetProductById(int id)
+    {
+        var product = await _mediator.Send(new GetProductByIdQuery(id));
+        if (product == null)
+            return NotFound();
+        return Ok(product);
     }
 
     [HttpGet]
@@ -33,10 +43,42 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
 
-    [HttpGet("low-stock")]
-    public async Task<ActionResult<IEnumerable<ProductDto>>> GetLowStockProducts([FromQuery] int farmId)
+    [HttpGet("farms/{farmId}/low-stock")]
+    public async Task<ActionResult<IEnumerable<LowStockProductDto>>> GetLowStockProducts(int farmId)
     {
         var products = await _mediator.Send(new GetLowStockProductsQuery(farmId));
         return Ok(products);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ProductDto>> UpdateProduct(int id, [FromBody] UpdateProductDto dto)
+    {
+        try
+        {
+            var result = await _mediator.Send(new UpdateProductCommand(id, dto));
+            return Ok(result);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ex.Errors);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteProduct(int id)
+    {
+        try
+        {
+            await _mediator.Send(new DeleteProductCommand(id));
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

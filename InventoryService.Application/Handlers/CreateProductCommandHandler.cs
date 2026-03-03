@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InventoryService.Application.Handlers;
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductDto>
 {
     private readonly IProductRepository _repository;
 
@@ -18,7 +18,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         _repository = repository;
     }
 
-    public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var dto = request.Dto;
 
@@ -39,6 +39,19 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             Active = true
         };
 
-        return await _repository.AddAsync(product, cancellationToken);
+        var createdId = await _repository.AddAsync(product, cancellationToken);
+        
+        return new ProductDto
+        {
+            Id = createdId,
+            Name = product.Name,
+            Category = product.Category?.ToString() ?? string.Empty,
+            UnitOfMeasure = product.UnitOfMeasure,
+            CurrentQuantity = product.CurrentQuantity,
+            AverageCost = product.AverageCost,
+            MinimumStock = product.MinimumStock,
+            FarmId = product.FarmId,
+            Active = product.Active
+        };
     }
 }

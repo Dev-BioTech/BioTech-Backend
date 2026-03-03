@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReproductionService.Application.Commands.CancelReproductionEvent;
 using ReproductionService.Application.Commands.CreateReproductionEvent;
+using ReproductionService.Application.Commands;
 using ReproductionService.Application.DTOs;
 using ReproductionService.Application.Queries.GetReproductionEventById;
 using ReproductionService.Application.Queries.GetReproductionEventsByAnimal;
 using ReproductionService.Application.Queries.GetReproductionEventsByFarm;
 using ReproductionService.Application.Queries.GetReproductionEventsByType;
+using ReproductionService.Application.Queries;
 using ReproductionService.Domain.Enums;
 using ReproductionService.Presentation.Common;
 
@@ -145,5 +147,93 @@ public class ReproductionController : ControllerBase
         var command = new CancelReproductionEventCommand(id);
         var result = await _mediator.Send(command);
         return Ok(ApiResponse<ReproductionEventResponse>.Ok(result, "Reproduction event cancelled successfully"));
+    }
+
+    /// <summary>
+    /// Get pregnancies by farm
+    /// </summary>
+    [HttpGet("pregnancies/farm/{farmId}")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<PregnancyDto>>>> GetPregnanciesByFarm(int farmId)
+    {
+        try
+        {
+            // Validate user has access to this farm
+            var userId = _authService.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(ApiResponse<IEnumerable<PregnancyDto>>.Fail("User not authenticated"));
+            }
+
+            var result = await _mediator.Send(new GetPregnanciesByFarmQuery(farmId));
+            return Ok(ApiResponse<IEnumerable<PregnancyDto>>.Ok(result, "Pregnancies retrieved successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<IEnumerable<PregnancyDto>>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<IEnumerable<PregnancyDto>>.Fail("Internal server error"));
+        }
+    }
+
+    /// <summary>
+    /// Get births by farm
+    /// </summary>
+    [HttpGet("births/farm/{farmId}")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<BirthDto>>>> GetBirthsByFarm(int farmId)
+    {
+        try
+        {
+            // Validate user has access to this farm
+            var userId = _authService.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(ApiResponse<IEnumerable<BirthDto>>.Fail("User not authenticated"));
+            }
+
+            var result = await _mediator.Send(new GetBirthsByFarmQuery(farmId));
+            return Ok(ApiResponse<IEnumerable<BirthDto>>.Ok(result, "Births retrieved successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<IEnumerable<BirthDto>>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<IEnumerable<BirthDto>>.Fail("Internal server error"));
+        }
+    }
+
+    /// <summary>
+    /// Register a new birth
+    /// </summary>
+    [HttpPost("births")]
+    public async Task<ActionResult<ApiResponse<BirthDto>>> RegisterBirth([FromBody] RegisterBirthCommand command)
+    {
+        try
+        {
+            // Validate user is authenticated
+            var userId = _authService.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(ApiResponse<BirthDto>.Fail("User not authenticated"));
+            }
+
+            var result = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetBirthsByFarm), new { farmId = 0 }, ApiResponse<BirthDto>.Ok(result, "Birth registered successfully"));
+        }
+        catch (FluentValidation.ValidationException ex)
+        {
+            return BadRequest(ApiResponse<BirthDto>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<BirthDto>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<BirthDto>.Fail("Internal server error"));
+        }
     }
 }
