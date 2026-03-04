@@ -10,7 +10,8 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| `POST` | `/api/Chat` | Send message to AI assistant | ✅ |
+| `POST` | `/api/v1/chat` | Send message to AI assistant | ✅ |
+| `POST` | `/api/v1/diagnostic/analyze-error` | Analyze error | ✅ |
 
 ---
 
@@ -18,18 +19,18 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| `POST` | `/api/Auth/login` | User login | ❌ |
-| `POST` | `/api/Auth/register` | Register new user | ❌ |
-| `GET` | `/api/auth/profile` | Get user profile | ✅ |
-| `PUT` | `/api/auth/profile` | Update user profile | ✅ |
+| `POST` | `/api/v1/auth/login` | User login | ❌ |
+| `POST` | `/api/v1/auth/register` | Register new user | ❌ |
+| `GET` | `/api/v1/auth/profile` | Get user profile | ✅ |
+| `PUT` | `/api/v1/auth/profile` | Update user profile | ✅ |
 
 ### Farms
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/Farms` | Create farm | - | ✅ |
-| `GET` | `/api/v1/Farms/{id}` | Get farm by ID | - | ✅ |
-| `GET` | `/api/v1/Farms/tenant/{userId}` | Get farms by tenant | `includeInactive` | ✅ |
+| `POST` | `/api/v1/farms` | Create farm | - | ✅ |
+| `GET` | `/api/v1/farms/{id}` | Get farm by ID | - | ✅ |
+| `GET` | `/api/v1/farms/tenant/{userId}` | Get farms by tenant | `includeInactive` | ✅ |
 
 ---
 
@@ -37,14 +38,14 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/FeedingEvents` | Create feeding event | - | ✅ |
-| `GET` | `/api/v1/FeedingEvents/{id}` | Get by ID | - | ✅ |
-| `GET` | `/api/v1/FeedingEvents/farm/{farmId}` | Get by farm | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/FeedingEvents/batch/{batchId}` | Get by batch | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/FeedingEvents/product/{productId}` | Get by product | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/FeedingEvents/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
-| `POST` | `/api/v1/FeedingEvents/recalculate-cost` | Recalculate cost | - | ✅ |
-| `PUT` | `/api/v1/FeedingEvents/{id}/cancel` | Cancel event | - | ✅ |
+| `POST` | `/api/v1/feeding-events` | Create feeding event | - | ✅ |
+| `GET` | `/api/v1/feeding-events/{id}` | Get by ID | - | ✅ |
+| `GET` | `/api/v1/feeding-events/farm/{farmId}` | Get by farm | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/feeding-events/batch/{batchId}` | Get by batch | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/feeding-events/product/{productId}` | Get by product | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/feeding-events/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
+| `POST` | `/api/v1/feeding-events/recalculate-cost` | Recalculate cost | - | ✅ |
+| `PUT` | `/api/v1/feeding-events/{id}/cancel` | Cancel event | - | ✅ |
 
 ---
 
@@ -52,13 +53,13 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/Reproduction` | Create event | - | ✅ |
-| `GET` | `/api/v1/Reproduction/{id}` | Get by ID | - | ✅ |
-| `GET` | `/api/v1/Reproduction/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/Reproduction/farm` | Get by farm (context) | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/Reproduction/farm/{farmId}` | Get by farm ID | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/Reproduction/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
-| `PUT` | `/api/v1/Reproduction/{id}/cancel` | Cancel event | - | ✅ |
+| `POST` | `/api/v1/reproduction` | Create event | - | ✅ |
+| `GET` | `/api/v1/reproduction/{id}` | Get by ID | - | ✅ |
+| `GET` | `/api/v1/reproduction/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/reproduction/farm` | Get by farm (context) | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/reproduction/farm/{farmId}` | Get by farm ID | `fromDate`, `toDate`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/reproduction/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
+| `PUT` | `/api/v1/reproduction/{id}/cancel` | Cancel event | - | ✅ |
 
 ### Pregnancies & Births
 
@@ -105,6 +106,7 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
+
 | `POST` | `/api/v1/HealthEvent` | Register event | - | ✅ |
 | `GET` | `/api/v1/HealthEvent/farm` | Get by farm (context) | `page`, `pageSize` | ✅ |
 | `GET` | `/api/v1/HealthEvent/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
@@ -115,9 +117,11 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 | `GET` | `/api/v1/HealthEvent/recent-treatments` | Recent treatments | `limit` (default: 10) | ✅ |
 | `PUT` | `/api/v1/HealthEvent/{id}` | Update health event | - | ✅ |
 
+
 ---
 
 ## � Inventory Service
+
 
 ### Products
 
@@ -137,6 +141,7 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 | `POST` | `/api/Inventory` | Create inventory item | - | ✅ |
 | `GET` | `/api/Inventory/farm/{farmId}` | Get by farm | `page`, `pageSize` | ✅ |
 
+
 ### Inventory Movements
 
 | Method | Endpoint | Description | Query Params | Auth |
@@ -150,11 +155,13 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
+
 | `GET` | `/api/v1/Sales` | Get sales by user | - | ✅ |
 | `GET` | `/api/v1/Sales/{id}` | Get sale by ID | - | ✅ |
 | `POST` | `/api/v1/Sales` | Create sale | - | ✅ |
 | `PUT` | `/api/v1/Sales/{id}` | Update sale | - | ✅ |
 | `DELETE` | `/api/v1/Sales/{id}` | Delete sale | - | ✅ |
+
 
 ---
 
@@ -164,16 +171,19 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
+
 | `POST` | `/api/transactions` | Create transaction | - | ✅ |
 | `GET` | `/api/transactions` | Get transactions | `fromDate`, `toDate`, `type`, `page`, `pageSize` | ✅ |
 | `GET` | `/api/transactions/{id}` | Get by ID | - | ✅ |
 | `GET` | `/api/transactions/{id}/animals` | Get transaction animals | - | ✅ |
 | `GET` | `/api/transactions/{id}/products` | Get transaction products | - | ✅ |
 
+
 ### Third Parties
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
+
 | `POST` | `/api/third-parties` | Create third party | - | ✅ |
 | `PUT` | `/api/third-parties/{id}` | Update third party | - | ✅ |
 | `GET` | `/api/third-parties` | Get third parties | `isSupplier`, `isCustomer`, `page`, `pageSize` | ✅ |
@@ -185,7 +195,7 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 ### Authentication
 - Include JWT token: `Authorization: Bearer <token>`
-- Get token from `/api/Auth/login`
+- Get token from `/api/v1/auth/login`
 
 ### API Versioning
 - All endpoints use versioning: `/api/v1/[controller]`
@@ -256,3 +266,4 @@ The API follows a microservice architecture where each service manages its own d
 **Last Updated:** 2025-03-02  
 **Version:** 1.0  
 **API Version:** v1
+

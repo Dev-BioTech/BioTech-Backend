@@ -8,7 +8,7 @@ using AIService.Presentation.Services;
 namespace AIService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/chat")]
 [Authorize]
 public class ChatController : ControllerBase
 {

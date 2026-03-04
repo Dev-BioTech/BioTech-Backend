@@ -10,7 +10,9 @@ using FluentValidation;
 namespace InventoryService.Presentation.Controllers.V1;
 
 [ApiController]
+
 [Route("api/v1/[controller]")]
+
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;

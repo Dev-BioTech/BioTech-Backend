@@ -1,6 +1,10 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
 using DotNetEnv;
+using Shared.Infrastructure.Extensions;
+using AuthService.Infrastructure.Persistence;
+using Shared.Infrastructure.Middlewares;
+using AuthService.Presentation.Middlewares;
 
 // Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -11,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -79,18 +84,44 @@ if (!string.IsNullOrEmpty(port))
 // ------------------------------------------------------------------------------------------------
 
 // 1. Database Connection
-var connectionString = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_URI") ?? 
-                       Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
-                       Environment.GetEnvironmentVariable("DB_URL");
+var configConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = "";
 
-if (!string.IsNullOrEmpty(connectionString))
+// Helper to get non-empty environment variable
+string GetEnv(params string[] names) {
+    foreach (var name in names) {
+        var val = Environment.GetEnvironmentVariable(name);
+        if (!string.IsNullOrEmpty(val)) return val;
+    }
+    return null;
+}
+
+// Priority 1: Individual variables (Ensures port overrides like 50013 are used)
+var dbHost = GetEnv("AUTH_DB_HOST", "POSTGRESQL_ADDON_HOST", "DB_HOST");
+if (!string.IsNullOrEmpty(dbHost))
 {
-    // Case 1: URI with scheme (postgresql://...) - Common in PaaS
-    if (connectionString.StartsWith("postgresql://"))
+    var dbPort = GetEnv("AUTH_DB_PORT", "POSTGRESQL_ADDON_PORT", "DB_PORT") ?? "5432";
+    var dbName = GetEnv("AUTH_DB_NAME", "POSTGRESQL_ADDON_DB", "DB_DATABASE", "DB_NAME") ?? "biotech_db";
+    var dbUser = GetEnv("AUTH_DB_USER", "POSTGRESQL_ADDON_USER", "DB_USER");
+    var dbPassword = GetEnv("AUTH_DB_PASSWORD", "POSTGRESQL_ADDON_PASSWORD", "DB_PASSWORD");
+    var dbSslMode = GetEnv("DB_SSL_MODE") ?? "Require";
+
+    if (!string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPassword))
+    {
+        connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
+        Console.WriteLine($"[Config] Using individual variables (Host: {dbHost}, Port: {dbPort})");
+    }
+}
+
+// Priority 2: Direct POSTGRESQL_ADDON_URI
+if (string.IsNullOrEmpty(connectionString))
+{
+    var addonUri = GetEnv("POSTGRESQL_ADDON_URI", "DATABASE_URL", "DB_URL");
+    if (!string.IsNullOrEmpty(addonUri) && addonUri.StartsWith("postgresql://"))
     {
         try 
         {
-            var uri = new Uri(connectionString);
+            var uri = new Uri(addonUri);
             var userInfo = uri.UserInfo.Split(':');
             var host = uri.Host;
             var parsedPort = uri.Port > 0 ? uri.Port : 5432;
@@ -98,57 +129,30 @@ if (!string.IsNullOrEmpty(connectionString))
             var user = userInfo.Length > 0 ? userInfo[0] : "";
             var pass = userInfo.Length > 1 ? userInfo[1] : "";
             
-            // Build standard connection string
             connectionString = $"Host={host};Port={parsedPort};Database={path};Username={user};Password={pass};Ssl Mode=Require;Trust Server Certificate=true;";
+            Console.WriteLine($"[Config] Using Addon URI (Host: {host}, Port: {parsedPort})");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Config Error] Failed to parse URI connection string: {ex.Message}");
-            // Fallback: Use string manipulation if Uri parsing fails
-            if (connectionString.Contains("@"))
-            {
-                 connectionString = connectionString.Replace("postgresql://", "Host=");
-                 var userInfoSplit = connectionString.IndexOf('@');
-                 var userPassPart = connectionString.Substring(5, userInfoSplit - 5);
-                 var hostPortDbPart = connectionString.Substring(userInfoSplit + 1);
-
-                 var userPass = userPassPart.Split(':');
-                 var hostPortDb = hostPortDbPart.Split('/');
-                 var hostPort = hostPortDb[0].Split(':');
-
-                 var host = hostPort[0];
-                 var dbPort = hostPort.Length > 1 ? hostPort[1] : "5432";
-                 var dbName = hostPortDb[1];
-                 var user = userPass[0];
-                 var password = userPass[1];
-
-                 connectionString = $"Host={host};Port={dbPort};Database={dbName};Username={user};Password={password};Ssl Mode=Require;Trust Server Certificate=true;";
-            }
+            Console.WriteLine($"[Config Error] Failed to parse URI: {ex.Message}");
         }
     }
 }
-else
-{
-    // Case 2: Individual variables - Common in Local/Docker
-    var dbHost = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_HOST") ?? Environment.GetEnvironmentVariable("DB_HOST");
-    if (!string.IsNullOrEmpty(dbHost))
-    {
-        var dbPort = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PORT") ?? Environment.GetEnvironmentVariable("DB_PORT");
-        if (string.IsNullOrEmpty(dbPort)) dbPort = "5432";
-        
-        var dbName = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_DB") ?? Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME") ?? "biotech_db";
-        var dbUser = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_USER") ?? Environment.GetEnvironmentVariable("DB_USER");
-        var dbPassword = Environment.GetEnvironmentVariable("POSTGRESQL_ADDON_PASSWORD") ?? Environment.GetEnvironmentVariable("DB_PASSWORD");
-        var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Disable";
 
-        connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
-    }
+// Priority 3: Fallback to configuration
+if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(configConnectionString) && !configConnectionString.Contains("Host=;"))
+{
+    connectionString = configConnectionString;
+    Console.WriteLine("[Config] Using configuration fallback.");
 }
 
-// Set the configuration
 if (!string.IsNullOrEmpty(connectionString))
 {
     builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+}
+else
+{
+    Console.WriteLine("[Config Warning] No database connection string found!");
 }
 
 // 2. JWT Configuration
@@ -210,10 +214,17 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // Disabled for internal service mesh
 
 app.UseRouting();
+
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<GatewayAuthenticationMiddleware>();
+
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Apply automatic migrations on startup
+app.ApplyMigrations<AuthDbContext>();
 
 app.MapControllers();
 

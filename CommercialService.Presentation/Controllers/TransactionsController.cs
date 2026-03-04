@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 
-using CommercialService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace CommercialService.Presentation.Controllers;
 
 
 [ApiController]
-[Route("api/transactions")]
+[Route("api/v1/transactions")]
 [Authorize]
 public class TransactionsController : ControllerBase
 {

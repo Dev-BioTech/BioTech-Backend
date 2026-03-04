@@ -2,9 +2,13 @@ using AuthService.Application.Commands.CreateFarm;
 using AuthService.Application.DTOs;
 using AuthService.Application.Queries.GetFarmById;
 using AuthService.Application.Queries.GetFarmsByTenant;
+
+
 using AuthService.Application.Queries.GetMyFarms;
 using AuthService.Presentation.Common;
+
 using AuthService.Presentation.Services;
+using Shared.Infrastructure.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthService.Presentation.Controllers.V1;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/farms")]
 [Authorize]
 [Produces("application/json")]
 public class FarmsController : ControllerBase

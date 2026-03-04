@@ -11,12 +11,12 @@ using ReproductionService.Application.Queries.GetReproductionEventsByFarm;
 using ReproductionService.Application.Queries.GetReproductionEventsByType;
 using ReproductionService.Application.Queries;
 using ReproductionService.Domain.Enums;
-using ReproductionService.Presentation.Common;
+using Shared.Infrastructure.Common;
 
 namespace ReproductionService.Presentation.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/reproduction")]
 [Authorize]
 public class ReproductionController : ControllerBase
 {

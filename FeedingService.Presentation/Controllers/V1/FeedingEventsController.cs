@@ -7,8 +7,8 @@ using FeedingService.Application.Queries.GetFeedingEventsByAnimal;
 using FeedingService.Application.Queries.GetFeedingEventsByBatch;
 using FeedingService.Application.Queries.GetFeedingEventsByFarm;
 using FeedingService.Application.Queries.GetFeedingEventsByProduct;
-using FeedingService.Presentation.Common;
 using FeedingService.Presentation.Services;
+using Shared.Infrastructure.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ namespace FeedingService.Presentation.Controllers.V1;
 
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/feeding-events")]
 [Authorize]
 [Produces("application/json")]
 public class FeedingEventsController : ControllerBase

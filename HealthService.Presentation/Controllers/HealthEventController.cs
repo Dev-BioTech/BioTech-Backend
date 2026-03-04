@@ -4,7 +4,7 @@ using HealthService.Application.Commands;
 using HealthService.Application.Queries;
 using HealthService.Application.DTOs;
 using HealthService.Presentation.Services;
-using HealthService.Presentation.Common;
+using Shared.Infrastructure.Common;
 using FluentValidation;
 using HealthService.Application.Queries.GetHealthEventsByAnimal;
 using HealthService.Application.Queries.GetHealthEventsByBatch;
@@ -13,8 +13,9 @@ using HealthService.Application.Queries.GetHealthEventsByType;
 
 namespace HealthService.Presentation.Controllers.V1;
 
-[ApiController]
+
 [Route("api/v1/[controller]")]
+
 public class HealthEventController : ControllerBase
 {
     private readonly IMediator _mediator;
