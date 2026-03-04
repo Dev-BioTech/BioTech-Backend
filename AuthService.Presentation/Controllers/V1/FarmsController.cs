@@ -2,6 +2,11 @@ using AuthService.Application.Commands.CreateFarm;
 using AuthService.Application.DTOs;
 using AuthService.Application.Queries.GetFarmById;
 using AuthService.Application.Queries.GetFarmsByTenant;
+
+
+using AuthService.Application.Queries.GetMyFarms;
+using AuthService.Presentation.Common;
+
 using AuthService.Presentation.Services;
 using Shared.Infrastructure.Common;
 using MediatR;
@@ -73,6 +78,18 @@ public class FarmsController : ControllerBase
         // Real-world: Should verify user link via UserFarmRole.
         
         return Ok(ApiResponse<FarmResponse>.Ok(result));
+    }
+
+    /// <summary>
+    /// Get farms for the authenticated user (canonical endpoint)
+    /// </summary>
+    [HttpGet("mine")]
+    [ProducesResponseType(typeof(ApiResponse<FarmListResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetMyFarms([FromQuery] bool includeInactive = false, CancellationToken ct = default)
+    {
+        var result = await _mediator.Send(new GetMyFarmsQuery(includeInactive), ct);
+        return Ok(ApiResponse<FarmListResponse>.Ok(result));
     }
 
     /// <summary>
