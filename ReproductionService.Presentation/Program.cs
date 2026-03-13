@@ -115,9 +115,6 @@ if (!string.IsNullOrEmpty(gatewaySecret)) builder.Configuration["Gateway:Secret"
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
-// Add Authentication (Fixes InvalidOperationException)
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
@@ -125,10 +122,8 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options => {});
 
-// Add Authorization
 builder.Services.AddAuthorization();
 
-// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowGateway", policy =>
@@ -140,40 +135,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Swagger Configuration
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Reproduction Service API",
-        Version = "v1",
-        Description = "API for managing reproduction events."
-    });
+builder.Services.AddMicroserviceSwagger("Reproduction Service API");
 
-    c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
-    {
-        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
-        Name = "X-Gateway-Secret",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Gateway"
-    });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Gateway"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);

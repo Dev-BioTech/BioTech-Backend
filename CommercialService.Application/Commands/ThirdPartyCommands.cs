@@ -82,3 +82,26 @@ public class UpdateThirdPartyCommandHandler : IRequestHandler<UpdateThirdPartyCo
         return true;
     }
 }
+
+// Delete
+public record DeleteThirdPartyCommand(long Id, int FarmId) : IRequest<bool>;
+
+public class DeleteThirdPartyCommandHandler : IRequestHandler<DeleteThirdPartyCommand, bool>
+{
+    private readonly IThirdPartyRepository _repository;
+
+    public DeleteThirdPartyCommandHandler(IThirdPartyRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<bool> Handle(DeleteThirdPartyCommand request, CancellationToken cancellationToken)
+    {
+        var existing = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        if (existing == null || existing.FarmId != request.FarmId) return false;
+
+        await _repository.DeleteAsync(request.Id, cancellationToken);
+        return true;
+    }
+}
+

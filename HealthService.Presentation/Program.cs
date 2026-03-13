@@ -116,42 +116,14 @@ if (!string.IsNullOrEmpty(gatewaySecret)) builder.Configuration["Gateway:Secret"
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMicroserviceSwagger("Health Service API");
 
 // Add Application & Infrastructure
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<HealthService.Presentation.Services.GatewayAuthenticationService>();
 
-// Swagger
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Health Service API", Version = "v1" });
-    
-    c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
-    {
-        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
-        Name = "X-Gateway-Secret",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Gateway"
-    });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Gateway"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
 
 // Register Messenger
 builder.Services.AddHttpClient();

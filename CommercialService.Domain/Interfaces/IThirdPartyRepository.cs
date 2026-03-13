@@ -12,4 +12,6 @@ public interface IThirdPartyRepository
     Task<ThirdParty?> GetByIdAsync(long id, CancellationToken cancellationToken);
     Task<List<ThirdParty>> GetAllAsync(int farmId, bool? isSupplier, bool? isCustomer, int page, int pageSize, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(int farmId, string identityDocument, CancellationToken cancellationToken);
+    Task DeleteAsync(long id, CancellationToken cancellationToken);
 }
+

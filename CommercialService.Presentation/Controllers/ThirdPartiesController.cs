@@ -83,4 +83,17 @@ public class ThirdPartiesController : ControllerBase
 
         return Ok(ApiResponse<ThirdPartyDto>.Ok(result));
     }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ApiResponse<bool>>> Delete(long id)
+    {
+        var farmId = _authService.GetFarmId();
+        if (!farmId.HasValue) return BadRequest(ApiResponse<bool>.Fail("User is not associated with a valid Farm"));
+        
+        var result = await _mediator.Send(new DeleteThirdPartyCommand(id, farmId.Value));
+        if (!result) return NotFound(ApiResponse<bool>.Fail("Third party not found"));
+        
+        return Ok(ApiResponse<bool>.Ok(true, "Third party deleted successfully"));
+    }
 }
+

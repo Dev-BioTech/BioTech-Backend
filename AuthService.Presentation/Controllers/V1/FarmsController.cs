@@ -1,4 +1,7 @@
 using AuthService.Application.Commands.CreateFarm;
+using AuthService.Application.Commands.UpdateFarm;
+using AuthService.Application.Commands.DeleteFarm;
+
 using AuthService.Application.DTOs;
 using AuthService.Application.Queries.GetFarmById;
 using AuthService.Application.Queries.GetFarmsByTenant;
@@ -94,4 +97,34 @@ public class FarmsController : ControllerBase
         var result = await _mediator.Send(new GetFarmsByTenantQuery(userId, includeInactive), ct);
         return Ok(ApiResponse<FarmListResponse>.Ok(result));
     }
+
+    /// <summary>
+    /// Update a farm
+    /// </summary>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<FarmResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateFarmRequest request, CancellationToken ct)
+    {
+        var userId = _authService.GetUserId();
+        var command = new UpdateFarmCommand(id, request.Name, request.Owner, request.Address, request.GeographicLocation, userId);
+        var result = await _mediator.Send(command, ct);
+        if (result == null) return NotFound(ApiResponse<FarmResponse>.Fail($"Farm {id} not found"));
+        return Ok(ApiResponse<FarmResponse>.Ok(result, "Farm updated successfully"));
+    }
+
+    /// <summary>
+    /// Delete a farm
+    /// </summary>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    {
+        var userId = _authService.GetUserId();
+        var result = await _mediator.Send(new DeleteFarmCommand(id, userId), ct);
+        if (!result) return NotFound(ApiResponse<bool>.Fail($"Farm {id} not found"));
+        return Ok(ApiResponse<bool>.Ok(true, "Farm deleted successfully"));
+    }
 }
+

@@ -131,7 +131,7 @@ builder.Services.AddAuthentication(options =>
 // Add Authorization
 builder.Services.AddAuthorization();
 
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMicroserviceSwagger("Herd Service API");
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -145,40 +145,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Herd Service API",
-        Version = "v1",
-        Description = "API for managing herd and animals."
-    });
-
-    c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
-    {
-        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
-        Name = "X-Gateway-Secret",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Gateway"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Gateway"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-
-});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);

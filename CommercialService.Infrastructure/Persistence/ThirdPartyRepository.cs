@@ -60,4 +60,15 @@ public class ThirdPartyRepository : IThirdPartyRepository
         return await _context.ThirdParties
             .AnyAsync(tp => tp.FarmId == farmId && tp.IdentityDocument == identityDocument, cancellationToken);
     }
+
+    public async Task DeleteAsync(long id, CancellationToken cancellationToken)
+    {
+        var thirdParty = await _context.ThirdParties.FindAsync(new object[] { id }, cancellationToken);
+        if (thirdParty != null)
+        {
+            _context.ThirdParties.Remove(thirdParty);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+    }
 }
+

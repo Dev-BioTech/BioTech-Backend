@@ -112,8 +112,8 @@ var gatewaySecret = Environment.GetEnvironmentVariable("GATEWAY_SECRET");
 if (!string.IsNullOrEmpty(gatewaySecret)) builder.Configuration["Gateway:Secret"] = gatewaySecret;
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddMicroserviceSwagger("AI Service API");
+
 
 // Layer dependencies
 builder.Services.AddApplication();

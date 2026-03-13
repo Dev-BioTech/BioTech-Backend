@@ -172,6 +172,27 @@
     networks:
       - biotech-network
 
+  sales-service:
+    build:
+      context: .
+      dockerfile: SalesService.Presentation/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - PORT=8080
+      - SALES_DB_HOST=${SALES_DB_HOST}
+      - SALES_DB_PORT=${SALES_DB_PORT}
+      - SALES_DB_NAME=${SALES_DB_NAME}
+      - SALES_DB_USER=${SALES_DB_USER}
+      - SALES_DB_PASSWORD=${SALES_DB_PASSWORD}
+      - GATEWAY_SECRET=${GATEWAY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+    networks:
+      - biotech-network
+
   api-gateway:
     build:
       context: .
@@ -210,6 +231,8 @@
       commercial-service:
         condition: service_started
       inventory-service:
+        condition: service_started
+      sales-service:
         condition: service_started
     networks:
       - biotech-network

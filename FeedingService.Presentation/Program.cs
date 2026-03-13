@@ -148,45 +148,8 @@ builder.Services.AddCors(options =>
 });
 
 // Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Feeding Service API",
-        Version = "v1",
-        Description = @"API for managing feeding events in livestock management system.
+builder.Services.AddMicroserviceSwagger("Feeding Service API");
 
-⚠️ IMPORTANT: This microservice uses Gateway Authentication.
-- Direct calls require X-Gateway-Secret header
-- In production, all requests should come through the API Gateway
-- The Gateway validates JWT and forwards user information via headers"
-    });
-
-        c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
-    {
-        Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
-        Name = "X-Gateway-Secret",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Gateway"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Gateway"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
 
 // Health checks UI
 builder.Services.AddHealthChecksUI(opt =>
