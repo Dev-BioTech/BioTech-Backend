@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace InventoryService.Application.Handlers;
 
 public class ProductQueryHandlers :
-    IRequestHandler<GetLowStockProductsQuery, IEnumerable<ProductDto>>,
+    IRequestHandler<GetLowStockProductsQuery, IEnumerable<LowStockProductDto>>,
     IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
 {
     private readonly IProductRepository _repository;
@@ -20,10 +20,15 @@ public class ProductQueryHandlers :
         _repository = repository;
     }
 
-    public async Task<IEnumerable<ProductDto>> Handle(GetLowStockProductsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<LowStockProductDto>> Handle(GetLowStockProductsQuery request, CancellationToken cancellationToken)
     {
         var products = await _repository.GetLowStockAsync(request.FarmId, cancellationToken);
-        return MapToDto(products);
+        return products.Select(p => new LowStockProductDto(
+            p.Id,
+            p.Name,
+            p.CurrentQuantity,
+            p.MinimumStock
+        ));
     }
 
     public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)

@@ -11,10 +11,11 @@ using HealthService.Application.Queries.GetHealthEventsByBatch;
 using HealthService.Application.Queries.GetHealthEventsByFarm;
 using HealthService.Application.Queries.GetHealthEventsByType;
 
-namespace HealthService.Presentation.Controllers;
+namespace HealthService.Presentation.Controllers.V1;
 
-[ApiController]
-[Route("api/v1/health-event")]
+
+[Route("api/v1/[controller]")]
+
 public class HealthEventController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -119,15 +120,15 @@ public class HealthEventController : ControllerBase
     }
 
     [HttpGet("upcoming")]
-    public async Task<ActionResult<ApiResponse<IEnumerable<HealthEventResponse>>>> GetUpcoming([FromQuery] int limit = 10)
+    public async Task<ActionResult<ApiResponse<IEnumerable<UpcomingHealthEventDto>>>> GetUpcomingEvents([FromQuery] int limit = 10)
     {
         var effectiveFarmId = _authService.GetFarmId();
 
         if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
-            return BadRequest(ApiResponse<IEnumerable<HealthEventResponse>>.Fail("User is not associated with a valid Farm (Context Missing)"));
+            return BadRequest(ApiResponse<IEnumerable<UpcomingHealthEventDto>>.Fail("User is not associated with a valid Farm (Context Missing)"));
 
-        var result = await _mediator.Send(new GetUpcomingHealthEventsQuery(effectiveFarmId.Value, limit));
-        return Ok(ApiResponse<IEnumerable<HealthEventResponse>>.Ok(result));
+        var result = await _mediator.Send(new GetUpcomingHealthEventsQuery(limit));
+        return Ok(ApiResponse<IEnumerable<UpcomingHealthEventDto>>.Ok(result));
     }
 
     [HttpGet("recent-treatments")]
@@ -140,5 +141,27 @@ public class HealthEventController : ControllerBase
 
         var result = await _mediator.Send(new GetRecentTreatmentsQuery(effectiveFarmId.Value, limit));
         return Ok(ApiResponse<IEnumerable<HealthEventResponse>>.Ok(result));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ApiResponse<HealthEventResponse>>> UpdateHealthEvent(long id, [FromBody] UpdateHealthEventDto dto)
+    {
+        try
+        {
+            var result = await _mediator.Send(new UpdateHealthEventCommand(id, dto));
+            return Ok(ApiResponse<HealthEventResponse>.Ok(result, "Health event updated successfully"));
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<HealthEventResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<HealthEventResponse>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<HealthEventResponse>.Fail("Internal server error"));
+        }
     }
 }

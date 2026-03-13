@@ -61,6 +61,14 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 | `GET` | `/api/v1/reproduction/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
 | `PUT` | `/api/v1/reproduction/{id}/cancel` | Cancel event | - | ✅ |
 
+### Pregnancies & Births
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `GET` | `/api/v1/Reproduction/pregnancies` | Get pregnancies by farm | `farmId` (required) | ✅ |
+| `GET` | `/api/v1/Reproduction/births` | Get births by farm | `farmId` (required) | ✅ |
+| `POST` | `/api/v1/Reproduction/register-birth` | Register birth | - | ✅ |
+
 ---
 
 ## 🐄 Herd Service - Animals
@@ -78,7 +86,19 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 | `PUT` | `/api/v1/animals/{id}/sell` | Mark as sold | - | ✅ |
 | `PUT` | `/api/v1/animals/{id}/dead` | Mark as dead | - | ✅ |
 
-**Note:** Herd Service also exposes `/api/v1/batches`, `/api/v1/breeds`, `/api/v1/categories`, `/api/v1/movement-types`, `/api/v1/paddocks` (standard CRUD).
+### Herd Management
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+| `GET` | `/api/v1/breeds` | Get all breeds | - | ✅ |
+| `POST` | `/api/v1/breeds` | Create breed | - | ✅ |
+| `GET` | `/api/v1/categories` | Get all categories | - | ✅ |
+| `POST` | `/api/v1/categories` | Create category | - | ✅ |
+| `GET` | `/api/v1/paddocks` | Get paddocks by farm | `farmId` (required) | ✅ |
+| `POST` | `/api/v1/paddocks` | Create paddock | - | ✅ |
+| `GET` | `/api/v1/batches` | Get batches by farm | `farmId` (required) | ✅ |
+| `POST` | `/api/v1/batches` | Create batch | - | ✅ |
+| `GET` | `/api/v1/movement-types` | Get movement types | - | ✅ |
 
 ---
 
@@ -86,56 +106,88 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/health-event` | Register event | - | ✅ |
-| `GET` | `/api/v1/health-event/farm` | Get by farm (context) | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/health-event/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/health-event/batch/{batchId}` | Get by batch | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/health-event/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/health-event/dashboard-stats` | Dashboard stats | - | ✅ |
-| `GET` | `/api/v1/health-event/upcoming` | Upcoming events | `limit` | ✅ |
-| `GET` | `/api/v1/health-event/recent-treatments` | Recent treatments | `limit` | ✅ |
+
+| `POST` | `/api/v1/HealthEvent` | Register event | - | ✅ |
+| `GET` | `/api/v1/HealthEvent/farm` | Get by farm (context) | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/HealthEvent/animal/{animalId}` | Get by animal | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/HealthEvent/batch/{batchId}` | Get by batch | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/HealthEvent/type/{type}` | Get by type | `page`, `pageSize` | ✅ |
+| `GET` | `/api/v1/HealthEvent/dashboard-stats` | Dashboard stats | - | ✅ |
+| `GET` | `/api/v1/HealthEvent/upcoming` | Upcoming events | `limit` (default: 10) | ✅ |
+| `GET` | `/api/v1/HealthEvent/recent-treatments` | Recent treatments | `limit` (default: 10) | ✅ |
+| `PUT` | `/api/v1/HealthEvent/{id}` | Update health event | - | ✅ |
+
 
 ---
 
-## 💼 Commercial Service
+## � Inventory Service
 
-| Method | Endpoint | Description | Query Params | Auth |
-|--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/transactions` | Create transaction | - | ✅ |
-| `GET` | `/api/v1/transactions` | Get transactions | `fromDate`, `toDate`, `type`, `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/transactions/{id}` | Get by ID | - | ✅ |
-| `GET` | `/api/v1/transactions/{id}/animals` | Get transaction animals | - | ✅ |
-| `GET` | `/api/v1/transactions/{id}/products` | Get transaction products | - | ✅ |
-| `POST` | `/api/v1/third-parties` | Create third party | - | ✅ |
-| `PUT` | `/api/v1/third-parties/{id}` | Update third party | - | ✅ |
-| `GET` | `/api/v1/third-parties` | Get third parties | `isSupplier`, `isCustomer`, `page`, `pageSize` | ✅ |
-| `GET` | `/api/v1/third-parties/{id}` | Get by ID | - | ✅ |
-
----
-
-## 📦 Inventory Service
 
 ### Products
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/products` | Create product | - | ✅ |
-| `GET` | `/api/v1/products` | Get products | `farmId` (required) | ✅ |
-| `GET` | `/api/v1/products/low-stock` | Get low stock | `farmId` (required) | ✅ |
+| `POST` | `/api/v1/Products` | Create product | - | ✅ |
+| `GET` | `/api/v1/Products` | Get products | `farmId` (required) | ✅ |
+| `GET` | `/api/v1/Products/{id}` | Get product by ID | - | ✅ |
+| `PUT` | `/api/v1/Products/{id}` | Update product | - | ✅ |
+| `DELETE` | `/api/v1/Products/{id}` | Delete product | - | ✅ |
+| `GET` | `/api/v1/Products/farms/{farmId}/low-stock` | Get low stock products | - | ✅ |
 
 ### Inventory
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/inventory` | Create inventory item | - | ✅ |
-| `GET` | `/api/v1/inventory/farm/{farmId}` | Get by farm | `page`, `pageSize` | ✅ |
+| `POST` | `/api/Inventory` | Create inventory item | - | ✅ |
+| `GET` | `/api/Inventory/farm/{farmId}` | Get by farm | `page`, `pageSize` | ✅ |
+
 
 ### Inventory Movements
 
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
-| `POST` | `/api/v1/inventory-movements` | Register movement | - | ✅ |
-| `GET` | `/api/v1/inventory-movements/product/{productId}` | Get Kardex | - | ✅ |
+| `POST` | `/api/InventoryMovements` | Register movement | - | ✅ |
+| `GET` | `/api/InventoryMovements/product/{productId}` | Get Kardex | - | ✅ |
+
+---
+
+## � Sales Service
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+
+| `GET` | `/api/v1/Sales` | Get sales by user | - | ✅ |
+| `GET` | `/api/v1/Sales/{id}` | Get sale by ID | - | ✅ |
+| `POST` | `/api/v1/Sales` | Create sale | - | ✅ |
+| `PUT` | `/api/v1/Sales/{id}` | Update sale | - | ✅ |
+| `DELETE` | `/api/v1/Sales/{id}` | Delete sale | - | ✅ |
+
+
+---
+
+## 💼 Commercial Service
+
+### Transactions
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+
+| `POST` | `/api/transactions` | Create transaction | - | ✅ |
+| `GET` | `/api/transactions` | Get transactions | `fromDate`, `toDate`, `type`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/transactions/{id}` | Get by ID | - | ✅ |
+| `GET` | `/api/transactions/{id}/animals` | Get transaction animals | - | ✅ |
+| `GET` | `/api/transactions/{id}/products` | Get transaction products | - | ✅ |
+
+
+### Third Parties
+
+| Method | Endpoint | Description | Query Params | Auth |
+|--------|----------|-------------|--------------|------|
+
+| `POST` | `/api/third-parties` | Create third party | - | ✅ |
+| `PUT` | `/api/third-parties/{id}` | Update third party | - | ✅ |
+| `GET` | `/api/third-parties` | Get third parties | `isSupplier`, `isCustomer`, `page`, `pageSize` | ✅ |
+| `GET` | `/api/third-parties/{id}` | Get by ID | - | ✅ |
 
 ---
 
@@ -145,9 +197,24 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 - Include JWT token: `Authorization: Bearer <token>`
 - Get token from `/api/v1/auth/login`
 
+### API Versioning
+- All endpoints use versioning: `/api/v1/[controller]`
+- Current version: **v1**
+- Future versions will be `/api/v2/[controller]`, etc.
+
 ### Farm Context
 - Most endpoints filter by user's `farmId` from JWT
 - Some require explicit `farmId` query parameter
+- New endpoints use RESTful resource patterns: `/api/v1/Products/farms/{farmId}/low-stock`
+
+### HTTP Status Codes
+- `200 OK` - Successful GET/PUT
+- `201 Created` - Successful POST (includes Location header)
+- `204 No Content` - Successful DELETE
+- `400 Bad Request` - Validation errors
+- `401 Unauthorized` - Authentication required
+- `404 Not Found` - Resource not found
+- `500 Internal Server Error` - Server error
 
 ### Pagination
 - Default: `page=1`, `pageSize=10`
@@ -167,7 +234,36 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 }
 ```
 
+### Error Response Format
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "data": null,
+  "errors": ["Error details"]
+}
+```
+
 ---
 
-**Last Updated:** 2026-02-23  
-**Version:** 1.1 (Standardized v1 Routes)
+## 🔄 Microservice Communication
+
+The API follows a microservice architecture where each service manages its own domain:
+
+- **HerdService**: Animal management, breeds, categories, paddocks, batches
+- **InventoryService**: Products, inventory, stock management
+- **HealthService**: Health events, treatments, vaccinations
+- **ReproductionService**: Pregnancies, births, reproduction events
+- **SalesService**: Sales transactions and customer management
+- **AuthService**: Authentication, user management, farms
+- **FeedingService**: Feeding events and nutrition tracking
+- **CommercialService**: General transactions and third parties
+
+**Important**: Cross-service communication is handled via HTTP requests through the API Gateway, not direct database access.
+
+---
+
+**Last Updated:** 2025-03-02  
+**Version:** 1.0  
+**API Version:** v1
+

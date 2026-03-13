@@ -213,4 +213,15 @@ public class HealthEventRepository : IHealthEventRepository
             .Take(pageSize)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<HealthEvent>> GetUpcomingEventsAsync(int userId, DateOnly fromDate, int limit, CancellationToken cancellationToken)
+    {
+        // Simplified implementation - in production this would filter by user's farms
+        return await _context.HealthEvents
+            .AsNoTracking()
+            .Where(h => h.EventDate >= fromDate)
+            .OrderBy(h => h.EventDate)
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+    }
 }
