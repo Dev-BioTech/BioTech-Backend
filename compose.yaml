@@ -1,4 +1,4 @@
-﻿services:
+services:
 
   auth-service:
     build:
@@ -7,17 +7,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - AUTH_DB_HOST=${AUTH_DB_HOST}
-      - AUTH_DB_PORT=${AUTH_DB_PORT}
-      - AUTH_DB_NAME=${AUTH_DB_NAME}
-      - AUTH_DB_USER=${AUTH_DB_USER}
-      - AUTH_DB_PASSWORD=${AUTH_DB_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -28,17 +19,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - COMMERCIAL_DB_HOST=${COMMERCIAL_DB_HOST}
-      - COMMERCIAL_DB_PORT=${COMMERCIAL_DB_PORT}
-      - COMMERCIAL_DB_NAME=${COMMERCIAL_DB_NAME}
-      - COMMERCIAL_DB_USER=${COMMERCIAL_DB_USER}
-      - COMMERCIAL_DB_PASSWORD=${COMMERCIAL_DB_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -49,17 +31,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - FEEDING_DB_HOST=${FEEDING_DB_HOST}
-      - FEEDING_DB_PORT=${FEEDING_DB_PORT}
-      - FEEDING_DB_NAME=${FEEDING_DB_NAME}
-      - FEEDING_DB_USER=${FEEDING_DB_USER}
-      - FEEDING_DB_PASSWORD=${FEEDING_DB_PASSWORD}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -70,17 +43,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - HEALTH_DB_HOST=${HEALTH_DB_HOST}
-      - HEALTH_DB_PORT=${HEALTH_DB_PORT}
-      - HEALTH_DB_NAME=${HEALTH_DB_NAME}
-      - HEALTH_DB_USER=${HEALTH_DB_USER}
-      - HEALTH_DB_PASSWORD=${HEALTH_DB_PASSWORD}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -91,17 +55,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - HERD_DB_HOST=${HERD_DB_HOST}
-      - HERD_DB_PORT=${HERD_DB_PORT}
-      - HERD_DB_NAME=${HERD_DB_NAME}
-      - HERD_DB_USER=${HERD_DB_USER}
-      - HERD_DB_PASSWORD=${HERD_DB_PASSWORD}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -112,17 +67,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - INVENTORY_DB_HOST=${INVENTORY_DB_HOST}
-      - INVENTORY_DB_PORT=${INVENTORY_DB_PORT}
-      - INVENTORY_DB_NAME=${INVENTORY_DB_NAME}
-      - INVENTORY_DB_USER=${INVENTORY_DB_USER}
-      - INVENTORY_DB_PASSWORD=${INVENTORY_DB_PASSWORD}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -133,17 +79,8 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - REPRODUCTION_DB_HOST=${REPRODUCTION_DB_HOST}
-      - REPRODUCTION_DB_PORT=${REPRODUCTION_DB_PORT}
-      - REPRODUCTION_DB_NAME=${REPRODUCTION_DB_NAME}
-      - REPRODUCTION_DB_USER=${REPRODUCTION_DB_USER}
-      - REPRODUCTION_DB_PASSWORD=${REPRODUCTION_DB_PASSWORD}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
     networks:
       - biotech-network
 
@@ -154,19 +91,11 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - AI_DB_HOST=${AI_DB_HOST}
-      - AI_DB_PORT=${AI_DB_PORT}
-      - AI_DB_NAME=${AI_DB_NAME}
-      - AI_DB_USER=${AI_DB_USER}
-      - AI_DB_PASSWORD=${AI_DB_PASSWORD}
-      - Gemini__ApiKey=${GEMINI_API_KEY}
-      - AnthropicApi__ApiKey=${ANTHROPIC_API_KEY}
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - ServiceUrls__HerdService=http://herd-service:8080
-      - ServiceUrls__HealthService=http://health-service:8080
-      - ServiceUrls__FeedingService=http://feeding-service:8080
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
+      ServiceUrls__HerdService: http://herd-service:8080
+      ServiceUrls__HealthService: http://health-service:8080
+      ServiceUrls__FeedingService: http://feeding-service:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -181,36 +110,30 @@
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - PORT=8080
-      - AUTH_SERVICE_HOST=auth-service
-      - AUTH_SERVICE_PORT=8080
-      - FEEDING_SERVICE_HOST=feeding-service
-      - FEEDING_SERVICE_PORT=8080
-      - HEALTH_SERVICE_HOST=health-service
-      - HEALTH_SERVICE_PORT=8080
-      - GATEWAY_SECRET=${GATEWAY_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_AUDIENCE=${JWT_AUDIENCE}
-      - JwtConfig__Secret=${JWT_SECRET}
-      - JwtConfig__Issuer=${JWT_ISSUER}
-      - JwtConfig__Audience=${JWT_AUDIENCE}
+      ASPNETCORE_ENVIRONMENT: Production
+      PORT: 8080
+      AUTH_SERVICE_HOST: auth-service
+      AUTH_SERVICE_PORT: 8080
+      FEEDING_SERVICE_HOST: feeding-service
+      FEEDING_SERVICE_PORT: 8080
+      HEALTH_SERVICE_HOST: health-service
+      HEALTH_SERVICE_PORT: 8080
+      HERD_SERVICE_HOST: herd-service
+      HERD_SERVICE_PORT: 8080
+      REPRODUCTION_SERVICE_HOST: reproduction-service
+      REPRODUCTION_SERVICE_PORT: 8080
+      COMMERCIAL_SERVICE_HOST: commercial-service
+      COMMERCIAL_SERVICE_PORT: 8080
+      INVENTORY_SERVICE_HOST: inventory-service
+      INVENTORY_SERVICE_PORT: 8080
     depends_on:
-      auth-service:
-        condition: service_started
-      feeding-service:
-        condition: service_started
-      herd-service:
-        condition: service_started
-      health-service:
-        condition: service_started
-      reproduction-service:
-        condition: service_started
-      commercial-service:
-        condition: service_started
-      inventory-service:
-        condition: service_started
+      - auth-service
+      - feeding-service
+      - herd-service
+      - health-service
+      - reproduction-service
+      - commercial-service
+      - inventory-service
     networks:
       - biotech-network
 

@@ -136,3 +136,8 @@ out/
 ehthumbs.db
 Icon?
 Thumbs.db
+
+#BACKUPS
+.env
+.env.*
+backups/
