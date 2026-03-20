@@ -5,7 +5,25 @@ using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Middlewares;
 using DotNetEnv;
 
-Env.Load();
+// Enable legacy timestamp behavior for Npgsql
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+// Load .env from current directory or parent directories
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (!File.Exists(envPath))
+{
+    envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
+}
+
+if (File.Exists(envPath))
+{
+    Env.Load(envPath);
+    Console.WriteLine($"[Config] Loaded environment from {envPath}");
+}
+else
+{
+    Env.Load(); // Fallback to default behavior
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +47,7 @@ string GetEnv(params string[] names) {
     return null;
 }
 
+// 1. Database Connection
 var dbHost = GetEnv("SALES_DB_HOST", "POSTGRESQL_ADDON_HOST", "DB_HOST");
 if (!string.IsNullOrEmpty(dbHost))
 {
@@ -37,7 +56,7 @@ if (!string.IsNullOrEmpty(dbHost))
     var dbUser = GetEnv("SALES_DB_USER", "POSTGRESQL_ADDON_USER", "DB_USER");
     var dbPassword = GetEnv("SALES_DB_PASSWORD", "POSTGRESQL_ADDON_PASSWORD", "DB_PASSWORD");
     var dbSslMode = GetEnv("DB_SSL_MODE") ?? "Require";
-
+   
     if (!string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPassword))
     {
         connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};Trust Server Certificate=true;";
@@ -77,12 +96,42 @@ if (!string.IsNullOrEmpty(connectionString))
 // 2. JWT & Gateway Configuration
 var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
 if (!string.IsNullOrEmpty(jwtSecret)) builder.Configuration["Jwt:Secret"] = jwtSecret;
+
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+if (!string.IsNullOrEmpty(jwtIssuer)) builder.Configuration["Jwt:Issuer"] = jwtIssuer;
+
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+if (!string.IsNullOrEmpty(jwtAudience)) builder.Configuration["Jwt:Audience"] = jwtAudience;
+
 var gatewaySecret = Environment.GetEnvironmentVariable("GATEWAY_SECRET");
 if (!string.IsNullOrEmpty(gatewaySecret)) builder.Configuration["Gateway:Secret"] = gatewaySecret;
 
 builder.Services.AddControllers();
 builder.Services.AddMicroserviceSwagger("Sales Service API");
 
+// Add Authentication and JWT Bearer
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ?? "default_secret_key_for_development_purposes_only"))
+    };
+});
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthService.Application.Interfaces.ICurrentUserService, SalesService.Presentation.Services.CurrentUserService>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -95,6 +144,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.ApplyMigrations<SalesDbContext>();
 
 app.MapControllers();
@@ -107,3 +159,5 @@ app.MapGet("/version", () => new
 });
 
 app.Run();
+
+public partial class Program { }

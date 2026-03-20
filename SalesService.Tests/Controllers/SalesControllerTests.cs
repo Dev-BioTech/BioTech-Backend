@@ -4,7 +4,8 @@ using Moq;
 using Xunit;
 using SalesService.Application.Commands;
 using SalesService.Application.DTOs;
-using SalesService.Presentation.Controllers;
+using SalesService.Presentation.Controllers.V1;
+using SalesService.Application.Queries;
 using MediatR;
 
 namespace SalesService.Tests.Controllers;
@@ -54,8 +55,8 @@ public class SalesControllerTests
         var result = await _controller.GetSales();
 
         // Assert
-        result.Result.Should().BeOfType<UnauthorizedResult>();
-        var unauthorizedResult = result.Result as UnauthorizedResult;
+        result.Result.Should().BeOfType<UnauthorizedObjectResult>();
+        var unauthorizedResult = result.Result as UnauthorizedObjectResult;
         unauthorizedResult.Should().NotBeNull();
         unauthorizedResult.StatusCode.Should().Be(401);
     }
@@ -139,7 +140,7 @@ public class SalesControllerTests
     }
 
     [Fact]
-    public async Task DeleteSale_WithValidId_ShouldReturnNoContent()
+    public async Task DeleteSale_WithValidId_ShouldReturnOkResult()
     {
         // Arrange
         var saleId = 1;
@@ -151,10 +152,10 @@ public class SalesControllerTests
         var result = await _controller.DeleteSale(saleId);
 
         // Assert
-        result.Should().BeOfType<NoContentResult>();
-        var noContentResult = result as NoContentResult;
-        noContentResult.Should().NotBeNull();
-        noContentResult.StatusCode.Should().Be(204);
+        result.Result.Should().BeOfType<OkObjectResult>();
+        var okResult = result.Result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult.StatusCode.Should().Be(200);
     }
 
     [Fact]
@@ -170,8 +171,8 @@ public class SalesControllerTests
         var result = await _controller.DeleteSale(saleId);
 
         // Assert
-        result.Should().BeOfType<BadRequestObjectResult>();
-        var badRequestResult = result as BadRequestObjectResult;
+        result.Result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = result.Result as BadRequestObjectResult;
         badRequestResult.Should().NotBeNull();
         badRequestResult.StatusCode.Should().Be(400);
     }
