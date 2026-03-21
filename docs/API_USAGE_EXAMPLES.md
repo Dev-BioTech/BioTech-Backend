@@ -239,7 +239,7 @@ const birth = await registerBirth(birthData);
 ### Get Sales
 ```javascript
 const getSales = async () => {
-  const response = await fetch('http://localhost:5000/api/v1/Sales', {
+  const response = await fetch('http://localhost:5000/api/v1/sales', {
     headers
   });
   
@@ -253,7 +253,7 @@ const getSales = async () => {
 ### Create Sale
 ```javascript
 const createSale = async (saleData) => {
-  const response = await fetch('http://localhost:5000/api/v1/Sales', {
+  const response = await fetch('http://localhost:5000/api/v1/sales', {
     method: 'POST',
     headers,
     body: JSON.stringify(saleData)

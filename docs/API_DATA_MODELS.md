@@ -428,6 +428,17 @@ interface Sale {
   updatedAt: string;
 }
 
+interface SaleDto {
+  id: number;
+  farmId: number;
+  animalId?: number;
+  buyerName: string;
+  saleDate: string;
+  amount: number;
+  notes?: string;
+  createdAt: string;
+}
+
 interface CreateSaleRequest {
   farmId: number;
   animalId?: number;
@@ -438,21 +449,9 @@ interface CreateSaleRequest {
 }
 
 interface UpdateSaleRequest {
-  buyerName?: string;
-  saleDate?: string;
-  amount?: number;
-  notes?: string;
-}
-
-interface SaleDto {
-  id: number;
-  farmId: number;
-  animalId?: number;
   buyerName: string;
   saleDate: string;
   amount: number;
-  notes?: string;
-  createdAt: string;
 }
 ```
 

@@ -156,11 +156,34 @@ All endpoints are accessed through the API Gateway. Authentication required unle
 | Method | Endpoint | Description | Query Params | Auth |
 |--------|----------|-------------|--------------|------|
 
-| `GET` | `/api/v1/Sales` | Get sales by user | - | ✅ |
-| `GET` | `/api/v1/Sales/{id}` | Get sale by ID | - | ✅ |
-| `POST` | `/api/v1/Sales` | Create sale | - | ✅ |
-| `PUT` | `/api/v1/Sales/{id}` | Update sale | - | ✅ |
-| `DELETE` | `/api/v1/Sales/{id}` | Delete sale | - | ✅ |
+| `GET` | `/api/v1/sales` | Get sales by user | - | ✅ |
+| `GET` | `/api/v1/sales/{id}` | Get sale by ID | - | ✅ |
+| `POST` | `/api/v1/sales` | Create sale | - | ✅ |
+| `PUT` | `/api/v1/sales/{id}` | Update sale | - | ✅ |
+| `DELETE` | `/api/v1/sales/{id}` | Delete sale | - | ✅ |
+
+#### POST /api/v1/sales (Create Sale)
+**Request Body:**
+```json
+{
+  "farmId": 1,
+  "animalId": 12345,
+  "buyerName": "Juan Perez",
+  "saleDate": "2026-03-21T00:00:00Z",
+  "amount": 1500.50,
+  "notes": "Optional notes here"
+}
+```
+
+#### PUT /api/v1/sales/{id} (Update Sale)
+**Request Body:**
+```json
+{
+  "buyerName": "Juan Perez Updated",
+  "saleDate": "2026-03-21T00:00:00Z",
+  "amount": 1600.00
+}
+```
 
 
 ---
