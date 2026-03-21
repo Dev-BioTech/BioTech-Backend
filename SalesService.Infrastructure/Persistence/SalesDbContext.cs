@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SalesService.Domain.Entities;
 
 namespace SalesService.Infrastructure.Persistence;
 
@@ -8,9 +9,17 @@ public class SalesDbContext : DbContext
     {
     }
 
+    public DbSet<Sale> Sales { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // Add mappings here
+        
+        modelBuilder.Entity<Sale>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.BuyerName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
+        });
     }
 }
