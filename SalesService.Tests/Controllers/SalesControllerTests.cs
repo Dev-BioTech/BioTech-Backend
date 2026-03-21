@@ -45,20 +45,14 @@ public class SalesControllerTests
     }
 
     [Fact]
-    public async Task GetSales_WhenUnauthorized_ShouldReturnUnauthorized()
+    public async Task GetSales_WhenUnauthorized_ShouldThrowUnauthorizedAccessException()
     {
         // Arrange
         _mediatorMock.Setup(x => x.Send(It.IsAny<GetSalesByUserQuery>(), default))
                     .ThrowsAsync(new UnauthorizedAccessException());
 
-        // Act
-        var result = await _controller.GetSales();
-
-        // Assert
-        result.Result.Should().BeOfType<UnauthorizedObjectResult>();
-        var unauthorizedResult = result.Result as UnauthorizedObjectResult;
-        unauthorizedResult.Should().NotBeNull();
-        unauthorizedResult.StatusCode.Should().Be(401);
+        // Act & Assert
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _controller.GetSales());
     }
 
     [Fact]
@@ -82,21 +76,15 @@ public class SalesControllerTests
     }
 
     [Fact]
-    public async Task CreateSale_WithInvalidData_ShouldReturnBadRequest()
+    public async Task CreateSale_WithInvalidData_ShouldThrowValidationException()
     {
         // Arrange
         var createDto = new CreateSaleDto(1, 1L, "", DateTime.UtcNow.AddDays(1), -100.00m);
         _mediatorMock.Setup(x => x.Send(It.IsAny<CreateSaleCommand>(), default))
                     .ThrowsAsync(new FluentValidation.ValidationException("Validation failed"));
 
-        // Act
-        var result = await _controller.CreateSale(createDto);
-
-        // Assert
-        result.Result.Should().BeOfType<BadRequestObjectResult>();
-        var badRequestResult = result.Result as BadRequestObjectResult;
-        badRequestResult.Should().NotBeNull();
-        badRequestResult.StatusCode.Should().Be(400);
+        // Act & Assert
+        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => _controller.CreateSale(createDto));
     }
 
     [Fact]
@@ -121,7 +109,7 @@ public class SalesControllerTests
     }
 
     [Fact]
-    public async Task UpdateSale_WithInvalidData_ShouldReturnBadRequest()
+    public async Task UpdateSale_WithInvalidData_ShouldThrowValidationException()
     {
         // Arrange
         var saleId = 1;
@@ -129,14 +117,8 @@ public class SalesControllerTests
         _mediatorMock.Setup(x => x.Send(It.IsAny<UpdateSaleCommand>(), default))
                     .ThrowsAsync(new FluentValidation.ValidationException("Validation failed"));
 
-        // Act
-        var result = await _controller.UpdateSale(saleId, updateDto);
-
-        // Assert
-        result.Result.Should().BeOfType<BadRequestObjectResult>();
-        var badRequestResult = result.Result as BadRequestObjectResult;
-        badRequestResult.Should().NotBeNull();
-        badRequestResult.StatusCode.Should().Be(400);
+        // Act & Assert
+        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => _controller.UpdateSale(saleId, updateDto));
     }
 
     [Fact]
@@ -159,7 +141,7 @@ public class SalesControllerTests
     }
 
     [Fact]
-    public async Task DeleteSale_WithInvalidId_ShouldReturnBadRequest()
+    public async Task DeleteSale_WithInvalidId_ShouldThrowArgumentException()
     {
         // Arrange
         var saleId = 999;
@@ -167,13 +149,7 @@ public class SalesControllerTests
         _mediatorMock.Setup(x => x.Send(It.IsAny<DeleteSaleCommand>(), default))
                     .ThrowsAsync(new ArgumentException("Sale not found"));
 
-        // Act
-        var result = await _controller.DeleteSale(saleId);
-
-        // Assert
-        result.Result.Should().BeOfType<BadRequestObjectResult>();
-        var badRequestResult = result.Result as BadRequestObjectResult;
-        badRequestResult.Should().NotBeNull();
-        badRequestResult.StatusCode.Should().Be(400);
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(() => _controller.DeleteSale(saleId));
     }
 }

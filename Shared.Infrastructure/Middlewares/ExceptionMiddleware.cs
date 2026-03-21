@@ -40,11 +40,26 @@ public class ExceptionMiddleware
 
         var message = _env.IsDevelopment() ? exception.Message : "An internal server error occurred.";
         
-        // Specific handling for business exceptions if needed
-        if (exception is InvalidOperationException)
+        // Specific handling for business exceptions
+        if (exception is FluentValidation.ValidationException validationEx)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var responseJson = ApiResponse<object>.Fail("Validation failed", validationEx.Errors.Select(e => e.ErrorMessage));
+            var opt = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(responseJson, opt));
+            return;
+        }
+
+        if (exception is ArgumentException || exception is InvalidOperationException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             message = exception.Message;
+        }
+
+        if (exception is UnauthorizedAccessException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            message = "Unauthorized access.";
         }
 
         var response = ApiResponse<object>.Fail(message, _env.IsDevelopment() ? new[] { exception.StackTrace ?? "" } : null);

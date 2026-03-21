@@ -147,7 +147,14 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.ApplyMigrations<SalesDbContext>();
+try
+{
+    app.ApplyMigrations<SalesDbContext>();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[Config] Could not apply migrations: {ex.Message}");
+}
 
 app.MapControllers();
 

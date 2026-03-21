@@ -32,7 +32,10 @@ public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, SaleD
             request.Dto.SaleDate,
             request.Dto.Amount,
             request.Dto.Notes
-        );
+        )
+        {
+            CreatedBy = userId
+        };
 
         var createdSale = await _saleRepository.AddAsync(sale, cancellationToken);
 
