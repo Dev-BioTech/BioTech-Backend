@@ -134,8 +134,27 @@ public class ReproductionController : ControllerBase
         
         var secureCommand = command with { FarmId = contextFarmId.Value, RegisteredBy = contextUserId };
 
-        var result = await _mediator.Send(secureCommand);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<ReproductionEventResponse>.Ok(result, "Reproduction event registered successfully"));
+        try
+        {
+            var result = await _mediator.Send(secureCommand);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<ReproductionEventResponse>.Ok(result, "Reproduction event registered successfully"));
+        }
+        catch (FluentValidation.ValidationException ex)
+        {
+            return BadRequest(ApiResponse<ReproductionEventResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<ReproductionEventResponse>.Fail(ex.Message));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<ReproductionEventResponse>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<ReproductionEventResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     /// <summary>
@@ -144,9 +163,20 @@ public class ReproductionController : ControllerBase
     [HttpPut("{id}/cancel")]
     public async Task<ActionResult<ApiResponse<ReproductionEventResponse>>> Cancel(long id)
     {
-        var command = new CancelReproductionEventCommand(id);
-        var result = await _mediator.Send(command);
-        return Ok(ApiResponse<ReproductionEventResponse>.Ok(result, "Reproduction event cancelled successfully"));
+        try
+        {
+            var command = new CancelReproductionEventCommand(id);
+            var result = await _mediator.Send(command);
+            return Ok(ApiResponse<ReproductionEventResponse>.Ok(result, "Reproduction event cancelled successfully"));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(ApiResponse<ReproductionEventResponse>.Fail($"Reproduction event with id {id} not found"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<ReproductionEventResponse>.Fail(ex.Message));
+        }
     }
 
     /// <summary>

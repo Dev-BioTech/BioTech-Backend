@@ -206,3 +206,38 @@ En caso de error:
     "errors": ["Detalle del error 1", "Detalle del error 2"]
 }
 ```
+
+---
+
+## ⚠️ Manejo de Excepciones en Controllers
+
+Todos los controllers siguen un patrón estándar de try-catch que mapea excepciones de dominio/aplicación a códigos HTTP:
+
+| Excepción | HTTP Status | Uso |
+|---|---|---|
+| `ValidationException` (FluentValidation) | 400 Bad Request | Fallos de validación de DTOs/Commands |
+| `ArgumentException` | 400 Bad Request | Datos inválidos de dominio (campos requeridos, formatos) |
+| `InvalidOperationException` | 409 Conflict | Operaciones de negocio inválidas (duplicados, estados inconsistentes, stock insuficiente) |
+| `KeyNotFoundException` | 404 Not Found | Entidad no encontrada |
+| `UnauthorizedAccessException` | 401 Unauthorized | Credenciales inválidas |
+| `Exception` (genérica) | 500 Internal Server Error | Errores inesperados |
+
+### Ejemplo de patrón estándar:
+```csharp
+try
+{
+    var result = await _mediator.Send(command);
+    return Ok(ApiResponse<T>.Ok(result, "Success message"));
+}
+catch (ValidationException ex) { return BadRequest(ApiResponse<T>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage))); }
+catch (ArgumentException ex) { return BadRequest(ApiResponse<T>.Fail(ex.Message)); }
+catch (InvalidOperationException ex) { return Conflict(ApiResponse<T>.Fail(ex.Message)); }
+catch (KeyNotFoundException) { return NotFound(ApiResponse<T>.Fail("Entity not found")); }
+catch (Exception) { return StatusCode(500, ApiResponse<T>.Fail("An error occurred")); }
+```
+
+---
+
+## 📖 Documentación de API
+
+La guía completa de endpoints con request/response bodies se encuentra en `endpoint.md` en la raíz del proyecto.

@@ -61,8 +61,19 @@ public class TransactionsController : ControllerBase
         // Actually dto might be class. Let's assume CreateTransactionCommand takes userId separately.
 
         // Command expects userId constraint
-        var transactionId = await _mediator.Send(new CreateTransactionCommand(secureDto, userId ?? 0));
-        return CreatedAtAction(nameof(GetTransactionById), new { id = transactionId }, ApiResponse<long>.Ok(transactionId, "Transaction created successfully"));
+        try
+        {
+            var transactionId = await _mediator.Send(new CreateTransactionCommand(secureDto, userId ?? 0));
+            return CreatedAtAction(nameof(GetTransactionById), new { id = transactionId }, ApiResponse<long>.Ok(transactionId, "Transaction created successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<long>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<long>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpGet]

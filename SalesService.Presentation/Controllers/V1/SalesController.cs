@@ -38,21 +38,46 @@ public class SalesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ApiResponse<SaleDto>>> CreateSale([FromBody] CreateSaleDto dto)
     {
-        var result = await _mediator.Send(new CreateSaleCommand(dto));
-        return CreatedAtAction(nameof(GetSale), new { id = result.Id }, ApiResponse<SaleDto>.Ok(result, "Sale created successfully"));
+        try
+        {
+            var result = await _mediator.Send(new CreateSaleCommand(dto));
+            return CreatedAtAction(nameof(GetSale), new { id = result.Id }, ApiResponse<SaleDto>.Ok(result, "Sale created successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<SaleDto>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<SaleDto>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<ApiResponse<SaleDto>>> UpdateSale(int id, [FromBody] UpdateSaleDto dto)
     {
-        var result = await _mediator.Send(new UpdateSaleCommand(id, dto));
-        return Ok(ApiResponse<SaleDto>.Ok(result, "Sale updated successfully"));
+        try
+        {
+            var result = await _mediator.Send(new UpdateSaleCommand(id, dto));
+            return Ok(ApiResponse<SaleDto>.Ok(result, "Sale updated successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ApiResponse<SaleDto>.Fail(ex.Message));
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult<ApiResponse<string>>> DeleteSale(int id)
     {
-        await _mediator.Send(new DeleteSaleCommand(id));
-        return Ok(ApiResponse<string>.Ok("Sale deleted successfully"));
+        try
+        {
+            await _mediator.Send(new DeleteSaleCommand(id));
+            return Ok(ApiResponse<string>.Ok("Sale deleted successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ApiResponse<string>.Fail(ex.Message));
+        }
     }
 }

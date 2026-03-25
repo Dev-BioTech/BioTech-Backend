@@ -406,10 +406,10 @@ Crear una categoría.
 **Request Body:**
 ```json
 {
-    "name": "Novillo",
-    "description": "Macho joven castrado"
+    "name": "Novillo"
 }
 ```
+> ⚠️ **Nota:** El command solo acepta `name`. La categoría no tiene campo `description` ni `sex`.
 
 ---
 
@@ -446,10 +446,10 @@ Crear un potrero.
 ```json
 {
     "name": "Potrero Norte",
-    "farmId": 1,
-    "areaInHectares": 10.5
+    "farmId": 1
 }
 ```
+> ⚠️ **Nota:** El command solo acepta `name` y `farmId`. El área se configura por separado en la entidad.
 
 ---
 
@@ -879,12 +879,11 @@ Registrar un parto.
 **Request Body:**
 ```json
 {
-    "animalId": 5,
-    "farmId": 1,
-    "birthDate": "2024-06-15",
-    "numberOfCalves": 1,
-    "complications": false,
-    "notes": "Parto sin complicaciones"
+    "motherAnimalId": 5,
+    "offspringTag": "CRIA-001",
+    "weight": 35.5,
+    "gender": "Female",
+    "birthDate": "2024-06-15"
 }
 ```
 
@@ -919,21 +918,14 @@ Crear una venta.
 ```json
 {
     "farmId": 1,
+    "animalId": 5,
     "buyerName": "Finca Vecina",
     "saleDate": "2024-06-15",
-    "totalAmount": 5000000.00,
-    "items": [
-        {
-            "animalId": 5,
-            "price": 2500000.00
-        },
-        {
-            "animalId": 8,
-            "price": 2500000.00
-        }
-    ]
+    "amount": 2500000.00,
+    "notes": "Venta de novillo"
 }
 ```
+> ⚠️ **Nota:** Cada venta registra un solo animal (opcional). `animalId` puede ser `null` para ventas sin animal asociado.
 
 ---
 

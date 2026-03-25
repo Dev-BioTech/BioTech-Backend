@@ -162,12 +162,27 @@ public class FeedingEventsController : ControllerBase
             userId
         );
 
-        var result = await _mediator.Send(command, ct);
+        try
+        {
+            var result = await _mediator.Send(command, ct);
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = result.Id },
-            ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event created successfully"));
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = result.Id },
+                ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event created successfully"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<FeedingEventResponse>.Fail(ex.Message));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<FeedingEventResponse>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<FeedingEventResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     /// <summary>
@@ -182,9 +197,15 @@ public class FeedingEventsController : ControllerBase
     {
         _logger.LogInformation("Recalculating cost for feeding event: {Id}", command.Id);
 
-        var result = await _mediator.Send(command, ct);
-
-        return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event cost recalculated successfully"));
+        try
+        {
+            var result = await _mediator.Send(command, ct);
+            return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event cost recalculated successfully"));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(ApiResponse<FeedingEventResponse>.Fail($"Feeding event not found"));
+        }
     }
 
     /// <summary>
@@ -197,9 +218,19 @@ public class FeedingEventsController : ControllerBase
     {
         _logger.LogInformation("Cancelling feeding event: {Id}", id);
 
-        var command = new CancelFeedingEventCommand(id);
-        var result = await _mediator.Send(command, ct);
-
-        return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event cancelled successfully"));
+        try
+        {
+            var command = new CancelFeedingEventCommand(id);
+            var result = await _mediator.Send(command, ct);
+            return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event cancelled successfully"));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(ApiResponse<FeedingEventResponse>.Fail($"Feeding event with id {id} not found"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<FeedingEventResponse>.Fail(ex.Message));
+        }
     }
 }

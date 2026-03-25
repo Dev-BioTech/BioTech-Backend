@@ -53,10 +53,21 @@ public class FarmsController : ControllerBase
             userId
         );
 
-        var result = await _mediator.Send(command, ct);
+        try
+        {
+            var result = await _mediator.Send(command, ct);
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, 
-            ApiResponse<FarmResponse>.Ok(result, "Farm created successfully"));
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, 
+                ApiResponse<FarmResponse>.Ok(result, "Farm created successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<FarmResponse>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<FarmResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     /// <summary>
@@ -124,9 +135,20 @@ public class FarmsController : ControllerBase
     {
         var userId = _authService.GetUserId();
         var command = new UpdateFarmCommand(id, request.Name, request.Owner, request.Address, request.GeographicLocation, userId);
-        var result = await _mediator.Send(command, ct);
-        if (result == null) return NotFound(ApiResponse<FarmResponse>.Fail($"Farm {id} not found"));
-        return Ok(ApiResponse<FarmResponse>.Ok(result, "Farm updated successfully"));
+        try
+        {
+            var result = await _mediator.Send(command, ct);
+            if (result == null) return NotFound(ApiResponse<FarmResponse>.Fail($"Farm {id} not found"));
+            return Ok(ApiResponse<FarmResponse>.Ok(result, "Farm updated successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<FarmResponse>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<FarmResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     /// <summary>
