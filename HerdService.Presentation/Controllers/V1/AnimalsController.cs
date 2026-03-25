@@ -46,6 +46,10 @@ public class AnimalsController : ControllerBase
         {
             return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message));
+        }
         catch (Exception)
         {
             return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
