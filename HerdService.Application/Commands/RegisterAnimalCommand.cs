@@ -22,5 +22,7 @@ public record RegisterAnimalCommand(
     string? ExternalFather,
     int? BatchId,
     int? PaddockId,
+    decimal? Weight,
+    decimal? Height,
     int? UserId // From Gateway
 ) : IRequest<AnimalResponse>;

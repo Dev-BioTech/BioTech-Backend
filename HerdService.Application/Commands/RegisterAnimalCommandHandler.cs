@@ -35,7 +35,9 @@ public class RegisterAnimalCommandHandler : IRequestHandler<RegisterAnimalComman
             request.MotherId,
             request.FatherId,
             request.ExternalMother,
-            request.ExternalFather
+            request.ExternalFather,
+            request.Weight,
+            request.Height
         );
 
         // Handle optional Batch/Paddock assignments
@@ -74,7 +76,9 @@ public class RegisterAnimalCommandHandler : IRequestHandler<RegisterAnimalComman
             animal.MotherId,
             animal.FatherId,
             animal.ExternalMother,
-            animal.ExternalFather
+            animal.ExternalFather,
+            animal.Weight,
+            animal.Height
         );
     }
 }

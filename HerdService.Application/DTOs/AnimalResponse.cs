@@ -27,5 +27,7 @@ public record AnimalResponse(
     long? MotherId,
     long? FatherId,
     string? ExternalMother,
-    string? ExternalFather
+    string? ExternalFather,
+    decimal? Weight,
+    decimal? Height
 );

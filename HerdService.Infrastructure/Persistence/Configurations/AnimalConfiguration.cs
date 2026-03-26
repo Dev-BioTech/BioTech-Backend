@@ -43,6 +43,8 @@ public class AnimalConfiguration : IEntityTypeConfiguration<Animal>
         builder.Property(e => e.FatherId).HasColumnName("father_id");
         builder.Property(e => e.ExternalMother).HasColumnName("external_mother").HasMaxLength(50);
         builder.Property(e => e.ExternalFather).HasColumnName("external_father").HasMaxLength(50);
+        builder.Property(e => e.Weight).HasColumnName("weight").HasColumnType("numeric(10,2)");
+        builder.Property(e => e.Height).HasColumnName("height").HasColumnType("numeric(10,2)");
 
         builder.Property(e => e.CurrentStatus)
             .HasColumnName("current_status")

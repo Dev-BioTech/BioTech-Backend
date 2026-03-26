@@ -45,7 +45,9 @@ public class GetAnimalByIdQueryHandler : IRequestHandler<GetAnimalByIdQuery, Ani
             animal.MotherId,
             animal.FatherId,
             animal.ExternalMother,
-            animal.ExternalFather
+            animal.ExternalFather,
+            animal.Weight,
+            animal.Height
         );
     }
 }

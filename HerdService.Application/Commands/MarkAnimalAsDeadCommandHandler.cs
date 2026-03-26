@@ -50,7 +50,9 @@ public class MarkAnimalAsDeadCommandHandler : IRequestHandler<MarkAnimalAsDeadCo
             animal.MotherId,
             animal.FatherId,
             animal.ExternalMother,
-            animal.ExternalFather
+            animal.ExternalFather,
+            animal.Weight,
+            animal.Height
         );
     }
 }

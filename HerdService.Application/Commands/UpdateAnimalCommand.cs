@@ -21,5 +21,7 @@ public record UpdateAnimalCommand(
     long? FatherId,
     string? ExternalMother,
     string? ExternalFather,
+    decimal? Weight,
+    decimal? Height,
     int? UserId
 ) : IRequest<AnimalResponse>;

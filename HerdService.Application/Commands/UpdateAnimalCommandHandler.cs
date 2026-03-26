@@ -35,7 +35,9 @@ public class UpdateAnimalCommandHandler : IRequestHandler<UpdateAnimalCommand, A
             request.MotherId,
             request.FatherId,
             request.ExternalMother,
-            request.ExternalFather
+            request.ExternalFather,
+            request.Weight,
+            request.Height
         );
 
         await _animalRepository.UpdateAsync(animal, cancellationToken);
@@ -67,7 +69,9 @@ public class UpdateAnimalCommandHandler : IRequestHandler<UpdateAnimalCommand, A
             animal.MotherId,
             animal.FatherId,
             animal.ExternalMother,
-            animal.ExternalFather
+            animal.ExternalFather,
+            animal.Weight,
+            animal.Height
         );
     }
 }

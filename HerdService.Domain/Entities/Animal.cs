@@ -21,6 +21,8 @@ public class Animal
     public DateOnly BirthDate { get; private set; }
     public string Sex { get; private set; } = "M"; // 'M' or 'F'
     public string? Color { get; private set; }
+    public decimal? Weight { get; private set; } // Weight in kg
+    public decimal? Height { get; private set; } // Height in cm
 
     // Genealogy
     public long? MotherId { get; private set; }
@@ -66,7 +68,9 @@ public class Animal
         long? motherId = null,
         long? fatherId = null,
         string? externalMother = null,
-        string? externalFather = null)
+        string? externalFather = null,
+        decimal? weight = null,
+        decimal? height = null)
     {
         if (string.IsNullOrWhiteSpace(visualCode))
             throw new ArgumentException("Visual Code is required");
@@ -98,7 +102,9 @@ public class Animal
             MotherId = motherId,
             FatherId = fatherId,
             ExternalMother = externalMother,
-            ExternalFather = externalFather
+            ExternalFather = externalFather,
+            Weight = weight,
+            Height = height
         };
     }
 
@@ -118,7 +124,9 @@ public class Animal
         long? motherId = null,
         long? fatherId = null,
         string? externalMother = null,
-        string? externalFather = null)
+        string? externalFather = null,
+        decimal? weight = null,
+        decimal? height = null)
     {
         if (string.IsNullOrWhiteSpace(visualCode)) throw new ArgumentException("Visual Code is required");
 
@@ -161,6 +169,8 @@ public class Animal
         if (fatherId.HasValue) FatherId = fatherId.Value > 0 ? fatherId.Value : null;
         if (externalMother != null) ExternalMother = externalMother;
         if (externalFather != null) ExternalFather = externalFather;
+        if (weight.HasValue) Weight = weight.Value;
+        if (height.HasValue) Height = height.Value;
     }
 
     public void MoveToBatch(int batchId, int? userId)
@@ -237,5 +247,17 @@ public class Animal
             throw new ArgumentException($"Invalid status: {newStatus}");
 
         CurrentStatus = newStatus;
+    }
+
+    public void UpdateWeight(decimal weight)
+    {
+        if (weight < 0) throw new ArgumentException("Weight cannot be negative");
+        Weight = weight;
+    }
+
+    public void UpdateHeight(decimal height)
+    {
+        if (height < 0) throw new ArgumentException("Height cannot be negative");
+        Height = height;
     }
 }

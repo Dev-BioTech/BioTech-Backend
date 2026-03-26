@@ -56,7 +56,9 @@ public class RegisterAnimalMovementCommandHandler : IRequestHandler<RegisterAnim
             animal.MotherId,
             animal.FatherId,
             animal.ExternalMother,
-            animal.ExternalFather
+            animal.ExternalFather,
+            animal.Weight,
+            animal.Height
         );
     }
 }
