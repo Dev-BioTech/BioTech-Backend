@@ -94,8 +94,20 @@ public class AnimalsController : ControllerBase
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal updated successfully"));
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpDelete("{id}")]
@@ -106,7 +118,15 @@ public class AnimalsController : ControllerBase
             await _mediator.Send(new DeleteAnimalCommand(id));
             return Ok(ApiResponse<Unit>.Ok(Unit.Value, "Animal deleted successfully"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<Unit>.Fail(ex.Message));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<Unit>.Fail("Animal not found")); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<Unit>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpPost("{id}/movements")]
@@ -122,8 +142,20 @@ public class AnimalsController : ControllerBase
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Movement registered successfully"));
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpPut("{id}/weight")]
@@ -139,8 +171,20 @@ public class AnimalsController : ControllerBase
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Weight updated successfully"));
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpPut("{id}/batch")]
@@ -156,8 +200,16 @@ public class AnimalsController : ControllerBase
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal moved to batch successfully"));
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal or Batch not found")); }
-        catch (InvalidOperationException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (InvalidOperationException ex) { return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpPut("{id}/sell")]
@@ -173,8 +225,20 @@ public class AnimalsController : ControllerBase
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal sold successfully"));
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 
     [HttpPut("{id}/dead")]
@@ -190,7 +254,19 @@ public class AnimalsController : ControllerBase
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal marked as dead"));
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<AnimalResponse>.Fail(ex.Message));
+        }
         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+        }
     }
 }
