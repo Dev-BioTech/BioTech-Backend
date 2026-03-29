@@ -33,4 +33,22 @@ public class MovementTypesController : ControllerBase
             return StatusCode(500, ApiResponse<IEnumerable<MovementTypeResponse>>.Fail("Internal server error"));
         }
     }
+
+    [HttpPost]
+    public async Task<ActionResult<ApiResponse<MovementTypeResponse>>> CreateMovementType([FromBody] HerdService.Application.Commands.CreateMovementTypeCommand command)
+    {
+        try
+        {
+            var result = await _mediator.Send(command);
+            return StatusCode(201, ApiResponse<MovementTypeResponse>.Ok(result, "Movement type created successfully"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<MovementTypeResponse>.Fail(ex.Message));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<MovementTypeResponse>.Fail("Internal server error"));
+        }
+    }
 }

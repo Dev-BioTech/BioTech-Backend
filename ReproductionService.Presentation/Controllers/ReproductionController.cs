@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReproductionService.Application.Commands.CancelReproductionEvent;
 using ReproductionService.Application.Commands.CreateReproductionEvent;
@@ -17,7 +16,6 @@ namespace ReproductionService.Presentation.Controllers;
 
 [ApiController]
 [Route("api/v1/reproduction")]
-[Authorize]
 public class ReproductionController : ControllerBase
 {
     private readonly IMediator _mediator;

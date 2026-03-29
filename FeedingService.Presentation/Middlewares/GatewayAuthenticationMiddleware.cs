@@ -36,6 +36,16 @@ public class GatewayAuthenticationMiddleware
             return;
         }
 
+        // Check if allow gateway secret is present
+        string? gatewaySecret = context.Request.Headers["X-Gateway-Secret"].FirstOrDefault();
+
+        if (string.IsNullOrEmpty(gatewaySecret))
+        {
+            // Fallback to standard authentication (JWT Bearer)
+            await _next(context);
+            return;
+        }
+
         // Validate request comes from Gateway
         if (!ValidateGatewayRequest(context))
         {

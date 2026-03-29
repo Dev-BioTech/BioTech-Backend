@@ -26,7 +26,9 @@ public class ProfileController : ControllerBase
     public async Task<ActionResult<UserProfileDto>> GetProfile()
     {
         // Extract userId from JWT claims
-        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            ?? User.FindFirst("sub")?.Value 
+            ?? User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
         {
@@ -48,7 +50,9 @@ public class ProfileController : ControllerBase
     public async Task<ActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
     {
         // Extract userId from JWT claims
-        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            ?? User.FindFirst("sub")?.Value 
+            ?? User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
         {

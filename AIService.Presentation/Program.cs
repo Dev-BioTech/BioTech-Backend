@@ -30,7 +30,7 @@ var configConnectionString = builder.Configuration.GetConnectionString("DefaultC
 var connectionString = "";
 
 // Helper to get non-empty environment variable
-string GetEnv(params string[] names) {
+string? GetEnv(params string[] names) {
     foreach (var name in names) {
         var val = Environment.GetEnvironmentVariable(name);
         if (!string.IsNullOrEmpty(val)) return val;

@@ -40,7 +40,10 @@ public class AnimalRepository : IAnimalRepository
             query = query.Where(a => a.CurrentStatus == "ACTIVE");
 
         if (!string.IsNullOrEmpty(status))
-            query = query.Where(a => a.CurrentStatus == status);
+        {
+            var upperStatus = status.ToUpperInvariant();
+            query = query.Where(a => a.CurrentStatus == upperStatus);
+        }
 
         return await query
             .Include(a => a.Breed)

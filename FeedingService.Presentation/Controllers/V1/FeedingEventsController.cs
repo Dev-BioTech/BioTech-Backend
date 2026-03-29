@@ -18,7 +18,6 @@ namespace FeedingService.Presentation.Controllers.V1;
 
 [ApiController]
 [Route("api/v1/feeding-events")]
-[Authorize]
 [Produces("application/json")]
 public class FeedingEventsController : ControllerBase
 {

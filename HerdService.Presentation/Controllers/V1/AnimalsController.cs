@@ -84,10 +84,8 @@ public class AnimalsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> UpdateAnimal(long id, [FromBody] UpdateAnimalCommand command)
     {
-        if (id != command.Id) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
-
         var userId = _authService.GetUserId();
-        var secureCommand = command with { UserId = userId };
+        var secureCommand = command with { Id = id, UserId = userId };
 
         try
         {
@@ -132,10 +130,8 @@ public class AnimalsController : ControllerBase
     [HttpPost("{id}/movements")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> RegisterMovement(long id, [FromBody] RegisterAnimalMovementCommand command)
     {
-        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
-
         var userId = _authService.GetUserId();
-        var secureCommand = command with { UserId = userId };
+        var secureCommand = command with { AnimalId = id, UserId = userId };
 
         try
         {
@@ -161,10 +157,8 @@ public class AnimalsController : ControllerBase
     [HttpPut("{id}/weight")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> UpdateWeight(long id, [FromBody] UpdateAnimalWeightCommand command)
     {
-        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
-
         var userId = _authService.GetUserId();
-        var secureCommand = command with { UserId = userId };
+        var secureCommand = command with { AnimalId = id, UserId = userId };
 
         try
         {
@@ -190,10 +184,8 @@ public class AnimalsController : ControllerBase
     [HttpPut("{id}/batch")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> MoveToBatch(long id, [FromBody] MoveAnimalToBatchCommand command)
     {
-        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
-
         var userId = _authService.GetUserId();
-        var secureCommand = command with { UserId = userId };
+        var secureCommand = command with { AnimalId = id, UserId = userId };
 
         try
         {
@@ -215,10 +207,8 @@ public class AnimalsController : ControllerBase
     [HttpPut("{id}/sell")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> SellAnimal(long id, [FromBody] SellAnimalCommand command)
     {
-        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
-
         var userId = _authService.GetUserId();
-        var secureCommand = command with { UserId = userId };
+        var secureCommand = command with { AnimalId = id, UserId = userId };
 
         try
         {
@@ -244,10 +234,8 @@ public class AnimalsController : ControllerBase
     [HttpPut("{id}/dead")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> MarkAsDead(long id, [FromBody] MarkAnimalAsDeadCommand command)
     {
-        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
-
         var userId = _authService.GetUserId();
-        var secureCommand = command with { UserId = userId };
+        var secureCommand = command with { AnimalId = id, UserId = userId };
 
         try
         {

@@ -17,7 +17,7 @@ public class GatewayAuthenticationService
     public int? GetUserId()
     {
         var userIdClaim = _httpContextAccessor.HttpContext?.User
-            .FindFirst(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "userId")?.Value;
+            .FindFirst(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "userId" || c.Type == "sub")?.Value;
 
         return int.TryParse(userIdClaim, out var userId) ? userId : null;
     }

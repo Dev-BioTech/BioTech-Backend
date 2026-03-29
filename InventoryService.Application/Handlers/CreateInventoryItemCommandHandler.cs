@@ -22,7 +22,7 @@ public class CreateInventoryItemCommandHandler : IRequestHandler<CreateInventory
     public async Task<InventoryItemDto> Handle(CreateInventoryItemCommand request, CancellationToken cancellationToken)
     {
         // Validate FarmId via HerdService
-        var paddocks = await _messenger.GetAsync<IEnumerable<object>>("HerdService", $"/api/v1/paddocks/farm/{request.FarmId}", cancellationToken);
+        var paddocks = await _messenger.GetAsync<object>("HerdService", $"/api/v1/paddocks?farmId={request.FarmId}", cancellationToken);
         
         // If the call fails (throws) or returns null/empty, we assume invalid farm or connection issue.
         // For strict validation, we might want to check if the list is not null. 

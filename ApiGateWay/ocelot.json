@@ -267,7 +267,7 @@
             }
         },
         {
-            "DownstreamPathTemplate": "/api/v1/health-event/{everything}",
+            "DownstreamPathTemplate": "/api/v1/healthEvent/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -275,7 +275,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/v1/health-event/{everything}",
+            "UpstreamPathTemplate": "/api/v1/healthEvent/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",

@@ -1,7 +1,7 @@
 using DotNetEnv;
 using FeedingService.Presentation.Services;
-using FeedingService.Presentation.Authorization;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
 using FeedingService.Infrastructure.Persistence;
@@ -123,11 +123,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<GatewayAuthenticationService>();
 
-// Authentication: trust the identity injected by GatewayAuthenticationMiddleware.
-// JWT validation is the Gateway's responsibility. The microservice only confirms
-// the "Gateway" typed ClaimsIdentity that the middleware already set on context.User.
-builder.Services.AddAuthentication("Gateway")
-    .AddScheme<GatewayAuthHandlerOptions, GatewayAuthenticationHandler>("Gateway", _ => { });
+// Add Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options => { });
 
 builder.Services.AddAuthorization();
 
