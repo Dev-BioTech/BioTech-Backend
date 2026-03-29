@@ -50,4 +50,8 @@ public class UpdateProductDto
     public string? UnitOfMeasure { get; set; }
 
     public decimal? MinimumStock { get; set; }
+
+    public decimal? CurrentQuantity { get; set; }
+    
+    public decimal? AverageCost { get; set; }
 }

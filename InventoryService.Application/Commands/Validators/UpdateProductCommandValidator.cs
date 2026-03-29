@@ -26,5 +26,15 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .GreaterThanOrEqualTo(0)
             .WithMessage("Minimum stock cannot be negative")
             .When(x => x.Dto.MinimumStock.HasValue);
+
+        RuleFor(x => x.Dto.CurrentQuantity)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Current quantity cannot be negative")
+            .When(x => x.Dto.CurrentQuantity.HasValue);
+
+        RuleFor(x => x.Dto.AverageCost)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Average cost cannot be negative")
+            .When(x => x.Dto.AverageCost.HasValue);
     }
 }

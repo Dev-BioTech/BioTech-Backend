@@ -47,6 +47,16 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.MinimumStock = request.Dto.MinimumStock.Value;
         }
 
+        if (request.Dto.CurrentQuantity.HasValue)
+        {
+            product.CurrentQuantity = request.Dto.CurrentQuantity.Value;
+        }
+
+        if (request.Dto.AverageCost.HasValue)
+        {
+            product.AverageCost = request.Dto.AverageCost.Value;
+        }
+
         await _repository.UpdateAsync(product, cancellationToken);
 
         return new ProductDto
