@@ -1,5 +1,6 @@
 using DotNetEnv;
 using FeedingService.Presentation.Services;
+using FeedingService.Presentation.Authorization;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure.Extensions;
@@ -101,17 +102,7 @@ else
     Console.WriteLine("[Config Warning] No database connection string found!");
 }
 
-// 2. JWT Configuration
-var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
-if (!string.IsNullOrEmpty(jwtSecret)) builder.Configuration["Jwt:Secret"] = jwtSecret;
-
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-if (!string.IsNullOrEmpty(jwtIssuer)) builder.Configuration["Jwt:Issuer"] = jwtIssuer;
-
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-if (!string.IsNullOrEmpty(jwtAudience)) builder.Configuration["Jwt:Audience"] = jwtAudience;
-
-// 3. Gateway Secret
+// 2. Gateway Secret
 var gatewaySecret = Environment.GetEnvironmentVariable("GATEWAY_SECRET");
 if (!string.IsNullOrEmpty(gatewaySecret)) builder.Configuration["Gateway:Secret"] = gatewaySecret;
 
@@ -130,29 +121,13 @@ builder.Services.AddFluentValidationAutoValidation();
 // Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
 
-
 builder.Services.AddScoped<GatewayAuthenticationService>();
 
-// Add Authentication and JWT Bearer
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ?? "default_secret_key_for_development_purposes_only"))
-    };
-});
+// Authentication: trust the identity injected by GatewayAuthenticationMiddleware.
+// JWT validation is the Gateway's responsibility. The microservice only confirms
+// the "Gateway" typed ClaimsIdentity that the middleware already set on context.User.
+builder.Services.AddAuthentication("Gateway")
+    .AddScheme<GatewayAuthHandlerOptions, GatewayAuthenticationHandler>("Gateway", _ => { });
 
 builder.Services.AddAuthorization();
 
