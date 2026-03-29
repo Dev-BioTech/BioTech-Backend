@@ -83,7 +83,7 @@ public class GatewayAuthenticationService
         }
 
         // 4. Fallback: Return the first authorized farm
-        return authorizedFarmIds.FirstOrDefault();
+        return authorizedFarmIds.Any() ? authorizedFarmIds.First() : null;
     }
 
     public bool IsInRole(string role)

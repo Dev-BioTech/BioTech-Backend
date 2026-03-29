@@ -44,10 +44,14 @@ public class GatewayAuthenticationService
 
     public int? GetFarmId()
     {
-        var farmIdClaim = _httpContextAccessor.HttpContext?.User
-            .FindFirst("farmId")?.Value;
+        var authorizedFarmIds = _httpContextAccessor.HttpContext?.User
+            .FindAll("farmId")
+            .Select(c => int.TryParse(c.Value, out var id) ? id : (int?)null)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .ToList() ?? new List<int>();
 
-        return int.TryParse(farmIdClaim, out var farmId) ? farmId : null;
+        return authorizedFarmIds.Any() ? authorizedFarmIds.First() : null;
     }
 
     public bool IsInRole(string role)
