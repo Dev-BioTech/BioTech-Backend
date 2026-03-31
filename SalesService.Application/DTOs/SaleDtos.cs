@@ -21,7 +21,7 @@ public record CreateSaleDto(
 );
 
 public record UpdateSaleDto(
-    string BuyerName,
-    DateTime SaleDate,
-    decimal Amount
+    string? BuyerName,
+    DateTime? SaleDate,
+    decimal? Amount
 );
