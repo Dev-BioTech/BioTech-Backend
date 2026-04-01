@@ -7,5 +7,5 @@ public record CreateInventoryItemCommand(
     string Name,
     decimal Quantity,
     string Unit,
-    int FarmId
+    int FarmId = 0
 ) : IRequest<InventoryItemDto>;

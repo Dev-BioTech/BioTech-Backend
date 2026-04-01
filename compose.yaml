@@ -1,4 +1,4 @@
-﻿services:
+services:
 
   auth-service:
     build:
@@ -119,6 +119,7 @@
       - INVENTORY_DB_NAME=${INVENTORY_DB_NAME}
       - INVENTORY_DB_USER=${INVENTORY_DB_USER}
       - INVENTORY_DB_PASSWORD=${INVENTORY_DB_PASSWORD}
+      - HERD_SERVICE_URL=http://herd-service:8080
       - GATEWAY_SECRET=${GATEWAY_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
