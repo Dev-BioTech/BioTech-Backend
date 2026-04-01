@@ -7,6 +7,7 @@ namespace ReproductionService.Infrastructure.Persistence;
 public class ReproductionDbContext : DbContext
 {
     public DbSet<ReproductionEvent> ReproductionEvents { get; set; }
+    public DbSet<Birth> Births { get; set; }
 
     public ReproductionDbContext(DbContextOptions<ReproductionDbContext> options)
         : base(options)

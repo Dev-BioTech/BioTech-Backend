@@ -241,15 +241,12 @@ public class ReproductionController : ControllerBase
     {
         try
         {
-            // Validate user is authenticated
-            var userId = _authService.GetUserId();
-            if (userId == null)
-            {
-                return Unauthorized(ApiResponse<BirthDto>.Fail("User not authenticated"));
-            }
+            var farmId = _authService.GetFarmId();
+            if (!farmId.HasValue) return BadRequest(ApiResponse<BirthDto>.Fail("User is not associated with a valid Farm"));
 
-            var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetBirthsByFarm), new { farmId = 0 }, ApiResponse<BirthDto>.Ok(result, "Birth registered successfully"));
+            var secureCommand = command with { FarmId = farmId.Value };
+            var result = await _mediator.Send(secureCommand);
+            return CreatedAtAction(nameof(GetBirthsByFarm), new { farmId = farmId.Value }, ApiResponse<BirthDto>.Ok(result, "Birth registered successfully"));
         }
         catch (FluentValidation.ValidationException ex)
         {

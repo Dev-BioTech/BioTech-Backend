@@ -37,6 +37,8 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString));
 
         services.AddScoped<IReproductionEventRepository, ReproductionEventRepository>();
+        services.AddScoped<IPregnancyRepository, PregnancyRepository>();
+        services.AddScoped<IBirthRepository, BirthRepository>();
 
         return services;
     }

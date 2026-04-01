@@ -18,7 +18,7 @@ public class RegisterBirthCommandHandler : IRequestHandler<RegisterBirthCommand,
     {
         var birth = new Birth(
             request.MotherAnimalId,
-            0, // FarmId will be set in the controller after validation
+            request.FarmId, 
             request.OffspringTag,
             request.BirthDate,
             request.Weight,
