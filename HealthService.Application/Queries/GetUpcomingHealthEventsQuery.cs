@@ -3,4 +3,4 @@ using MediatR;
 
 namespace HealthService.Application.Queries;
 
-public record GetUpcomingHealthEventsQuery(int Limit = 4) : IRequest<IEnumerable<UpcomingHealthEventDto>>;
+public record GetUpcomingHealthEventsQuery(int FarmId, int Limit = 10) : IRequest<IEnumerable<UpcomingHealthEventDto>>;

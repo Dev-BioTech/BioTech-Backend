@@ -127,7 +127,7 @@ public class HealthEventController : ControllerBase
         if (!effectiveFarmId.HasValue || effectiveFarmId.Value <= 0)
             return BadRequest(ApiResponse<IEnumerable<UpcomingHealthEventDto>>.Fail("User is not associated with a valid Farm (Context Missing)"));
 
-        var result = await _mediator.Send(new GetUpcomingHealthEventsQuery(limit));
+        var result = await _mediator.Send(new GetUpcomingHealthEventsQuery(effectiveFarmId.Value, limit));
         return Ok(ApiResponse<IEnumerable<UpcomingHealthEventDto>>.Ok(result));
     }
 
