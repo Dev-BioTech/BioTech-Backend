@@ -3,6 +3,7 @@ using SalesService.Infrastructure;
 using SalesService.Infrastructure.Persistence;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Middlewares;
+using SalesService.Presentation.Middlewares;
 using DotNetEnv;
 
 // Enable legacy timestamp behavior for Npgsql
@@ -144,6 +145,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<GatewayAuthenticationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

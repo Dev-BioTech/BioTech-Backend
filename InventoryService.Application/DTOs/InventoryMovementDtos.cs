@@ -9,8 +9,8 @@ public class InventoryMovementDto
     public long Id { get; set; }
     public int ProductId { get; set; }
     public string ProductName { get; set; } = string.Empty;
-    public string Direction { get; set; } = string.Empty; // ENTRY/EXIT
-    public string Concept { get; set; } = string.Empty; // PURCHASE/SALE...
+    public int Direction { get; set; }
+    public int Concept { get; set; }
     public decimal Quantity { get; set; }
     public DateTime MovementDate { get; set; }
 
@@ -33,9 +33,9 @@ public class RegisterMovementDto
     public int ProductId { get; set; }
 
     [Required]
-    public MovementConcept Concept { get; set; }
+    public int Concept { get; set; }
 
-    public MovementDirection? Direction { get; set; } // Optional if Concept implies it
+    public int? Direction { get; set; } // Optional if Concept implies it
 
     [Required]
     [Range(0.0001, double.MaxValue, ErrorMessage = "Quantity must be greater than 0")]

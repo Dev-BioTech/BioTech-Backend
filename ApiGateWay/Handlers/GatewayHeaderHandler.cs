@@ -26,73 +26,91 @@ public class GatewayHeaderHandler : DelegatingHandler
             // Extract user claims from JWT and forward them as headers
             var user = httpContext.User;
             
-            if (user?.Identity?.IsAuthenticated == true)
-            {
-                // User ID
-                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                          ?? user.FindFirst("sub")?.Value 
-                          ?? user.FindFirst("userId")?.Value;
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    request.Headers.TryAddWithoutValidation("X-User-Id", userId);
-                }
+            // Aggressive Extraction: If standard user is not authenticated or lacks ID, try manual JWT parsing
+            string? userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                          ?? user?.FindFirst("sub")?.Value 
+                          ?? user?.FindFirst("userId")?.Value;
+            
+            string? email = user?.FindFirst(ClaimTypes.Email)?.Value 
+                         ?? user?.FindFirst("email")?.Value;
+                         
+            string? username = user?.FindFirst(ClaimTypes.Name)?.Value 
+                            ?? user?.FindFirst("name")?.Value 
+                            ?? user?.FindFirst("username")?.Value
+                            ?? user?.FindFirst("fullName")?.Value;
 
-                // Email
-                var email = user.FindFirst(ClaimTypes.Email)?.Value 
-                         ?? user.FindFirst("email")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        var token = authHeader.Substring("Bearer ".Length).Trim();
+                        var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                        if (handler.CanReadToken(token))
+                        {
+                            var jwtToken = handler.ReadJwtToken(token);
+                            userId = jwtToken.Subject ?? jwtToken.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+                            email ??= jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+                            username ??= jwtToken.Claims.FirstOrDefault(c => c.Type == "fullName" || c.Type == "name" || c.Type == "unique_name")?.Value;
+                        }
+                    }
+                    catch { /* Ignore parsing errors, fallback to empty */ }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                request.Headers.Remove("X-User-Id");
+                request.Headers.Add("X-User-Id", userId);
+                
                 if (!string.IsNullOrEmpty(email))
                 {
-                    request.Headers.TryAddWithoutValidation("X-User-Email", email);
+                    request.Headers.Remove("X-User-Email");
+                    request.Headers.Add("X-User-Email", email);
                 }
-
-                // Username
-                var username = user.FindFirst(ClaimTypes.Name)?.Value 
-                            ?? user.FindFirst("name")?.Value 
-                            ?? user.FindFirst("username")?.Value
-                            ?? user.FindFirst("fullName")?.Value; // Pick up fullName from AuthService
+                    
                 if (!string.IsNullOrEmpty(username))
                 {
-                    request.Headers.TryAddWithoutValidation("X-User-Name", username);
+                    request.Headers.Remove("X-User-Name");
+                    request.Headers.Add("X-User-Name", username);
                 }
 
-                // Roles
-                var roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+                // Roles Handling
+                var roles = user?.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList() ?? new List<string>();
                 if (!roles.Any())
                 {
-                    roles = user.FindAll("role").Select(c => c.Value).ToList();
+                    roles = user?.FindAll("role").Select(c => c.Value).ToList() ?? new List<string>();
                 }
                 
-                // Also pick up farm_role and extract the role part if needed, or send as is
-                var farmRoles = user.FindAll("farm_role").Select(c => c.Value).ToList();
-                if (farmRoles.Any())
+                var farmRoles = user?.FindAll("farm_role").Select(c => c.Value).ToList() ?? new List<string>();
+                if (!farmRoles.Any())
                 {
-                    // For now, we add them to the roles list or send them separately
-                    roles.AddRange(farmRoles);
-                }
-
-                if (roles.Any())
-                {
-                    request.Headers.TryAddWithoutValidation("X-User-Roles", string.Join(",", roles));
-                }
-
-                // Farm ID (business-specific claim)
-                var farmId = user.FindFirst("farmId")?.Value 
-                          ?? user.FindFirst("FarmId")?.Value;
-                
-                // If farmId is missing, try to extract it from the first farm_role (Format: FarmId:RoleName)
-                if (string.IsNullOrEmpty(farmId) && farmRoles.Any())
-                {
-                    var firstFarmRole = farmRoles.First();
-                    if (firstFarmRole.Contains(':'))
+                    // Fallback to manual JWT if needed
+                    var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
+                    if (!string.IsNullOrEmpty(authHeader))
                     {
-                        farmId = firstFarmRole.Split(':')[0];
+                         try {
+                            var token = authHeader.Split(" ").Last();
+                            var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().ReadJwtToken(token);
+                            farmRoles = jwt.Claims.Where(c => c.Type == "farm_role").Select(c => c.Value).ToList();
+                         } catch {}
                     }
                 }
 
-                if (!string.IsNullOrEmpty(farmId))
+                if (farmRoles.Any()) roles.AddRange(farmRoles);
+                if (roles.Any()) request.Headers.TryAddWithoutValidation("X-User-Roles", string.Join(",", roles.Distinct()));
+
+                // Farm ID extraction
+                var farmId = user?.FindFirst("farmId")?.Value ?? user?.FindFirst("FarmId")?.Value;
+                if (string.IsNullOrEmpty(farmId) && farmRoles.Any())
                 {
-                    request.Headers.TryAddWithoutValidation("X-Farm-Id", farmId);
+                    var firstFarmRole = farmRoles.First();
+                    if (firstFarmRole.Contains(':')) farmId = firstFarmRole.Split(':')[0];
                 }
+                
+                if (!string.IsNullOrEmpty(farmId)) request.Headers.TryAddWithoutValidation("X-Farm-Id", farmId);
             }
         }
 

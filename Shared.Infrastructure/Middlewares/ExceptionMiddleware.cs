@@ -38,7 +38,7 @@ public class ExceptionMiddleware
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-        var message = _env.IsDevelopment() ? exception.Message : "An internal server error occurred.";
+        var message = exception.Message; // Mostrar siempre el mensaje real para diagnóstico (Temporalmente)
         
         // Specific handling for business exceptions
         if (exception is FluentValidation.ValidationException validationEx)

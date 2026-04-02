@@ -8,7 +8,7 @@ public class ProductDto
     public int Id { get; set; }
     public int FarmId { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string? Category { get; set; }
+    public int? Category { get; set; }
     public string UnitOfMeasure { get; set; } = string.Empty;
     public decimal CurrentQuantity { get; set; }
     public decimal AverageCost { get; set; }
@@ -25,7 +25,7 @@ public class CreateProductDto
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    public ProductCategory? Category { get; set; }
+    public int? Category { get; set; }
 
     [Required]
     [MaxLength(20)]
@@ -44,7 +44,7 @@ public class UpdateProductDto
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    public ProductCategory? Category { get; set; }
+    public int? Category { get; set; }
 
     [MaxLength(20)]
     public string? UnitOfMeasure { get; set; }

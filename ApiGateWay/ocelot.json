@@ -349,11 +349,23 @@
                 "PUT",
                 "DELETE",
                 "OPTIONS"
+            ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/products",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "inventory-service",
+                    "Port": 8080
+                }
             ],
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-            }
+            "UpstreamPathTemplate": "/api/v1/products",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "OPTIONS"
+            ]
         },
         {
             "DownstreamPathTemplate": "/api/v1/inventory/{everything}",
@@ -371,11 +383,7 @@
                 "PUT",
                 "DELETE",
                 "OPTIONS"
-            ],
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-            }
+            ]
         },
         {
             "DownstreamPathTemplate": "/api/v1/inventory-movements/{everything}",
@@ -393,11 +401,7 @@
                 "PUT",
                 "DELETE",
                 "OPTIONS"
-            ],
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-            }
+            ]
         },
         {
             "DownstreamPathTemplate": "/api/v1/sales/{everything}",
@@ -415,11 +419,23 @@
                 "PUT",
                 "DELETE",
                 "OPTIONS"
+            ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/sales",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "sales-service",
+                    "Port": 8080
+                }
             ],
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-            }
+            "UpstreamPathTemplate": "/api/v1/sales",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "OPTIONS"
+            ]
         },
         {
             "DownstreamPathTemplate": "/api/v1/diagnostic/{everything}",
@@ -445,6 +461,7 @@
         }
     ],
     "GlobalConfiguration": {
-        "BaseUrl": "http://localhost:5000"
+        "BaseUrl": "http://localhost:5000",
+        "RouteIsCaseSensitive": false
     }
 }

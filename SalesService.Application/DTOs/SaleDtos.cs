@@ -21,6 +21,7 @@ public record CreateSaleDto(
 );
 
 public record UpdateSaleDto(
+    int? FarmId,
     string? BuyerName,
     DateTime? SaleDate,
     decimal? Amount

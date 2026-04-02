@@ -34,7 +34,7 @@ public class ProductQueryHandlers :
             Id = p.Id,
             FarmId = p.FarmId,
             Name = p.Name,
-            Category = p.Category?.ToString(),
+            Category = (int?)p.Category,
             UnitOfMeasure = p.UnitOfMeasure,
             CurrentQuantity = p.CurrentQuantity,
             AverageCost = p.AverageCost,

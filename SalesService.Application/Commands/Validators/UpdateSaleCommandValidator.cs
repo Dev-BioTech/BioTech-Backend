@@ -11,18 +11,24 @@ public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
             .GreaterThan(0)
             .WithMessage("Sale ID must be greater than zero");
 
-        RuleFor(x => x.Dto.BuyerName)
-            .NotEmpty()
-            .WithMessage("BuyerName is required")
-            .MaximumLength(100)
-            .WithMessage("BuyerName cannot exceed 100 characters");
+        When(x => x.Dto.BuyerName != null, () => {
+            RuleFor(x => x.Dto.BuyerName)
+                .NotEmpty()
+                .WithMessage("BuyerName cannot be empty")
+                .MaximumLength(100)
+                .WithMessage("BuyerName cannot exceed 100 characters");
+        });
 
-        RuleFor(x => x.Dto.Amount)
-            .GreaterThan(0)
-            .WithMessage("Amount must be greater than zero");
+        When(x => x.Dto.Amount != null, () => {
+            RuleFor(x => x.Dto.Amount)
+                .GreaterThan(0)
+                .WithMessage("Amount must be greater than zero");
+        });
 
-        RuleFor(x => x.Dto.SaleDate)
-            .LessThanOrEqualTo(DateTime.UtcNow)
-            .WithMessage("SaleDate cannot be in the future");
+        When(x => x.Dto.SaleDate != null, () => {
+            RuleFor(x => x.Dto.SaleDate)
+                .LessThanOrEqualTo(DateTime.UtcNow)
+                .WithMessage("SaleDate cannot be in the future");
+        });
     }
 }

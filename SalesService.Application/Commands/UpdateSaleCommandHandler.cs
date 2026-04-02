@@ -23,8 +23,15 @@ public class UpdateSaleCommandHandler : IRequestHandler<UpdateSaleCommand, SaleD
         }
 
         // Update properties only if provided
+        if (request.Dto.FarmId.HasValue && request.Dto.FarmId.Value > 0)
+            sale.FarmId = request.Dto.FarmId.Value;
+
         if (!string.IsNullOrWhiteSpace(request.Dto.BuyerName))
             sale.BuyerName = request.Dto.BuyerName;
+
+        // Healing logic for broken dates in the DB
+        if (sale.SaleDate == DateTime.MinValue)
+            sale.SaleDate = DateTime.UtcNow;
 
         if (request.Dto.SaleDate.HasValue && request.Dto.SaleDate.Value != DateTime.MinValue)
             sale.SaleDate = request.Dto.SaleDate.Value;

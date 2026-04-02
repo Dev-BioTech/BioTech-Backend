@@ -17,10 +17,12 @@ public class CurrentUserService : ICurrentUserService
     {
         get
         {
-            var userIdClaim = _httpContextAccessor.HttpContext?.User
-                .FindFirst(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "userId")?.Value;
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "userId")?.Value;
+            if (int.TryParse(userIdClaim, out var userId)) return userId;
 
-            return int.TryParse(userIdClaim, out var userId) ? userId : null;
+            // Fallback: Check for header from Gateway
+            var headerUserId = _httpContextAccessor.HttpContext?.Request.Headers["X-User-Id"].ToString();
+            return int.TryParse(headerUserId, out var hUserId) ? hUserId : null;
         }
     }
 

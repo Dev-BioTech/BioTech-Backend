@@ -1,5 +1,6 @@
 using InventoryService.Application.Commands;
 using InventoryService.Application.DTOs;
+using InventoryService.Domain.Enums;
 using InventoryService.Domain.Entities;
 using InventoryService.Domain.Interfaces;
 using MediatR;
@@ -35,7 +36,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
         // Update properties
         product.Name = request.Dto.Name;
-        product.Category = request.Dto.Category;
+        product.Category = request.Dto.Category.HasValue ? (ProductCategory)request.Dto.Category.Value : null;
         
         if (!string.IsNullOrWhiteSpace(request.Dto.UnitOfMeasure))
         {
@@ -64,7 +65,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             Id = product.Id,
             FarmId = product.FarmId,
             Name = product.Name,
-            Category = product.Category?.ToString(),
+            Category = (int?)product.Category,
             UnitOfMeasure = product.UnitOfMeasure,
             CurrentQuantity = product.CurrentQuantity,
             AverageCost = product.AverageCost,

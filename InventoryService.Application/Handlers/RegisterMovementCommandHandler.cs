@@ -32,12 +32,14 @@ public class RegisterMovementCommandHandler : IRequestHandler<RegisterMovementCo
 
         // Determine Direction based on Concept or Input
         MovementDirection direction;
+        var movementConcept = (MovementConcept)dto.Concept;
+        var movementDirectionInput = (MovementDirection?)dto.Direction;
 
-        switch (dto.Concept)
+        switch (movementConcept)
         {
             case MovementConcept.PURCHASE:
             case MovementConcept.RETURN: // Assuming Customer Return
-            case MovementConcept.INVENTORY_ADJUSTMENT when dto.Direction == MovementDirection.ENTRY:
+            case MovementConcept.INVENTORY_ADJUSTMENT when movementDirectionInput == MovementDirection.ENTRY:
                 direction = MovementDirection.ENTRY;
                 break;
 
@@ -45,7 +47,7 @@ public class RegisterMovementCommandHandler : IRequestHandler<RegisterMovementCo
             case MovementConcept.FEED_CONSUMPTION:
             case MovementConcept.HEALTH_CONSUMPTION:
             case MovementConcept.EXPIRATION:
-            case MovementConcept.INVENTORY_ADJUSTMENT when dto.Direction == MovementDirection.EXIT:
+            case MovementConcept.INVENTORY_ADJUSTMENT when movementDirectionInput == MovementDirection.EXIT:
                 direction = MovementDirection.EXIT;
                 break;
 
@@ -53,14 +55,14 @@ public class RegisterMovementCommandHandler : IRequestHandler<RegisterMovementCo
                 // If not specified, default to... or check signed quantity? 
                 // Here assuming DTO quantity is positive. 
                 // If direction is null, default to ENTRY if we can't guess, or throw.
-                if (dto.Direction.HasValue) direction = dto.Direction.Value;
+                if (movementDirectionInput.HasValue) direction = movementDirectionInput.Value;
                 else throw new ArgumentException("Direction must be specified for Inventory Adjustment");
                 break;
 
             default:
                 // Default based on provided Direction or throw
-                if (dto.Direction.HasValue) direction = dto.Direction.Value;
-                else throw new ArgumentException($"Cannot determine direction for concept {dto.Concept}");
+                if (movementDirectionInput.HasValue) direction = movementDirectionInput.Value;
+                else throw new ArgumentException($"Cannot determine direction for concept {movementConcept}");
                 break;
         }
 
@@ -100,7 +102,7 @@ public class RegisterMovementCommandHandler : IRequestHandler<RegisterMovementCo
             FarmId = product.FarmId, // Inherit from Product
             ProductId = dto.ProductId,
             MovementType = direction,
-            Concept = dto.Concept,
+            Concept = movementConcept,
             Quantity = dto.Quantity,
             MovementDate = DateTime.UtcNow,
             ThirdPartyId = dto.ThirdPartyId,

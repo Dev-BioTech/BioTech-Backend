@@ -1,4 +1,6 @@
 using InventoryService.Application.DTOs;
+using InventoryService.Domain.Entities;
+using InventoryService.Domain.Enums;
 using InventoryService.Domain.Interfaces;
 using MediatR;
 
@@ -20,7 +22,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, I
         {
             Id = p.Id,
             Name = p.Name,
-            Category = p.Category?.ToString() ?? string.Empty,
+            Category = (int?)p.Category,
             UnitOfMeasure = p.UnitOfMeasure,
             CurrentQuantity = p.CurrentQuantity,
             AverageCost = p.AverageCost,

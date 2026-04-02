@@ -23,7 +23,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         {
             Id = product.Id,
             Name = product.Name,
-            Category = product.Category?.ToString() ?? string.Empty,
+            Category = (int?)product.Category,
             UnitOfMeasure = product.UnitOfMeasure,
             CurrentQuantity = product.CurrentQuantity,
             AverageCost = product.AverageCost,

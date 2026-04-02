@@ -25,11 +25,13 @@ public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, SaleD
             throw new UnauthorizedAccessException("User not authenticated");
         }
 
+        var saleDate = request.Dto.SaleDate == default ? DateTime.UtcNow : request.Dto.SaleDate;
+
         var sale = new Sale(
             request.Dto.FarmId,
             request.Dto.AnimalId,
             request.Dto.BuyerName,
-            request.Dto.SaleDate,
+            saleDate,
             request.Dto.Amount,
             request.Dto.Notes
         )

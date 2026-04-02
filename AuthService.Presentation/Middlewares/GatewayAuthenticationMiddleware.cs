@@ -28,10 +28,23 @@ public class GatewayAuthenticationMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        // Skip authentication for health check endpoints and Swagger
-        if (context.Request.Path.StartsWithSegments("/health") || 
-            context.Request.Path.StartsWithSegments("/swagger"))
+        // Skip authentication for health check endpoints
+        if (context.Request.Path.StartsWithSegments("/health"))
         {
+            await _next(context);
+            return;
+        }
+
+        // Diagnostic log: See what headers we are actually receiving from the Gateway
+        var headers = string.Join(" | ", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"));
+        _logger.LogInformation("[GatewayAuth] Incoming Headers: {Headers}", headers);
+
+        // Check if allow gateway secret is present
+        string? gatewaySecret = context.Request.Headers["X-Gateway-Secret"].FirstOrDefault();
+
+        if (string.IsNullOrEmpty(gatewaySecret))
+        {
+            // Fallback to standard authentication if no gateway secret (internal/direct calls)
             await _next(context);
             return;
         }
@@ -39,27 +52,45 @@ public class GatewayAuthenticationMiddleware
         // Validate request comes from Gateway
         if (!ValidateGatewayRequest(context))
         {
-            _logger.LogWarning("Unauthorized: Gateway validation failed for request to {Path} from {IP}", 
-                context.Request.Path, context.Connection.RemoteIpAddress);
-
+            _logger.LogWarning("Unauthorized: Gateway validation failed for request to {Path}", context.Request.Path);
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsJsonAsync(new
-            {
-                success = false,
-                message = "Unauthorized: Invalid gateway token or source. Use X-Gateway-Secret in Swagger.",
-                timestamp = DateTime.UtcNow
-            });
+            await context.Response.WriteAsJsonAsync(new { message = "Unauthorized: Invalid gateway token or source" });
             return;
         }
 
-        // Extract user information from headers sent by Gateway (for simulate header injection)
+        // Extract user information from headers sent by Gateway
         var userClaims = ExtractUserClaims(context);
         
-        // DEV MODE: If no headers and in Development, inject default test user
-        if (!userClaims.Any() && _env.IsDevelopment())
+        // Final Backstop: If headers are missing but Authorization header is present, try manual extraction
+        if (!userClaims.Any(c => c.Type == ClaimTypes.NameIdentifier))
         {
-            _logger.LogInformation("Dev Mode: Injecting default test user claims for manual testing");
-            userClaims = GetDefaultDevClaims();
+            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var token = authHeader.Substring("Bearer ".Length).Trim();
+                    var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                    if (handler.CanReadToken(token))
+                    {
+                        var jwtToken = handler.ReadJwtToken(token);
+                        var userId = jwtToken.Subject ?? jwtToken.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            _logger.LogWarning("[GatewayAuth] IDENTITY RECOVERY: Extracted userId {UserId} directly from JWT because X-User-Id header was missing.", userId);
+                            userClaims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
+                            userClaims.Add(new Claim("userId", userId));
+                            
+                            var email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+                            if (!string.IsNullOrEmpty(email)) userClaims.Add(new Claim(ClaimTypes.Email, email));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "[GatewayAuth] Failed to manually recover identity from JWT.");
+                }
+            }
         }
 
         if (userClaims.Any())

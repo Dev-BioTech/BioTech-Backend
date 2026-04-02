@@ -1,5 +1,6 @@
 using InventoryService.Application.Commands;
 using InventoryService.Application.DTOs;
+using InventoryService.Domain.Enums;
 using InventoryService.Domain.Entities;
 using InventoryService.Domain.Interfaces;
 using MediatR;
@@ -31,7 +32,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         {
             FarmId = dto.FarmId,
             Name = dto.Name,
-            Category = dto.Category,
+            Category = dto.Category.HasValue ? (ProductCategory)dto.Category.Value : null,
             UnitOfMeasure = dto.UnitOfMeasure,
             CurrentQuantity = dto.CurrentQuantity,
             AverageCost = dto.AverageCost,
@@ -45,7 +46,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         {
             Id = createdId,
             Name = product.Name,
-            Category = product.Category?.ToString() ?? string.Empty,
+            Category = (int?)product.Category,
             UnitOfMeasure = product.UnitOfMeasure,
             CurrentQuantity = product.CurrentQuantity,
             AverageCost = product.AverageCost,
