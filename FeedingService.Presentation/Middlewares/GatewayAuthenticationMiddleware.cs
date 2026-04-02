@@ -120,12 +120,35 @@ public class GatewayAuthenticationMiddleware
 
         // Validation 2: Optional IP whitelist validation
         var allowedIPs = _configuration.GetSection("Gateway:AllowedIPs").Get<string[]>();
+        
+        // Also support comma-separated string if the array is null or empty
+        if (allowedIPs == null || allowedIPs.Length == 0)
+        {
+            var allowedIPsString = _configuration["Gateway:AllowedIPs"];
+            if (!string.IsNullOrEmpty(allowedIPsString))
+            {
+                allowedIPs = allowedIPsString.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(ip => ip.Trim()).ToArray();
+            }
+        }
+
         if (allowedIPs != null && allowedIPs.Length > 0)
         {
-            var remoteIP = context.Connection.RemoteIpAddress?.ToString();
-            if (remoteIP == null || !allowedIPs.Contains(remoteIP))
+            // Try to get IP from X-Forwarded-For if it exists (for proxies/load balancers)
+            string? remoteIP = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(remoteIP))
             {
-                _logger.LogWarning("Request rejected: IP {IP} not in whitelist", remoteIP);
+                // Take the first IP if multiple are present
+                remoteIP = remoteIP.Split(',')[0].Trim();
+            }
+            else
+            {
+                remoteIP = context.Connection.RemoteIpAddress?.ToString();
+            }
+
+            if (remoteIP == null || !allowedIPs.Any(ip => ip.Trim() == remoteIP))
+            {
+                _logger.LogWarning("Request rejected: IP {IP} not in whitelist. Allowed IPs: {AllowedIPs}", 
+                    remoteIP ?? "Unknown", string.Join(", ", allowedIPs));
                 return false;
             }
         }

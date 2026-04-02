@@ -1,0 +1,246 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "4.14.0.0",
+        "fileVersion": "4.14.0-3.25413.5 (b828a8df)",
+        "semanticVersion": "4.14.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CS0029",
+          "level": "error",
+          "message": "No se puede convertir implícitamente el tipo 'string' en 'int?'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/BasicIntegrationTests.cs",
+                "region": {
+                  "startLine": 45,
+                  "startColumn": 24,
+                  "endLine": 45,
+                  "endColumn": 30
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS1503",
+          "level": "error",
+          "message": "Argumento 1: no se puede convertir de 'string' a 'int'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/BasicIntegrationTests.cs",
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 38,
+                  "endLine": 57,
+                  "endColumn": 44
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0266",
+          "level": "error",
+          "message": "No se puede convertir implícitamente el tipo 'InventoryService.Domain.Enums.ProductCategory' en 'int?'. Ya existe una conversión explícita (compruebe si le falta una conversión)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 80,
+                  "startColumn": 24,
+                  "endLine": 80,
+                  "endColumn": 44
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Desreferencia de una referencia posiblemente NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 96,
+                  "startColumn": 9,
+                  "endLine": 96,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Desreferencia de una referencia posiblemente NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 128,
+                  "startColumn": 9,
+                  "endLine": 128,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0266",
+          "level": "error",
+          "message": "No se puede convertir implícitamente el tipo 'InventoryService.Domain.Enums.ProductCategory' en 'int?'. Ya existe una conversión explícita (compruebe si le falta una conversión)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 140,
+                  "startColumn": 24,
+                  "endLine": 140,
+                  "endColumn": 44
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0266",
+          "level": "error",
+          "message": "No se puede convertir implícitamente el tipo 'InventoryService.Domain.Enums.ProductCategory' en 'int?'. Ya existe una conversión explícita (compruebe si le falta una conversión)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 151,
+                  "startColumn": 24,
+                  "endLine": 151,
+                  "endColumn": 48
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0266",
+          "level": "error",
+          "message": "No se puede convertir implícitamente el tipo 'InventoryService.Domain.Enums.ProductCategory' en 'int?'. Ya existe una conversión explícita (compruebe si le falta una conversión)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 186,
+                  "startColumn": 24,
+                  "endLine": 186,
+                  "endColumn": 44
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Desreferencia de una referencia posiblemente NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/marxl/OneDrive/Documentos/BioTech-Backend/BioTechBackend.Tests/Integration/CompleteDataFlowTests.cs",
+                "region": {
+                  "startLine": 213,
+                  "startColumn": 9,
+                  "endLine": 213,
+                  "endColumn": 21
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CS0029": {
+          "id": "CS0029",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0029)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS0266": {
+          "id": "CS0266",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0266)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS1503": {
+          "id": "CS1503",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1503)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS8602": {
+          "id": "CS8602",
+          "shortDescription": "Desreferencia de una referencia posiblemente NULL.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8602)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

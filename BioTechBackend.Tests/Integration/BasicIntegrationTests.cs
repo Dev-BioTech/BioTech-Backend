@@ -3,6 +3,7 @@ using FluentAssertions;
 using HerdService.Application.Commands;
 using HerdService.Application.DTOs;
 using InventoryService.Application.DTOs;
+using InventoryService.Domain.Enums;
 
 namespace BioTechBackend.Tests.Integration;
 
@@ -42,7 +43,7 @@ public class BasicIntegrationTests
         {
             Id = 1,
             Name = "Test Product",
-            Category = "Feed",
+            Category = (int)ProductCategory.FEED,
             UnitOfMeasure = "kg",
             CurrentQuantity = 100,
             AverageCost = 50.5m,
@@ -54,7 +55,7 @@ public class BasicIntegrationTests
         // Act & Assert
         product.Should().NotBeNull();
         product.Name.Should().Be("Test Product");
-        product.Category.Should().Be("Feed");
+        product.Category.Should().Be((int)ProductCategory.FEED);
     }
 
     [Fact]

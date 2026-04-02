@@ -77,7 +77,7 @@ public class CompleteDataFlowTests
         var createDto = new CreateProductDto
         {
             Name = "Test Product",
-            Category = ProductCategory.FEED,
+            Category = (int)ProductCategory.FEED,
             UnitOfMeasure = "kg",
             CurrentQuantity = 100,
             AverageCost = 25.50m,
@@ -137,7 +137,7 @@ public class CompleteDataFlowTests
         var normalProduct = new CreateProductDto
         {
             Name = "Normal Stock Product",
-            Category = ProductCategory.FEED,
+            Category = (int)ProductCategory.FEED,
             UnitOfMeasure = "kg",
             CurrentQuantity = 100,
             AverageCost = 20.00m,
@@ -148,7 +148,7 @@ public class CompleteDataFlowTests
         var lowStockProduct = new CreateProductDto
         {
             Name = "Low Stock Product",
-            Category = ProductCategory.MEDICINE,
+            Category = (int)ProductCategory.MEDICINE,
             UnitOfMeasure = "units",
             CurrentQuantity = 5,
             AverageCost = 50.00m,
@@ -183,7 +183,7 @@ public class CompleteDataFlowTests
         var productData = new CreateProductDto
         {
             Name = "Consistency Test Product",
-            Category = ProductCategory.FEED,
+            Category = (int)ProductCategory.FEED,
             UnitOfMeasure = "kg",
             CurrentQuantity = 100,
             AverageCost = 25.00m,
